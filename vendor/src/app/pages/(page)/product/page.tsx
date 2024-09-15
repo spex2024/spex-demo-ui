@@ -84,30 +84,13 @@ export default function Dashboard() {
     const orders: Order[] = vendor?.orders || [];
     const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const { isAuthenticated } = useAuthStore();
-    const router = useRouter();
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            if (!isAuthenticated) {
-                router.push('/login'); // Redirect to login page if not authenticated
-            }
-        }, 1000); // Adjust the delay as needed
-
-        return () => clearTimeout(timer); // Clean up the timer if the component unmounts
-    }, [isAuthenticated, router]);
 
     useEffect(() => {
 
-        if (isAuthenticated) {
             fetchVendor()
-        }
 
-    }, [isAuthenticated, fetchVendor]);
+    }, [fetchVendor]);
 
-    // Optionally, you can return a loading indicator while checking authentication
-    if (!isAuthenticated) {
-        return null
-    }
 
     const totalPages = Math.ceil(meals.length / ITEMS_PER_PAGE);
 

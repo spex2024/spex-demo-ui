@@ -15,19 +15,12 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import useAuth from "@/app/hook/auth";
-import {useRouter} from "next/navigation";
 import toast from "react-hot-toast";
 import Image from "next/image";
-
-import useAuthStore from "@/app/store/authenticate";
 import useVendorStore from "@/app/store/vendor";
-
-
 const Header = () => {
     const {logout , success,error} = useAuth()
     const {vendor,fetchVendor} =useVendorStore()
-    const router = useRouter()
-    const { isAuthenticated, isLoading, logout:clear } = useAuthStore();
     useEffect(() => {
         if (success) {
             toast.success(success);
@@ -37,25 +30,16 @@ const Header = () => {
     }, [success, error]);
     useEffect(() => {
 
-        if (isAuthenticated) {
             fetchVendor()
-        }
 
-    }, [isAuthenticated, fetchVendor]);
-    useEffect(() => {
-        if (!isLoading && !isAuthenticated) {
-            router.push('/login'); // Redirect to login page if not authenticated
-        }
-    }, [isAuthenticated, isLoading, router]);
+    }, [fetchVendor]);
+
 
     const handleLogout = async () => {
         await logout();
-        clear()
         router.push('/login'); // Redirect to the login page after logout
     };
 
-
- if (!isAuthenticated) return null;
 
     return (
 
