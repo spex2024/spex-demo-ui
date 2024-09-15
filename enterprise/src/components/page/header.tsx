@@ -64,7 +64,6 @@ const Header: React.FC = () => {
 
     const handleLogout = async () => {
         await logout();
-        clear();
         router.push('/login'); // Redirect to the login page after logout
     };
 
