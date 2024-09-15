@@ -43,7 +43,6 @@ interface UserStore {
 const Header: React.FC = () => {
     const { logout, success, error } = useAuth();
     const router = useRouter();
-    const { isAuthenticated, isLoading, logout: clear } = useAuthStore();
     const { user, fetchUser } = useUserStore() as UserStore; // Casting to UserStore
     const { company, imageUrl, location, code, token } = user ?? {};
 
@@ -61,11 +60,6 @@ const Header: React.FC = () => {
         fetchUser().finally(() => setLoading(false));
     }, [fetchUser]);
 
-    // useEffect(() => {
-    //     if (!isAuthenticated) {
-    //         router.push('/login'); // Redirect to login page if not authenticated
-    //     }
-    // }, [isAuthenticated, router]);
 
 
     const handleLogout = async () => {
@@ -74,7 +68,7 @@ const Header: React.FC = () => {
         router.push('/login'); // Redirect to the login page after logout
     };
 
-    if (!isAuthenticated) return null;
+
 
     return (
         <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
