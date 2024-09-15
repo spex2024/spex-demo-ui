@@ -18,9 +18,11 @@ import useAuth from "@/app/hook/auth";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import useVendorStore from "@/app/store/vendor";
+import {useRouter} from "next/navigation";
 const Header = () => {
     const {logout , success,error} = useAuth()
     const {vendor,fetchVendor} =useVendorStore()
+    const {router} = useRouter()
     useEffect(() => {
         if (success) {
             toast.success(success);
