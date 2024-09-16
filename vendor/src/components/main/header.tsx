@@ -15,14 +15,18 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import useAuth from "@/app/hook/auth";
+import {useRouter} from "next/navigation";
 import toast from "react-hot-toast";
 import Image from "next/image";
+
+import useAuthStore from "@/app/store/authenticate";
 import useVendorStore from "@/app/store/vendor";
-import {useRouter} from "next/navigation";
+
+
 const Header = () => {
     const {logout , success,error} = useAuth()
     const {vendor,fetchVendor} =useVendorStore()
-    const {router} = useRouter()
+    const router = useRouter()
     useEffect(() => {
         if (success) {
             toast.success(success);
@@ -33,6 +37,7 @@ const Header = () => {
     useEffect(() => {
 
             fetchVendor()
+
 
     }, [fetchVendor]);
 
