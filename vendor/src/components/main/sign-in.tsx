@@ -38,7 +38,7 @@ const SignIn: React.FC = () => {
     const errorClass = 'text-red-500';
 
     return (
-        <div className="flex flex-wrap h-screen justify-center items-center ">
+        <div className="w-full flex flex-wrap h-screen justify-center items-center ">
             <div className="flex w-full flex-col md:w-1/3 lg:mt-20">
                 <div className="mx-auto my-auto flex flex-col justify-center pt-8 md:justify-start md:px-4 md:pt-0 mt-20 lg:w-[30rem] gap-10">
                     <form className="flex flex-col gap-3 pt-3 md:pt-8 lg:mt-28" onSubmit={handleSubmit(onSubmit)}>
