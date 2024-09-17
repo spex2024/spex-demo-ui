@@ -36,19 +36,31 @@ const SignIn: React.FC = () => {
     const errorClass = 'text-red-500';
 
     return (
-        <div className="flex flex-col h-screen">
-            <div className="flex w-full flex-col md:w-1/3 ">
-                <div className="flex justify-center pt-12 md:-mb-24 md:justify-start md:pl-12">
-                    <a href="#" className="border-b-gray-700 border-b-4 pb-2 text-2xl font-bold text-gray-900">SPEX.</a>
+        <div className="w-full flex flex-col justify-center items-center h-screen">
+            <div className="flex w-full flex-col justify-center items-center  ">
+                <div className="text-center mb-3">
+                    <div className="flex justify-center ">
+                        <img
+                            alt="spex-africa"
+                            className="w-auto h-32 sm:h-40"
+                            src="https://res.cloudinary.com/ddwet1dzj/image/upload/v1722177650/spex_logo-03_png_dui5ur.png"
+                        />
+                    </div>
+
+                    <p className=" text-gray-500 dark:text-gray-300">
+                        Sign in to access your account
+                    </p>
                 </div>
-                <div className="mx-auto my-auto flex flex-col justify-center pt-8 md:justify-start md:px-4 md:pt-0 mt-20 lg:w-[30rem]">
-                    <form className="flex flex-col gap-3 pt-3 md:pt-8 lg:mt-28" onSubmit={handleSubmit(onSubmit)}>
+                <div
+                    className="w-full  flex flex-col justify-center  items-center md:px-4  ">
+                    <form className="w-full flex flex-col gap-3  px-10 " onSubmit={handleSubmit(onSubmit)}>
                         <div className="flex flex-col pt-4">
-                            <input type="email" {...register('email')} className={inputClass} placeholder="Email" />
+                            <input type="email" {...register('email')} className={inputClass} placeholder="Email"/>
                             {errors.email && <p className={errorClass}>{errors.email?.message}</p>}
                         </div>
                         <div className="flex flex-col pt-4">
-                            <input type="password" {...register('password')} className={inputClass} placeholder="Password" />
+                            <input type="password" {...register('password')} className={inputClass}
+                                   placeholder="Password"/>
                             {errors.password && <p className={errorClass}>{errors.password?.message}</p>}
                         </div>
                         <div className="flex flex-col pt-4 text-sm text-gray-500 underline">
@@ -64,9 +76,11 @@ const SignIn: React.FC = () => {
                         </button>
                     </form>
                     <div className="mt-7 w-full flex items-start justify-start">
-                        <p className="whitespace-nowrap text-gray-600 flex gap-4 w-full items-center">
+                        <p className="whitespace-nowrap text-gray-600 flex gap-4 w-full items-center px-10">
                             Do not have an account?
-                            <Link href={'/sign-up'} className="underline-offset-4 font-semibold text-gray-900 underline">Sign up for free.</Link>
+                            <Link href={'/sign-up'}
+                                  className="underline-offset-4 font-semibold text-gray-900 underline">Sign up for
+                                free.</Link>
                         </p>
                     </div>
                 </div>

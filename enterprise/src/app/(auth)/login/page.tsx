@@ -4,8 +4,8 @@ import SignIn from "@/components/auth/sign-in";
 
 export default function Login() {
     return (
-        <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-3 xl:min-h-[800px] ">
-            <div className="flex items-center justify-center py-12 lg:col-span-1">
+        <div className="w-full lg:grid  lg:grid-cols-3 ">
+            <div className="w-full   lg:col-span-1">
 
                     <SignIn/>
             </div>

@@ -3,12 +3,11 @@ import SignUp from "@/components/auth/sign-up";
 
 export default function Register() {
     return (
-        <div className="relative w-full lg:grid lg:max-h-screen lg:grid-cols-3 ">
+        <div className="w-full lg:grid  lg:grid-cols-3 ">
 
             {/* Sign-up form */}
-            <div className=" w-full flex flex-col items-center justify-center  lg:col-span-1 lg:mt-7 lg:px-20">
-                <h1 className="text-2xl font-bold">Welcome to Our Platform</h1>
-                <p className="text-lg text-gray-600">Create your account to get started.</p>
+            <div className=" w-full  lg:col-span-1 ">
+
                 <SignUp/>
             </div>
 
