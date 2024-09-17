@@ -74,11 +74,11 @@ const SignUp: React.FC = () => {
     return (
         <div className="flex flex-wrap">
             <div className="flex w-full justify-center items-center min-h-screen flex-col md:w-1/3 px-5">
-                <div className="text-center">
+                <div className="w-full flex text-center">
                     <div className="flex justify-center ">
                         <img
                             alt="spex-africa"
-                            className="w-auto h-32 sm:h-28"
+                            className="w-auto h-32 sm:h-20"
                             src="https://res.cloudinary.com/ddwet1dzj/image/upload/v1722177650/spex_logo-03_png_dui5ur.png"
                         />
                     </div>
@@ -154,7 +154,7 @@ const SignUp: React.FC = () => {
                             Up
                         </button>
                     </form>
-                    <div className="mt-5 w-full flex items-start justify-start px-5">
+                    <div className="mt-5 w-full flex items-start justify-start px-5 text-sm">
                         <p className="whitespace-nowrap text-gray-600 flex gap-4 w-full items-center ">
                             Already have an account?
                             <Link href={'/login'} className="underline-offset-4 font-semibold text-gray-900 underline">Sign

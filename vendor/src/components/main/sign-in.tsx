@@ -39,7 +39,7 @@ const SignIn: React.FC = () => {
 
     return (
         <div className="w-full flex flex-wrap min-h-screen justify-center items-center  ">
-            <div className="w-full flex w-full flex-col justify-center items-center md:w-1/3   min-h-screen px-10">
+            <div className="w-full flex  flex-col justify-center items-center md:w-1/3   min-h-screen px-10">
                 <div className="text-center">
                     <div className="flex justify-center ">
                         <img
