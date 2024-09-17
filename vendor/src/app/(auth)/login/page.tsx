@@ -1,5 +1,6 @@
 import React from 'react';
-import SignIn from "../../../components/main/sign-in";
+import SignIn from "@/components/main/sign-in";
+
 
 
 

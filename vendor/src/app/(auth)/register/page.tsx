@@ -73,40 +73,67 @@ const SignUp: React.FC = () => {
 
     return (
         <div className="flex flex-wrap">
-            <div className="flex w-full min-h-screen flex-col md:w-1/3">
-                <div className="mx-auto my-auto flex flex-col justify-center pt-5 md:justify-start md:px-4 md:pt-0 mt-5 lg:w-[30rem]">
-                    <form className="flex flex-col gap-2 pt-3 md:pt-5" onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex w-full justify-center items-center min-h-screen flex-col md:w-1/3 px-5">
+                <div className="text-center">
+                    <div className="flex justify-center ">
+                        <img
+                            alt="spex-africa"
+                            className="w-auto h-32 sm:h-28"
+                            src="https://res.cloudinary.com/ddwet1dzj/image/upload/v1722177650/spex_logo-03_png_dui5ur.png"
+                        />
+                    </div>
+
+                    <p className=" text-gray-500 dark:text-gray-300 text-sm">
+                        Create a new account
+                    </p>
+                </div>
+                <div className="w-full flex flex-col justify-center  md:justify-start md:px-4 md:pt-0  ">
+                    <form className="flex flex-col gap-2  px-5" onSubmit={handleSubmit(onSubmit)}>
                         <div className="flex flex-col pt-4">
-                            <input type="text" {...register('company')} className={inputClass} placeholder="Vendor / Restaurant" />
+                            <input type="text" {...register('company')} className={inputClass}
+                                   placeholder="Vendor / Restaurant"/>
                             {errors.company && <p className={errorClass}>{errors.company.message}</p>}
                         </div>
                         <div className="flex flex-col pt-4">
-                            <input type="text" {...register('location')} className={inputClass} placeholder="Location" />
+                            <input type="text" {...register('location')} className={inputClass} placeholder="Location"/>
                             {errors.location && <p className={errorClass}>{errors.location.message}</p>}
                         </div>
                         <div className="flex flex-col pt-4">
-                            <input type="email" {...register('email')} className={inputClass} placeholder="john@gcb.org" />
+                            <input type="email" {...register('email')} className={inputClass}
+                                   placeholder="john@gcb.org"/>
                             {errors.email && <p className={errorClass}>{errors.email.message}</p>}
                         </div>
-                        <div className="flex flex-col pt-4">
-                            <input type="tel" {...register('phone')} className={inputClass} placeholder="Phone" />
-                            {errors.phone && <p className={errorClass}>{errors.phone.message}</p>}
+
+
+                        <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3  h-auto">
+                            <div className="w-full flex flex-col pt-4">
+                                <input type="text" {...register('owner')} className={inputClass} placeholder="Owner"/>
+                                {errors.owner && <p className={errorClass}>{errors.owner.message}</p>}
+                            </div>
+                            <div className="w-full flex flex-col pt-4">
+                                <input type="tel" {...register('phone')} className={inputClass} placeholder="Phone"/>
+                                {errors.phone && <p className={errorClass}>{errors.phone.message}</p>}
+                            </div>
                         </div>
-                        <div className="flex flex-col pt-4">
-                            <input type="password" {...register('password')} className={inputClass} placeholder="Password" />
-                            {errors.password && <p className={errorClass}>{errors.password.message}</p>}
-                        </div>
-                        <div className="flex flex-col pt-4">
-                            <input type="password" {...register('confirmPassword')} className={inputClass} placeholder="Confirm Password" />
-                            {errors.confirmPassword && <p className={errorClass}>{errors.confirmPassword.message}</p>}
-                        </div>
-                        <div className="flex flex-col pt-4">
-                            <input type="text" {...register('owner')} className={inputClass} placeholder="Owner" />
-                            {errors.owner && <p className={errorClass}>{errors.owner.message}</p>}
+                        <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3  h-auto">
+                            <div className="w-full flex flex-col pt-4">
+                                <input type="password" {...register('password')} className={inputClass}
+                                       placeholder="Password"/>
+                                {errors.password && <p className={errorClass}>{errors.password.message}</p>}
+                            </div>
+                            <div className="w-full flex flex-col pt-4">
+                                <input type="password" {...register('confirmPassword')} className={inputClass}
+                                       placeholder="Confirm Password"/>
+                                {errors.confirmPassword &&
+                                    <p className={errorClass}>{errors.confirmPassword.message}</p>}
+                            </div>
                         </div>
                         <div className="flex items-center space-x-6 pt-4">
                             <div className="shrink-0">
-                                <img id='preview_img' className="h-10 w-10 object-cover rounded-full border-2 border-black" src={profilePhoto?.length ? URL.createObjectURL(profilePhoto[0]) : 'https://res.cloudinary.com/ddwet1dzj/image/upload/v1722177650/spex_logo-03_png_dui5ur.png'} alt="Current profile photo" />
+                                <img id='preview_img'
+                                     className="h-10 w-10 object-cover rounded-full border-2 border-black"
+                                     src={profilePhoto?.length ? URL.createObjectURL(profilePhoto[0]) : 'https://res.cloudinary.com/ddwet1dzj/image/upload/v1722177650/spex_logo-03_png_dui5ur.png'}
+                                     alt="Current profile photo"/>
                             </div>
                             <label className="block">
                                 <span className="sr-only">Choose profile photo</span>
@@ -122,19 +149,25 @@ const SignUp: React.FC = () => {
                                 />
                             </label>
                         </div>
-                        <button type="submit" className="mt-5 w-[50%] bg-gray-900 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition">Sign Up</button>
+                        <button type="submit"
+                                className="mt-5 w-[50%] bg-gray-900 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition">Sign
+                            Up
+                        </button>
                     </form>
-                    <div className="mt-5 w-full flex items-start justify-start">
+                    <div className="mt-5 w-full flex items-start justify-start px-5">
                         <p className="whitespace-nowrap text-gray-600 flex gap-4 w-full items-center ">
                             Already have an account?
-                            <Link href={'/login'} className="underline-offset-4 font-semibold text-gray-900 underline">Sign in.</Link>
+                            <Link href={'/login'} className="underline-offset-4 font-semibold text-gray-900 underline">Sign
+                                in.</Link>
                         </p>
                     </div>
                 </div>
             </div>
             <div className="pointer-events-none relative hidden h-screen select-none bg-black md:block md:w-2/3">
                 <div className="absolute bottom-0 z-10 px-8 text-white opacity-100">
-                    <p className="mb-8 text-3xl font-semibold leading-10">SPEX is a meal marketplace that leverages a web platform/app to connect food vendors with enterprises and users seeking sustainable food packaging.</p>
+                    <p className="mb-8 text-3xl font-semibold leading-10">SPEX is a meal marketplace that leverages a
+                        web platform/app to connect food vendors with enterprises and users seeking sustainable food
+                        packaging.</p>
                 </div>
                 <img className="absolute top-0 h-full w-full object-cover opacity-40 -z-1" src="https://res.cloudinary.com/ddwet1dzj/image/upload/v1720541196/spex_jrkich.jpg" alt="Background" />
             </div>
