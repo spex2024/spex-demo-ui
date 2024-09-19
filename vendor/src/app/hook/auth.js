@@ -9,8 +9,8 @@ const useAuth = () => {
     const [error, setError] = useState(null);
     const { setIsAuthenticated } = useAuthStore()
     const router = useRouter();
-    const baseurl = 'http://localhost:8080';
-    // const baseurl = 'https://api.spexafrica.site';
+    // const baseurl = 'http://localhost:8080';
+    const baseurl = 'https://api.spexafrica.site';
 
     const login = async (data) => {
         setError(null);
