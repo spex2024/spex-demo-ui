@@ -116,7 +116,7 @@ const UpdateVendorForm: React.FC<UpdateVendorProps> = ({ vendor }) => {
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="w-[50%] rounded-none p-0 bg-black text-white "
+                    className="w-[50%] rounded-none p-0 bg-black text-white flex items-center justify-center gap-2 "
                 >
                     <LucideEdit3 size={16} /> update profile
                 </Button>
