@@ -91,6 +91,7 @@ const Card = () => {
                                 <p>{vendor.location}</p>
                                 <p>{vendor.email}</p>
                                 <p>{vendor.phone}</p>
+                                <p>{vendor.owner}</p>
                             </div>
                             <div className="w-full text-gray-300 hover:text-gray-400 cursor-pointer ">
                                 <UpdateVendorForm vendor={vendor} />
