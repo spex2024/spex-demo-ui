@@ -85,10 +85,10 @@ const Header = () => {
                     Orders
                 </Link>
                 <Link
-                    href="#"
+                    href={'/pages/settings'}
                     className="text-muted-foreground transition-colors hover:text-foreground"
                 >
-                    Profile
+                    Settings
                 </Link>
             </nav>
             <Sheet>

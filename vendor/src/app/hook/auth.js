@@ -9,8 +9,8 @@ const useAuth = () => {
     const [error, setError] = useState(null);
     const { setIsAuthenticated } = useAuthStore()
     const router = useRouter();
-    // const baseurl = 'http://localhost:8080';
-    const baseurl = 'https://api.spexafrica.site';
+    const baseurl = 'http://localhost:8080';
+    // const baseurl = 'https://api.spexafrica.site';
 
     const login = async (data) => {
         setError(null);
@@ -104,6 +104,24 @@ const useAuth = () => {
             setError(err.response ? err.response.data.message : 'An error occurred');
         }
     }
+    const updateVendor = async (vendorId , userData) => {
+        setError(null);
+        try {
+            const response = await axios.put(`${baseurl}/api/vendor/update/${vendorId}`, userData,{ headers: {
+                    'Content-Type': 'multipart/form-data',
+                },});
+
+            if (response.status === 200) {
+                setSuccess(response?.data?.message);
+                window.location.reload();
+                // Optionally redirect or perform additional actions
+            } else {
+                setError(response?.data?.message);
+            }
+        } catch (error) {
+            setError(error.response?.data?.message);
+        }
+    };
 
     return {
         login,
@@ -112,6 +130,7 @@ const useAuth = () => {
         resetRequest,
         resetPassword,
         resendVerification,
+        updateVendor,
         success,
         error,
     };

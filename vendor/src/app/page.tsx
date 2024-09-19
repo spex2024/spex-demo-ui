@@ -58,15 +58,13 @@ interface Vendor {
 
 export default function Dashboard() {
     const {vendor, fetchVendor} = useVendorStore();
-    const {isAuthenticated} = useAuthStore();
-    const router = useRouter();
+
 
     // Fetch vendor data if authenticated
     useEffect(() => {
-        if (isAuthenticated) {
             fetchVendor();
-        }
-    }, [isAuthenticated, fetchVendor]);
+
+    }, [ fetchVendor]);
 
     // Sort and filter recent orders
     const recentOrders = vendor.orders
@@ -75,25 +73,8 @@ export default function Dashboard() {
         }) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
         .slice(0, 5);
 
-    // Redirect to login page if not authenticated
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            if (!isAuthenticated) {
-                router.push('/login');
-            }
-        }, 1000); // Adjust the delay as needed
 
-        return () => clearTimeout(timer);
-    }, [isAuthenticated, router]);
 
-    // Display loading screen while checking authentication
-    if (!isAuthenticated) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <ScaleLoader color={'#000'}/>
-            </div>
-        );
-    }
 
     const agencies: Agency[] = vendor.agencies || [];
 

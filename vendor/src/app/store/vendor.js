@@ -6,10 +6,11 @@ const baseurl = 'https://api.spexafrica.site';
 
 const useVendorStore = create((set) => ({
     vendor: [],
+    loading: true,
     fetchVendor: async () => {
         try {
             const response = await axios.get(`${baseurl}/api/vendor/vendor`, { withCredentials: true });
-            set({ vendor: response.data });
+            set({ vendor: response.data , loading: false });
         } catch (error) {
             console.error('Error fetching vendor:', error);
         }
