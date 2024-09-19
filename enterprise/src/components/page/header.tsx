@@ -87,8 +87,8 @@ const Header: React.FC = () => {
                 <Link href={'/orders'} className="text-muted-foreground transition-colors hover:text-foreground">
                     Orders
                 </Link>
-                <Link href={'/add-vendor'} className="text-muted-foreground transition-colors hover:text-foreground">
-                    Analytics
+                <Link href={'/settings'} className="text-muted-foreground transition-colors hover:text-foreground">
+                    Settings
                 </Link>
             </nav>
             <Sheet>

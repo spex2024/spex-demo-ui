@@ -2,155 +2,83 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import useAuthStore from "@/store/authenticate";
-import {useUserStore} from "@/store/profile";
 
 const useAuth = () => {
     const [success, setSuccess] = useState(null);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false); // New loading state
     const router = useRouter();
-    const { setIsAuthenticated ,logout: clearAuth} = useAuthStore()
-    const {  fetchUser } = useUserStore()
-    // const baseurl = 'https://enterprise-backend.vercel.app';
-    const baseurl = 'https://api.spexafrica.site';
     // const baseurl = 'http://localhost:8080';
+    const baseurl = 'https://api.spexafrica.site';
 
-    const login = async (data) => {
+
+    const handleRequest = async (request) => {
+        setLoading(true);
         setError(null);
         try {
-            const response = await axios.post(`${baseurl}/api/enterprise/login`, data, { withCredentials: true });
-            if (response.status===200) {
-                setSuccess(response?.data?.message);
-                setIsAuthenticated(true)
-                router.push('/')
+            const response = await request();
+            if (response.status === 200) {
+                setSuccess(response.data.message);
+                window.location.reload();
+            } else {
+                setError(response.data.message);
             }
         } catch (error) {
-            setError(error.response?.data?.message);
+            setError(error.response?.data?.message || 'An error occurred');
+        } finally {
+            setLoading(false);
         }
+    };
+
+    const login = async (data) => {
+        await handleRequest(() => axios.post(`${baseurl}/api/enterprise/login`, data, { withCredentials: true }));
+        if (success) router.push('/');
     };
 
     const logout = async () => {
-        setError(null);
-        try {
-            const response = await axios.post(`${baseurl}/api/enterprise/logout`, {}, { withCredentials: true });
-            if (response.data.success) {
-                setSuccess(response.data.message);
-                clearAuth()
-                router.push('/login'); // or any public route
-            }
-            setSuccess(response.data.message);
-        } catch (error) {
-            setError(error.response.data.message);
-        }
+        await handleRequest(() => axios.post(`${baseurl}/api/enterprise/logout`, {}, { withCredentials: true }));
+        if (success) router.push('/login');
     };
 
     const createAgency = async (data) => {
-        setError(null);
-        console.log(data)
-        try {
-            const response = await axios.post(`${baseurl}/api/enterprise/register`, data);
-            console.log(response.data)
-            if (response.status===200) {
-                setSuccess(response.data.message);
-                router.push('/login');
-
-            } else {
-                setError(response.data.message);
-            }
-        } catch (error) {
-            setError(error.response.data.message);
-        }
+        await handleRequest(() => axios.post(`${baseurl}/api/enterprise/register`, data));
+        if (success) router.push('/login');
     };
 
     const addVendor = async (data) => {
-        setError(null);
-        try {
-            const response = await axios.post(`${baseurl}/api/enterprise/add-vendor`, data ,{withCredentials: true });
-            console.log(response.data)
-            if (response.status===200) {
-                setSuccess(response.data.message);
-
-            } else {
-                setError(response.data.message);
-            }
-        } catch (error) {
-            setError(error.response.data.message);
-        }
+        await handleRequest(() => axios.post(`${baseurl}/api/enterprise/add-vendor`, data, { withCredentials: true }));
     };
 
     const resetRequest = async (user) => {
-        setError(null);
-        setSuccess(null);
-        try {
-            const response = await axios.post(`${baseurl}/api/enterprise/request`, user);
-            if (response.status === 200) {
-                setSuccess(response.data.message);
-            } else {
-                setError(response.data.message);
-            }
-        } catch (error) {
-            setError(error.response.data.message);
-        }
+        await handleRequest(() => axios.post(`${baseurl}/api/enterprise/request`, user));
     };
 
     const resetPassword = async (user, token) => {
-        const data = {token ,...user}
-        setError(null);
-        try {
-            const response = await axios.post(`${baseurl}/api/enterprise/reset`, data);
-            console.log(response.status);
-            if (response.status === 200) {
-                router.push('/sign-in')
-                setSuccess(response.data.message);
-
-            } else {
-                setError(response.data.message);
-            }
-        } catch (error) {
-            setError(error.response.data.message);
-        }
+        await handleRequest(() => axios.post(`${baseurl}/api/enterprise/reset`, { token, ...user }));
+        if (success) router.push('/sign-in');
     };
 
     const resendVerification = async (data) => {
-        try {
-            const response = await axios.post(`${baseurl}/api/enterprise/resend`, data);
-            console.log(response);
-            router.push('/sign-in')
-            setSuccess(response.data.message)
-            if (response.status===400){
-                setError(response.data.message);
-            }
+        await handleRequest(() => axios.post(`${baseurl}/api/enterprise/resend`, data));
+        if (success) router.push('/sign-in');
+    };
 
-        } catch (err) {
-            setError(err.response ? err.response.data.message : 'An error occurred');
-        }
-    }
     const disConnectVendor = async (userId, vendorId) => {
-        try {
-            const response = await axios.post(`${baseurl}/api/enterprise/vendor/disconnect`, {userId , vendorId});
-            console.log(response);
-            setSuccess(response.data.message)
-            if (response.status===400){
-                setError(response.data.message);
-            }
+        await handleRequest(() => axios.post(`${baseurl}/api/enterprise/vendor/disconnect`, { userId, vendorId }));
+    };
 
-        } catch (err) {
-            setError(err.response ? err.response.data.message : 'An error occurred');
-        }
-    }
     const disConnectUser = async (entId, userId) => {
-        try {
-            const response = await axios.post(`${baseurl}/api/enterprise/employee/disconnect`, {userId , entId});
-            console.log(response);
-            setSuccess(response.data.message)
-            if (response.status===400){
-                setError(response.data.message);
-            }
+        await handleRequest(() => axios.post(`${baseurl}/api/enterprise/employee/disconnect`, { userId, entId }));
+    };
 
-        } catch (err) {
-            setError(err.response ? err.response.data.message : err.message);
-        }
-    }
+    const updateEnterprise = async (entId, userData) => {
+        await handleRequest(() =>
+            axios.put(`${baseurl}/api/enterprise/update/${entId}`, userData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            })
+        );
+
+    };
 
     return {
         login,
@@ -162,8 +90,10 @@ const useAuth = () => {
         addVendor,
         disConnectVendor,
         disConnectUser,
+        updateEnterprise,
         success,
         error,
+        loading, // Expose loading state
     };
 };
 
