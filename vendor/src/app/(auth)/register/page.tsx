@@ -74,7 +74,7 @@ const SignUp: React.FC = () => {
     return (
         <div className="flex flex-wrap">
             <div className="flex w-full justify-center items-center min-h-screen flex-col md:w-1/3 px-5">
-                <div className="w-full flex text-center">
+                <div className="w-full text-center">
                     <div className="flex justify-center ">
                         <img
                             alt="spex-africa"
