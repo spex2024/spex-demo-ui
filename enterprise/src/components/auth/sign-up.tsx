@@ -80,7 +80,7 @@ const SignUp: React.FC = () => {
                         Create a new account
                     </p>
                 </div>
-                <div className="mx-auto my-auto flex flex-col justify-center  md:justify-start px-10">
+                <div className=" flex flex-col justify-center  md:justify-start px-10">
                     <form className="flex flex-col gap-2 " onSubmit={handleSubmit(onSubmit)}>
                         <div className="flex flex-col pt-4">
                             <input type="text" {...register('company')} className={inputClass} placeholder="Company"/>
@@ -96,11 +96,11 @@ const SignUp: React.FC = () => {
                             {errors.email && <p className={errorClass}>{errors.email.message}</p>}
                         </div>
                         <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3  h-auto">
-                            <div className="flex flex-col pt-4">
+                            <div className="w-full flex flex-col pt-4">
                                 <input type="text" {...register('branch')} className={inputClass} placeholder="Branch"/>
                                    {errors.branch && <p className={errorClass}>{errors.branch.message}</p>}
                             </div>
-                            <div className="flex flex-col pt-4">
+                            <div className="w-full flex flex-col pt-4">
                                 <input type="tel" {...register('phone')} className={inputClass} placeholder="Phone"/>
                                 {errors.phone && <p className={errorClass}>{errors.phone.message}</p>}
                             </div>

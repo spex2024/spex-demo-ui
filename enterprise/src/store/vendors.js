@@ -21,24 +21,6 @@ const useVendorStore = create((set) => ({
         }
     },
 
-    updateVendor: async (vendorId, updatedData) => {
-        set({ loading: true, error: null });
-        try {
-            const response = await axios.patch(`${baseURL}/api/admin/vendors/${vendorId}`, updatedData, { withCredentials: true });
-            if (response.status === 200) {
-                set((state) => ({
-                    vendors: state.vendors.map(vendor =>
-                        vendor._id === vendorId ? { ...vendor, ...updatedData } : vendor
-                    ),
-                    loading: false,
-                }));
-            }
-        } catch (error) {
-            set({ error: error.message, loading: false });
-        }
-    },
-
-    setError: (error) => set({ error }),
 }));
 
 export default useVendorStore;
