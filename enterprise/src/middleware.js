@@ -20,5 +20,5 @@ export function middleware(req) {
 }
 
 export const config = {
-    matcher: ['/', '/employees', '/vendors', '/orders', '/sign-up', '/settings', '/login'],
+    matcher: ['/ent-dashboard', '/employees', '/vendors', '/orders', '/sign-up', '/settings', '/login'],
 };
