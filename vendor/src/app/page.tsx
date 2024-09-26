@@ -203,12 +203,6 @@ export default function Dashboard() {
                                         <p className="text-sm font-medium leading-none">{agency.company}</p>
                                         <p className="text-sm text-muted-foreground">{agency.branch}</p>
                                     </div>
-                                    <div className="ml-auto font-medium grid grid-cols-1 g gap-1">
-                                        <p className="text-md font-medium leading-none">
-                                            {agency.users[0]?.orders?.length}
-                                        </p>
-                                        <h2 className={`text-sm text-muted-foreground`}>Orders</h2>
-                                    </div>
                                 </div>
                             ))}
                         </CardContent>
