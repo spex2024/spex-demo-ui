@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export function middleware(req) {
-    const token = req.cookies.get("token")?.value; // Use the Next.js cookies API
+    const token = req.cookies.get("vendor")?.value; // Use the Next.js cookies API
     const url = new URL(req.url);
 
     if (token) {
