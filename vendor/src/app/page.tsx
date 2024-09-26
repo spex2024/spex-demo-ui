@@ -190,7 +190,7 @@ export default function Dashboard() {
                     </Card>
                     <Card>
                         <CardHeader>
-                            <CardTitle>Agencies</CardTitle>
+                            <CardTitle>Enterprises</CardTitle>
                         </CardHeader>
                         <CardContent className="grid gap-8">
                             {agencies?.map((agency) => (
