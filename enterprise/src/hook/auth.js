@@ -8,8 +8,8 @@ const useAuth = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false); // New loading state
     const router = useRouter();
-    // const baseurl = 'http://localhost:8080';
-    const baseurl = 'https://api.spexafrica.site';
+    const baseurl = 'http://localhost:8080';
+    // const baseurl = 'https://api.spexafrica.site';
 
 
     const handleRequest = async (request) => {
@@ -32,7 +32,7 @@ const useAuth = () => {
 
     const login = async (data) => {
         await handleRequest(() => axios.post(`${baseurl}/api/enterprise/login`, data, { withCredentials: true }));
-        if (success) router.push('/');
+        if (success) router.push('/ent-dashboard');
     };
 
     const logout = async () => {

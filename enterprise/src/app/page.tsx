@@ -13,7 +13,7 @@ const App: React.FC = () => {
 
     return (
         <div>
-            <Dashboard />
+            <h1>Coming Soon</h1>
 
         </div>
     );
