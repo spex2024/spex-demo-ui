@@ -7,7 +7,7 @@ export function middleware(req) {
     if (token) {
         // Redirect to home or dashboard if trying to access login or signup page while logged in
         if (url.pathname === '/login' || url.pathname === '/sign-up') {
-            return NextResponse.redirect(new URL('/ent-dashboard', req.url));
+            return NextResponse.redirect(new URL('/', req.url));
         }
     } else {
         // Redirect to login if no token is present
@@ -20,5 +20,5 @@ export function middleware(req) {
 }
 
 export const config = {
-    matcher: ['/ent-dashboard', '/employees', '/vendors', '/orders', '/sign-up', '/settings', '/login'],
+    matcher: ['/', '/employees', '/vendors', '/orders', '/sign-up', '/settings', '/login'],
 };
