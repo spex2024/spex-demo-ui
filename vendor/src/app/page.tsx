@@ -125,7 +125,7 @@ export default function Dashboard() {
                     </Card>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Agencies</CardTitle>
+                            <CardTitle className="text-sm font-medium">Enterprise(s)</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{vendor.agencies?.length || 0}</div>

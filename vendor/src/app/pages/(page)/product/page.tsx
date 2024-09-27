@@ -47,6 +47,7 @@ import MealDetail from "@/components/main/detail";
 import useAuthStore from "@/app/store/authenticate";
 import {useRouter} from "next/navigation";
 import useVendorStore from "@/app/store/vendor";
+import UpateMealForm from "@/components/main/update-meal";
 
 type Meal = {
     _id: string;
@@ -226,6 +227,8 @@ export default function Dashboard() {
                                                         </TableCell>
                                                         <TableCell className="hidden md:table-cell">
                                                             {formatDate(meal.createdAt)}
+                                                        </TableCell>
+                                                        <TableCell className="hidden md:table-cell">
                                                         </TableCell>
                                                     </TableRow>
                                                 ))
