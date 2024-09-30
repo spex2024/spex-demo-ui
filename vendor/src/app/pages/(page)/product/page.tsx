@@ -44,10 +44,7 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs";
 import MealDetail from "@/components/main/detail";
-import useAuthStore from "@/app/store/authenticate";
-import {useRouter} from "next/navigation";
 import useVendorStore from "@/app/store/vendor";
-import UpateMealForm from "@/components/main/update-meal";
 
 type Meal = {
     _id: string;
