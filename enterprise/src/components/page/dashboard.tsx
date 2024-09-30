@@ -41,6 +41,7 @@ interface Meal {
     main?: string;
     protein?: string;
     sauce?: string;
+    price?:number
     extras?: string[];
 }
 
@@ -241,7 +242,7 @@ export default function Dashboard() {
                                             <TableCell>
                                                 {new Date(order.createdAt).toLocaleDateString()}
                                             </TableCell>
-                                            <TableCell className="">GH₵{order.totalPrice.toFixed(2)}</TableCell>
+                                            <TableCell className="">GH₵ {order.meals.reduce((total, meal) => total + (meal.price || 0), 0)}</TableCell>
                                             <TableCell>
                                                 <div className="font-medium">
                                                     {order.user.firstName} {order.user.lastName}
