@@ -41,6 +41,7 @@ const Header = () => {
 
     }, [fetchVendor]);
 
+    console.log(vendor)
 
     const handleLogout = async () => {
         await logout();

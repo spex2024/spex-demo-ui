@@ -8,7 +8,7 @@ import {
     MoreHorizontal,
     PlusCircle,
     CircleArrowRight,
-    CircleArrowLeft,
+    CircleArrowLeft, Edit2Icon, EyeIcon, Trash,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -45,6 +45,9 @@ import {
 } from "@/components/ui/tabs";
 import MealDetail from "@/components/main/detail";
 import useVendorStore from "@/app/store/vendor";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
+import useAuth from "@/app/hook/auth";
+import toast from "react-hot-toast";
 
 type Meal = {
     _id: string;
@@ -82,6 +85,8 @@ export default function Dashboard() {
     const orders: Order[] = vendor?.orders || [];
     const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
+
+    const {deleteMeal , success,error} = useAuth()
 
     useEffect(() => {
 
@@ -122,8 +127,23 @@ export default function Dashboard() {
             day: 'numeric',
         });
     };
+    useEffect(() => {
+        if (success) {
+            toast.success(success);
+        } else if (error) {
+            toast.error(error);
+        }
+    }, [success, error]);
+    const editMeal = (id :string) =>{
+        console.log(id)
+    }
 
+    const deleteMealItem = async (id : string) =>{
+        console.log(id)
+        await deleteMeal(id)
+    }
 
+console.log(meals)
 
     return (
         <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -133,8 +153,6 @@ export default function Dashboard() {
                         <div className="flex items-center">
                             <TabsList>
                                 <TabsTrigger value="all">All</TabsTrigger>
-                                <TabsTrigger value="active">Active</TabsTrigger>
-                                <TabsTrigger value="draft">Inactive</TabsTrigger>
                             </TabsList>
                             <div className="ml-auto flex items-center gap-2">
                                 <DropdownMenu>
@@ -173,7 +191,7 @@ export default function Dashboard() {
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <Table>
+                                    <Table className={`text-xs`}>
                                         <TableHeader>
                                             <TableRow>
                                                 <TableHead className="hidden w-[100px] sm:table-cell">
@@ -199,7 +217,7 @@ export default function Dashboard() {
                                         <TableBody>
                                             {currentMeals.length > 0 ? (
                                                 currentMeals.map((meal) => (
-                                                    <TableRow key={meal._id} onClick={() => setSelectedMeal(meal)}>
+                                                    <TableRow key={meal._id} >
                                                         <TableCell className="hidden sm:table-cell">
                                                             <Image
                                                                 alt="Product image"
@@ -226,6 +244,61 @@ export default function Dashboard() {
                                                             {formatDate(meal.createdAt)}
                                                         </TableCell>
                                                         <TableCell className="hidden md:table-cell">
+                                                            <>
+
+                                                                <TooltipProvider>
+                                                                    <Tooltip>
+                                                                        <TooltipTrigger asChild>
+                                                                            <Button
+                                                                                variant="ghost"
+                                                                                size="icon"
+                                                                                onClick={() => editMeal(meal._id)}
+                                                                            >
+                                                                                <Edit2Icon size={16} />
+                                                                            </Button>
+                                                                        </TooltipTrigger>
+                                                                        <TooltipContent>
+                                                                            Edit Meal
+                                                                        </TooltipContent>
+                                                                    </Tooltip>
+                                                                </TooltipProvider>
+                                                                <TooltipProvider>
+                                                                    <Tooltip>
+                                                                        <TooltipTrigger asChild>
+                                                                            <Button
+                                                                                variant="ghost"
+                                                                                size="icon"
+                                                                                onClick={() => setSelectedMeal(meal)}
+                                                                            >
+                                                                                <EyeIcon size={16}  />
+                                                                            </Button>
+                                                                        </TooltipTrigger>
+                                                                        <TooltipContent  className={` flex flex-col items-center justify-center bg-white text-black border border-black`}>
+                                                                            <h2 className={`font-bold`}>Meal Details</h2>
+
+
+                                                                        </TooltipContent>
+                                                                    </Tooltip>
+                                                                </TooltipProvider>
+                                                                <TooltipProvider>
+                                                                    <Tooltip>
+                                                                        <TooltipTrigger asChild>
+                                                                            <Button
+                                                                                variant="ghost"
+                                                                                size="icon"
+                                                                                onClick={()=>deleteMealItem(meal._id)}
+                                                                            >
+                                                                                <Trash size={16}  />
+                                                                            </Button>
+                                                                        </TooltipTrigger>
+                                                                        <TooltipContent  className={` flex flex-col items-center justify-center bg-white text-black border border-black`}>
+                                                                            <h2 className={`font-bold `}>Delete Meal</h2>
+
+
+                                                                        </TooltipContent>
+                                                                    </Tooltip>
+                                                                </TooltipProvider>
+                                                            </>
                                                         </TableCell>
                                                     </TableRow>
                                                 ))

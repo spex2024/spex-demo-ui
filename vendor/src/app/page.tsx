@@ -181,7 +181,7 @@ export default function Dashboard() {
                                             <TableCell>
                                                 {new Date(order?.createdAt).toLocaleDateString()}
                                             </TableCell>
-                                            <TableCell className="text-right">GH₵{order?.totalPrice.toFixed(2)}</TableCell>
+                                            <TableCell className="text-right">GH₵{order.meals.reduce((total, meal) => total + (meal.price || 0), 0)}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

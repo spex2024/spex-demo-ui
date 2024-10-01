@@ -123,6 +123,21 @@ const useAuth = () => {
         }
     };
 
+    const deleteMeal= async (orderId) => {
+        setError(null);
+        try {
+            const response = await axios.delete(`${baseurl}/api/vendor/meal/${orderId}`, { withCredentials: true });
+            if (response.status === 200) {
+                setSuccess(response?.data?.message);
+                setTimeout(() => { window.location.reload(); }, 3000); // Delayed reload
+            } else {
+                setError(response?.data?.message);
+            }
+        } catch (error) {
+            setError(error.response?.data?.message);
+        }
+    };
+
     return {
         login,
         logout,
@@ -131,6 +146,7 @@ const useAuth = () => {
         resetPassword,
         resendVerification,
         updateVendor,
+        deleteMeal,
         success,
         error,
     };

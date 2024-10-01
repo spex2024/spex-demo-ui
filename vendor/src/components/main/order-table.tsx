@@ -1,7 +1,7 @@
 'use client';
 
 import Image from "next/image";
-import {CircleArrowLeft, File, ListFilter, MoreHorizontal, PlusCircle , CircleArrowRight} from "lucide-react";
+import { CircleArrowLeft, File, ListFilter, MoreHorizontal, PlusCircle, CircleArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,8 +35,8 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs";
-import { useState } from "react";
 import { format } from 'date-fns';
+import { useState } from "react";
 
 interface Meal {
     mealId: string;
@@ -47,7 +47,7 @@ interface Meal {
 interface Order {
     orderId: string;
     status: string;
-    createdAt: string; // assuming it's an ISO string
+    createdAt: string;
     meals: Meal[];
     orderedBy: string;
     imageUrl: string;
@@ -55,6 +55,9 @@ interface Order {
     user: {
         firstName: string;
         lastName: string;
+    };
+    vendor: {
+        name: string;
     };
 }
 
@@ -65,15 +68,12 @@ interface User {
 }
 
 interface OrderTableProps {
-    user: User[]; // Changed from `user` to `users` for clarity
+    orders: Order[]; // Orders array directly instead of Users
 }
 
-export default function OrderTable({ user }: OrderTableProps) {
+export default function OrderTable({ orders }: OrderTableProps) {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const rowsPerPage = 5;
-
-    // Flatten the orders from all users
-    const orders = user.flatMap(user => user.orders);
 
     // Calculate total pages
     const totalPages = Math.ceil(orders.length / rowsPerPage);
@@ -126,7 +126,6 @@ export default function OrderTable({ user }: OrderTableProps) {
                                         Export
                                     </span>
                                 </Button>
-
                             </div>
                         </div>
                         <TabsContent value="all">
@@ -146,6 +145,7 @@ export default function OrderTable({ user }: OrderTableProps) {
                                                 </TableHead>
                                                 <TableHead>Order ID</TableHead>
                                                 <TableHead>Meal</TableHead>
+                                                <TableHead>Vendor</TableHead>
                                                 <TableHead>Status</TableHead>
                                                 <TableHead>Price</TableHead>
                                                 <TableHead>Quantity</TableHead>
@@ -154,7 +154,7 @@ export default function OrderTable({ user }: OrderTableProps) {
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
-                                            {paginatedOrders.map(order => (
+                                            {paginatedOrders.map((order) => (
                                                 <TableRow key={order.orderId}>
                                                     <TableCell className="">
                                                         <Image
@@ -169,7 +169,10 @@ export default function OrderTable({ user }: OrderTableProps) {
                                                         {order.orderId}
                                                     </TableCell>
                                                     <TableCell className="font-medium">
-                                                        {order.meals.map(meal => meal.main)}
+                                                        {order.meals.map((meal) => meal.main).join(', ')}
+                                                    </TableCell>
+                                                    <TableCell className="font-medium">
+                                                        {order.vendor.name}
                                                     </TableCell>
                                                     <TableCell>
                                                         <Badge variant="outline">
@@ -191,14 +194,13 @@ export default function OrderTable({ user }: OrderTableProps) {
                                                             <span>{order.user.lastName}</span>
                                                         </div>
                                                     </TableCell>
-
                                                 </TableRow>
                                             ))}
                                         </TableBody>
                                     </Table>
                                 </CardContent>
                                 <CardFooter>
-                                    <div className=" w-full flex justify-between items-center">
+                                    <div className="w-full flex justify-between items-center">
                                         <div className="text-xs text-muted-foreground">
                                             Showing <strong>{(currentPage - 1) * rowsPerPage + 1}</strong>-
                                             <strong>{Math.min(currentPage * rowsPerPage, orders.length)}</strong> of <strong>{orders.length}</strong> orders
@@ -208,16 +210,16 @@ export default function OrderTable({ user }: OrderTableProps) {
                                                 className={`flex gap-2`}
                                                 size="sm"
                                                 variant="ghost"
-                                                onClick={() => setCurrentPage(page => Math.max(page - 1, 1))}
+                                                onClick={() => setCurrentPage((page) => Math.max(page - 1, 1))}
                                                 disabled={currentPage === 1}
                                             >
-                                                <CircleArrowLeft size={20} strokeWidth={1}/> Previous
+                                                <CircleArrowLeft size={20} strokeWidth={1} /> Previous
                                             </Button>
                                             <Button
                                                 className={`flex gap-2`}
                                                 size="sm"
                                                 variant="ghost"
-                                                onClick={() => setCurrentPage(page => Math.min(page + 1, totalPages))}
+                                                onClick={() => setCurrentPage((page) => Math.min(page + 1, totalPages))}
                                                 disabled={currentPage === totalPages}
                                             >
                                                 Next <CircleArrowRight size={20} strokeWidth={1} />

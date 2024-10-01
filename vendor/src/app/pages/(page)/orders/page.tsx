@@ -38,7 +38,7 @@ const Orders: React.FC = () => {
             {agencies.length > 0 ? (
                 <ul>
                     {agencies.map((agency) => (
-                        <AgencyAccordion key={agency._id} agency={agency} />
+                        <AgencyAccordion key={agency._id} agency={agency} vendor={vendor}  />
                     ))}
                 </ul>
             ) : (
