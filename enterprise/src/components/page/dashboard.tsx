@@ -35,6 +35,7 @@ import Header from '@/components/page/header';
 import { useUserStore } from '@/store/profile';
 import { useEffect } from 'react';
 import { AddVendor } from './add-vendor';
+import {VendorMetricsModal} from "@/components/page/vendor-metrics";
 
 interface Meal {
     mealId: string;
@@ -106,6 +107,51 @@ export default function Dashboard() {
         .slice(0, 5);
 
     const vendors = user?.vendors || [];
+
+    console.log('vendor :', vendors)
+
+    function calculateVendorSalesByTimeframe(vendorId: string, allOrders: Order[], timeframe: 'daily' | 'weekly' | 'monthly' | 'yearly'): number {
+        const now = new Date();
+
+        return allOrders.reduce((total, order) => {
+            if (order.vendor._id === vendorId) {
+                const orderDate = new Date(order.createdAt);
+                const isWithinTimeframe = checkTimeframe(orderDate, now, timeframe);
+
+                if (isWithinTimeframe) {
+                    const orderTotal = order.meals.reduce((orderSum, meal) => orderSum + (meal.price || 0), 0);
+                    return total + orderTotal;
+                }
+            }
+            return total;
+        }, 0);
+    }
+
+// Helper function to check if an order is within the given timeframe
+    function checkTimeframe(orderDate: Date, now: Date, timeframe: 'daily' | 'weekly' | 'monthly' | 'yearly'): boolean {
+        switch (timeframe) {
+            case 'daily':
+                return orderDate.toDateString() === now.toDateString(); // Same day
+            case 'weekly':
+                const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
+                return orderDate > oneWeekAgo;
+            case 'monthly':
+                return orderDate.getMonth() === now.getMonth() && orderDate.getFullYear() === now.getFullYear();
+            case 'yearly':
+                return orderDate.getFullYear() === now.getFullYear();
+            default:
+                return false;
+        }
+    }
+
+
+    const limitWords = (text: string, maxWords: number) => {
+        const words = text.split(' ');
+        return words.length > maxWords
+            ? words.slice(0, maxWords).join(' ') + '...'
+            : text;
+    };
+
 
     const remaining = (user?.packs ?? 0) - (user?.issuedPack ?? 0)
 
@@ -271,24 +317,41 @@ export default function Dashboard() {
                                 </div>
                             ) : (
                                 vendors.map((vendor) => (
-                                    <div className="flex items-center gap-4" key={vendor._id}>
+                                    <div className="flex items-center justify-between gap-4" key={vendor._id}>
                                         <Avatar className="hidden h-12 w-13 sm:flex">
                                             <AvatarImage src={vendor.imageUrl} alt="Avatar" />
                                             <AvatarFallback>{vendor.code}</AvatarFallback>
                                         </Avatar>
                                         <div className="grid gap-1">
-                                            <p className="text-sm font-medium leading-none">{vendor.name}</p>
-                                            <p className="text-sm text-muted-foreground">{vendor.location}</p>
+                                            <p className="text-sm font-medium leading-none">{limitWords(vendor.name,5)}</p>
+                                            <p className="text-sm text-muted-foreground">{limitWords(vendor.location,5)}</p>
                                         </div>
-                                        <div className="ml-auto font-medium">
+                                        <div className=" ml-auto font-medium">
                                             <p className="text-sm font-medium leading-none">GH₵ {vendor.totalSales}</p>
-                                            <p className="text-xs text-muted-foreground">Total Sales</p>
+                                            <p className="text-xs text-muted-foreground">
+                                                Total Sales
+                                            </p>
+
                                         </div>
+
+                                        {/* Add VendorMetricsModal here */}
+
+                                        <VendorMetricsModal
+                                            vendorName={vendor.name}
+                                            metrics={{
+                                                daily: calculateVendorSalesByTimeframe(vendor._id, allOrders, 'daily'),
+                                                weekly: calculateVendorSalesByTimeframe(vendor._id, allOrders, 'weekly'),
+                                                monthly: calculateVendorSalesByTimeframe(vendor._id, allOrders, 'monthly'),
+                                                yearly: calculateVendorSalesByTimeframe(vendor._id, allOrders, 'yearly'),
+                                            }}
+                                        />
+
                                     </div>
                                 ))
                             )}
                         </CardContent>
                     </Card>
+
                 </div>
             </main>
         </div>
