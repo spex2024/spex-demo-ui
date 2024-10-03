@@ -60,7 +60,7 @@ const AgencyAccordion: React.FC<AgencyAccordionProps> = ({ agency, vendor }) => 
         user.orders?.filter(order => order.vendor.name === vendor.name) || []
     );
 
-    console.log(orders);
+    console.log('orders :',orders);
 
     return (
         <Accordion type="single" collapsible className="w-full">
