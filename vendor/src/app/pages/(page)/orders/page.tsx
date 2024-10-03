@@ -24,11 +24,7 @@ const Orders: React.FC = () => {
 
 
     useEffect(() => {
-
-
-                fetchVendor()
-
-
+        fetchVendor()
     }, [fetchVendor]);
 
 
