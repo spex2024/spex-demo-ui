@@ -114,7 +114,7 @@ export default function Dashboard() {
         const now = new Date();
 
         return allOrders.reduce((total, order) => {
-            if (order.vendor._id === vendorId) {
+            if (order.vendor._id === vendorId && order.status === 'completed') {
                 const orderDate = new Date(order.createdAt);
                 const isWithinTimeframe = checkTimeframe(orderDate, now, timeframe);
 
@@ -184,14 +184,14 @@ export default function Dashboard() {
                         </CardHeader>
                         <CardContent>
                             <div className="w-full flex   justify-between gap-3 text-2xl ">
-                               <p className={`font-bold`}>{user?.packs}</p>
+                                <p className={`font-bold`}>{user?.packs}</p>
                                 <div className={`w-full flex  justify-end mt-2 gap-2 text-xs `}>
                                     <p className={`w-[80%] flex flex-col items-end
                                      text:muted`}>
                                         <span>Issued</span>
                                         <span> {user?.issuedPack}</span>
                                     </p>
-                                     <p className={'h-8  border border-gray-500 '}></p>
+                                    <p className={'h-8  border border-gray-500 '}></p>
                                     <p className={`w-[50%] flex flex-col  text:muted`}>
                                         <span> Remaining</span>
                                         <span> {remaining} </span></p>
