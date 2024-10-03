@@ -323,8 +323,8 @@ export default function Dashboard() {
                                             <AvatarFallback>{vendor.code}</AvatarFallback>
                                         </Avatar>
                                         <div className="grid gap-1">
-                                            <p className="text-sm font-medium leading-none">{limitWords(vendor.name,5)}</p>
-                                            <p className="text-sm text-muted-foreground">{limitWords(vendor.location,5)}</p>
+                                            <p className="text-xs font-medium leading-none">{limitWords(vendor.name,5)}</p>
+                                            <p className="text-xs text-muted-foreground">{limitWords(vendor.location,4)}</p>
                                         </div>
                                         <div className=" ml-auto font-medium">
                                             <p className="text-sm font-medium leading-none">GH₵ {vendor.totalSales}</p>
