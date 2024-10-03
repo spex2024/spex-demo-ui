@@ -200,7 +200,7 @@ export default function EmployeeData() {
                                                     </TableCell>
                                                     <TableCell>{userItem.email}</TableCell>
                                                     <TableCell>{userItem.phone}</TableCell>
-                                                    <TableCell>{userItem.points}</TableCell>
+                                                    <TableCell>{userItem.points.toFixed(2)}</TableCell>
                                                     <TableCell>{userItem.code}</TableCell>
                                                     <TableCell>
                                                         <Badge variant={userItem.isVerified ? "outline" : "secondary"}>
@@ -228,7 +228,7 @@ export default function EmployeeData() {
                                                                     </TooltipTrigger>
                                                                     <TooltipContent>
 
-                                                                        <p className={`text-xs`}>remove vendor</p>
+                                                                        <p className={`text-xs`}>remove user</p>
                                                                     </TooltipContent>
                                                                 </Tooltip>
                                                             </div>
