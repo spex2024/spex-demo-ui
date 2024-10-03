@@ -192,7 +192,7 @@ export default function Dashboard() {
                         <CardHeader>
                             <CardTitle>Enterprise(s)</CardTitle>
                         </CardHeader>
-                        <CardContent className="grid gap-8">
+                        <CardContent className="grid gap-8 lg:gap-3">
                             {agencies?.map((agency) => (
                                 <div className="flex items-center gap-4" key={agency._id}>
                                     <Avatar className="hidden h-12 w-10 sm:flex">
