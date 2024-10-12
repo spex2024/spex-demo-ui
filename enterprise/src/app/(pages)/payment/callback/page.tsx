@@ -11,9 +11,10 @@ const PaymentCallback = () => {
     const plan = searchParams.get('plan'); // Get the plan from query params
     const amount = searchParams.get('amount'); // Get the amount from query params
     const [loading, setLoading] = useState(true);
-    const [status, setStatus] = useState(null);
+    const [status, setStatus] = useState<string | null>(null); // Specify type as string or null
     const [paymentSent, setPaymentSent] = useState(false); // New flag to prevent double submission
     const baseurl = 'https://api.spexafrica.site';
+
     useEffect(() => {
         const verifyPayment = async () => {
             if (reference) {
@@ -47,7 +48,7 @@ const PaymentCallback = () => {
             await axios.post('http://localhost:8080/api/paystack/record-payment', {
                 email,
                 plan,
-                amount: parseFloat(amount),
+                amount: parseFloat(amount || '0'), // Handle case where amount may be null
                 reference,
             });
             setPaymentSent(true); // Set the flag to prevent double submission
