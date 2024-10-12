@@ -1,18 +1,16 @@
+// app/payment/callback/page.tsx
 'use client';
-import { useEffect, useState, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
-const PaymentCallback = () => {
+// PaymentCallback component to handle payment verification and display status
+const PaymentCallback = ({ reference, email, plan, amount }) => {
     const router = useRouter();
-    const searchParams = useSearchParams(); // To get query parameters from the URL
-    const reference = searchParams.get('reference'); // Get the payment reference from query params
-    const email = searchParams.get('email'); // Get the email from query params
-    const plan = searchParams.get('plan'); // Get the plan from query params
-    const amount = searchParams.get('amount'); // Get the amount from query params
     const [loading, setLoading] = useState(true);
-    const [status, setStatus] = useState<string | null>(null); // Specify type as string or null
-    const [paymentSent, setPaymentSent] = useState(false); // New flag to prevent double submission
+    const [status, setStatus] = useState<string | null>(null);
+    const [paymentSent, setPaymentSent] = useState(false);
     const baseurl = 'https://api.spexafrica.site';
 
     useEffect(() => {
@@ -25,7 +23,6 @@ const PaymentCallback = () => {
                     if (data.data.status === 'success') {
                         setStatus('Payment successful');
                         if (!paymentSent) {
-                            // Ensure we send the payment info only once
                             await sendSelectedPlan();
                         }
                     } else {
@@ -51,18 +48,17 @@ const PaymentCallback = () => {
                 amount: parseFloat(amount || '0'), // Handle case where amount may be null
                 reference,
             });
-            setPaymentSent(true); // Set the flag to prevent double submission
+            setPaymentSent(true);
             alert('Payment information sent to the backend.');
         } catch (error) {
             console.error('Error sending payment information:', error);
         }
     };
 
-    // Add a delay for redirection
     useEffect(() => {
         const redirectDelay = async () => {
             if (!loading && status) {
-                await new Promise(resolve => setTimeout(resolve, 2000)); // Delay for 2 seconds
+                await new Promise(resolve => setTimeout(resolve, 2000));
                 router.push('/'); // Redirect to the homepage after the delay
             }
         };
@@ -87,12 +83,21 @@ const PaymentCallback = () => {
     );
 };
 
-// Wrap the PaymentCallback component with Suspense
+// Parent component to manage search parameters and suspense
 const PaymentCallbackWrapper = () => {
+    const searchParams = new URLSearchParams(window.location.search); // Get URL search params directly from window
+    const reference = searchParams.get('reference');
+    const email = searchParams.get('email');
+    const plan = searchParams.get('plan');
+    const amount = searchParams.get('amount');
+
     return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <PaymentCallback />
-        </Suspense>
+        <PaymentCallback
+            reference={reference}
+            email={email}
+            plan={plan}
+            amount={amount}
+        />
     );
 };
 
