@@ -237,7 +237,7 @@ export default function Dashboard() {
                     className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0 pb-4 border-b">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                         <h2 className="text-2xl font-bold tracking-tight">{user?.company || 'Dashboard'}</h2>
-                        <Badge variant="secondary" className="text-xs font-semibold">
+                        <Badge variant="secondary" className="text-xs font-semibold flex items-center justify-items-center gap-3">
                             <p>Plan: {user?.subscription?.plan || 'N/A'}</p>
                             <p>Packs: {user?.packs || 'N/A'}</p>
 
@@ -268,7 +268,7 @@ export default function Dashboard() {
                         title="Total Packs Available"
                         value={
                             <div className="w-full flex  justify-between">
-                                <div className="text-2xl font-bold">{user?.availablePacks || 0}</div>
+                                <div className="text-2xl font-bold">{user?.packs || 0}</div>
                                 <div className=" w-[40%] flex justify-between items-center text-xs text-muted-foreground ">
                                     <div className="flex flex-col items-start">
                                         <span>Issued</span>
@@ -277,7 +277,7 @@ export default function Dashboard() {
                                     <div className="h-5 border-r border-gray-300"></div>
                                     <div className="flex flex-col items-end">
                                         <span>Remaining</span>
-                                        <span>{user?.availablePacks || 0}</span>
+                                        <span>{user?.packs || 0}</span>
                                     </div>
                                 </div>
                             </div>
