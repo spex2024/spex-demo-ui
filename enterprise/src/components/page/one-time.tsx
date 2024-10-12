@@ -5,7 +5,6 @@ import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, 
     useState
 } from 'react'
 import axios from 'axios'
-import {useRouter} from 'next/navigation'
 import {useUserStore} from "@/store/profile"
 import usePlans from "@/store/plans"
 import {motion} from "framer-motion"
@@ -43,7 +42,6 @@ interface UserStore {
 export default function OneTime() {
     const {user, fetchUser} = useUserStore() as UserStore
     const {plans, fetchPlans} = usePlans()
-    const router = useRouter()
     const [email, setEmail] = useState<string>('')
     const [amount, setAmount] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
@@ -59,7 +57,7 @@ export default function OneTime() {
             setEmail(user.email)
         }
     }, [user])
-
+    const baseurl = 'https://api.spexafrica.site';
     const handlePayment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setLoading(true)
@@ -70,7 +68,7 @@ export default function OneTime() {
         callbackUrl.searchParams.append('amount', amount)
 
         try {
-            const {data} = await axios.post('http://localhost:8080/api/paystack/initialize-payment', {
+            const {data} = await axios.post(`${baseurl}/api/paystack/initialize-payment`, {
                 email,
                 amount: parseFloat(amount),
                 callback_url: callbackUrl.toString(),

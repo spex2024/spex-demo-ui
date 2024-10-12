@@ -13,12 +13,12 @@ const PaymentCallback = () => {
     const [loading, setLoading] = useState(true);
     const [status, setStatus] = useState(null);
     const [paymentSent, setPaymentSent] = useState(false); // New flag to prevent double submission
-
+    const baseurl = 'https://api.spexafrica.site';
     useEffect(() => {
         const verifyPayment = async () => {
             if (reference) {
                 try {
-                    const { data } = await axios.get(`http://localhost:8080/api/paystack/verify-payment/${reference}`);
+                    const { data } = await axios.get(`${baseurl}/api/paystack/verify-payment/${reference}`);
                     console.log('Payment Verification Response:', data);
 
                     if (data.data.status === 'success') {
