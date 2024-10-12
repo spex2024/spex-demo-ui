@@ -228,7 +228,7 @@ export default function Dashboard() {
             ? words.slice(0, maxWords).join(' ') + '...'
             : text
     }
-
+    console.log(user?.packs)
     return (
         <div className="flex min-h-screen w-full flex-col bg-background">
             <Header />
