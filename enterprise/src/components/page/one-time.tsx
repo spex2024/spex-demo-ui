@@ -72,7 +72,14 @@ export default function OneTime() {
                 email,
                 amount: parseFloat(amount),
                 callback_url: callbackUrl.toString(),
-            })
+            },
+                {
+                    headers: {
+                        Authorization: `Bearer ${process.env.NEXT_PUBLIC_PAYSTACK_SECRET_KEY}`, // Use an environment variable for your secret key
+                        'Content-Type': 'application/json',
+                    },
+                }
+            )
 
             const paystackUrl = data.data.authorization_url
             window.location.href = paystackUrl
