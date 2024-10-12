@@ -239,6 +239,10 @@ export default function Dashboard() {
                         <h2 className="text-2xl font-bold tracking-tight">{user?.company || 'Dashboard'}</h2>
                         <Badge variant="secondary" className="text-xs font-semibold flex items-center justify-items-center gap-3">
                             <p>Plan: {user?.subscription?.plan || 'N/A'}</p>
+
+                        </Badge>
+                        <Badge variant="secondary"
+                               className="text-xs font-semibold flex items-center justify-items-center gap-3 bg-black text-white">
                             <p>Packs: {user?.packs || 'N/A'}</p>
 
                         </Badge>
