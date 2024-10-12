@@ -238,7 +238,9 @@ export default function Dashboard() {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                         <h2 className="text-2xl font-bold tracking-tight">{user?.company || 'Dashboard'}</h2>
                         <Badge variant="secondary" className="text-xs font-semibold">
-                            Plan: {user?.subscription?.plan || 'N/A'}
+                            <p>Plan: {user?.subscription?.plan || 'N/A'}</p>
+                            <p>Packs: {user?.packs || 'N/A'}</p>
+
                         </Badge>
                     </div>
                     <Button asChild variant="outline" size="sm">
@@ -263,10 +265,10 @@ export default function Dashboard() {
                         trend={trendTotalEmployees}
                     />
                     <StatCard
-                        title="Total Packs"
+                        title="Total Packs Available"
                         value={
                             <div className="w-full flex  justify-between">
-                                <div className="text-2xl font-bold">{user?.packs || 0}</div>
+                                <div className="text-2xl font-bold">{user?.availablePacks || 0}</div>
                                 <div className=" w-[40%] flex justify-between items-center text-xs text-muted-foreground ">
                                     <div className="flex flex-col items-start">
                                         <span>Issued</span>
