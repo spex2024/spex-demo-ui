@@ -1,21 +1,13 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState} from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
-import { Button } from "@/components/ui/button"
-import { toast } from "@/components/ui/use-toast"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { UserCircle, Info, FileText, LifeBuoy, Loader2, Check, Camera } from "lucide-react"
-import { useForm, SubmitHandler } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
+
 import ProfileTab from "@/components/page/profile";
 
 
@@ -61,7 +53,7 @@ export default function AdvancedStylishProfile() {
     const renderPolicyContent = () => (
         <div className="space-y-4">
             <h3 className="text-lg font-semibold">Privacy Policy</h3>
-            <p>We take your privacy seriously. Our policy ensures that your personal information is protected and used only for the purposes you've consented to.</p>
+            <p>We take your privacy seriously. Our policy ensures that your personal information is protected and used only for the purposes you have consented to.</p>
             <h3 className="text-lg font-semibold mt-4">Terms of Service</h3>
             <p>By using our service, you agree to abide by our terms of service. These terms are designed to create a safe and respectful environment for all users.</p>
             <div className="mt-6">
