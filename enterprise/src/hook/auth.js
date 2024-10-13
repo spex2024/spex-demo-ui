@@ -8,8 +8,8 @@ const useAuth = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false); // New loading state
     const router = useRouter();
-    const baseurl = 'http://localhost:8080';
-    // const baseurl = 'https://api.spexafrica.app';
+    // const baseurl = 'http://localhost:8080';
+    const baseurl = 'https://api.spexafrica.app';
 
 
     const handleRequest = async (request) => {
