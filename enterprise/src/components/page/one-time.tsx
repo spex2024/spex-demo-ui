@@ -57,7 +57,7 @@ export default function OneTime() {
             setEmail(user.email)
         }
     }, [user])
-    const baseurl = 'https://api.spexafrica.site';
+    const baseurl = 'https://api.spexafrica.app';
     // const baseurl = "http://localhost:8080";
 
     const handlePayment = async (e: React.FormEvent<HTMLFormElement>) => {
