@@ -165,7 +165,7 @@ export default function Dashboard() {
                                                     {order.user?.firstName} {order.user?.lastName}
                                                 </div>
                                                 <div className="hidden text-sm text-muted-foreground md:inline">
-                                                    {order.user?.agency.company || 'N/A'}
+                                                    {order.user?.agency?.company || 'N/A'}
                                                 </div>
                                             </TableCell>
                                             <TableCell>
@@ -196,11 +196,11 @@ export default function Dashboard() {
                             {agencies?.map((agency) => (
                                 <div className="flex items-center gap-4" key={agency._id}>
                                     <Avatar className="hidden h-12 w-10 sm:flex">
-                                        <AvatarImage src={agency.imageUrl} alt={agency.company} />
+                                        <AvatarImage src={agency.imageUrl} alt={agency?.company} />
                                         <AvatarFallback>{agency.company.charAt(0)}</AvatarFallback>
                                     </Avatar>
                                     <div className="grid gap-1">
-                                        <p className="text-sm font-medium leading-none">{agency.company}</p>
+                                        <p className="text-sm font-medium leading-none">{agency?.company}</p>
                                         <p className="text-sm text-muted-foreground">{agency.branch}</p>
                                     </div>
                                 </div>
