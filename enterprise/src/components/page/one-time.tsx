@@ -1,4 +1,3 @@
-'use client'
 
 import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal,
     useEffect,

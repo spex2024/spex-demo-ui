@@ -46,7 +46,7 @@ const PaymentCallback = () => {
 
     const sendSelectedPlan = async () => {
         try {
-            await axios.post('http://localhost:8080/api/paystack/record-payment', {
+            await axios.post(`${baseurl}/api/paystack/record-payment`, {
                 email,
                 plan,
                 amount: parseFloat(amount || '0'), // Handle case where amount may be null
