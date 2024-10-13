@@ -27,6 +27,7 @@ interface Meal {
 
 interface Subcription{
     plan:string
+    staff:number
 }
 
 interface Order {
@@ -228,7 +229,7 @@ export default function Dashboard() {
             ? words.slice(0, maxWords).join(' ') + '...'
             : text
     }
-    console.log(user?.packs)
+    const packs = (user?.subscription?.staff ?? 0) * 2;
     return (
         <div className="flex min-h-screen w-full flex-col bg-background">
             <Header />
@@ -243,7 +244,7 @@ export default function Dashboard() {
                         </Badge>
                         <Badge variant="secondary"
                                className="text-xs font-semibold flex items-center justify-items-center gap-3 bg-black text-white">
-                            <p>Packs: {user?.packs || 'N/A'}</p>
+                            <p>Packs: {packs || 'N/A'}</p>
 
                         </Badge>
                     </div>

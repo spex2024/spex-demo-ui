@@ -14,6 +14,7 @@ const PaymentCallback = () => {
     const [status, setStatus] = useState<string | null>(null); // Specify type as string or null
     const [paymentSent, setPaymentSent] = useState(false); // New flag to prevent double submission
     const baseurl = 'https://api.spexafrica.site';
+    // const baseurl = "http://localhost:8080";
 
     useEffect(() => {
         const verifyPayment = async () => {
