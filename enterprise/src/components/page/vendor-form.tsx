@@ -1,130 +1,133 @@
-'use client'
+"use client"
 
-import React, { useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import Select, { MultiValue } from 'react-select';
-import { toast } from 'react-hot-toast';
-import useVendorStore from '@/store/vendors';
-import useAuth from "@/hook/auth";
+import React, { useEffect } from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { toast } from 'react-hot-toast'
+import useVendorStore from '@/store/vendors'
+import useAuth from "@/hook/auth"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Label } from "@/components/ui/label"
 
 // Define schema for validation
 const schema = z.object({
     vendors: z.array(z.string()).min(1, 'At least one vendor must be selected'),
-});
+})
 
 // Define type for vendor data
 type Vendor = {
-    _id: string;
-    name: string;
-    location: string;
-};
-
-// Define type for select options
-type OptionType = {
-    value: string;
-    label: string;
-};
+    _id: string
+    name: string
+    location: string
+}
 
 // Define type for form data
 type FormData = {
-    vendors: string[];
-};
-
-interface VendorFormProps {
-    onClose?: () => void;
+    vendors: string[]
 }
 
-function VendorForm({ onClose }: VendorFormProps) {
-    const { vendors, fetchVendors, loading } = useVendorStore();
-    const { addVendor, success, error } = useAuth();
+export default function VendorFormDialog() {
+    const [open, setOpen] = React.useState(false)
+    const { vendors, fetchVendors, loading } = useVendorStore()
+    const { addVendor, success, error } = useAuth()
 
-    useEffect(() => {
-        fetchVendors();
-    }, []);
-
-    useEffect(() => {
-        if (success) {
-            toast.success(success);
-            if (onClose) {
-                onClose();
-            }
-        } else if (error) {
-            toast.error(error);
-        }
-    }, [success, error]);
-
-    const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm<FormData>({
+    const { control, handleSubmit, setValue, watch, formState: { errors }, reset } = useForm<FormData>({
         resolver: zodResolver(schema),
         defaultValues: {
             vendors: [],
         },
-    });
+    })
 
-    const selectedVendors = watch('vendors');
+    useEffect(() => {
+        fetchVendors()
+    }, [fetchVendors])
+
+    useEffect(() => {
+        if (success) {
+            toast.success(success)
+            setOpen(false)
+            reset()
+        } else if (error) {
+            toast.error(error)
+        }
+    }, [success, error, reset])
+
+    const selectedVendors = watch('vendors')
 
     const onSubmit = async (data: FormData) => {
         try {
-            await addVendor(data.vendors);
-            console.log('Selected Vendors:', data.vendors);
+            await addVendor(data.vendors)
+            console.log('Selected Vendors:', data.vendors)
         } catch (err) {
-            console.error('Error adding vendors:', err);
+            console.error('Error adding vendors:', err)
         }
-    };
-
-    // Transform vendor data into select options
-    const vendorOptions: OptionType[] = vendors?.map((vendor: Vendor) => ({
-        value: vendor?._id,
-        label: `${vendor?.name} (${vendor?.location})`,
-    }));
-
+    }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4">
-            <div className="w-full flex flex-col">
-                <Controller
-                    name="vendors"
-                    control={control}
-                    render={({ field }) => (
-                        <Select<OptionType, true>
-                            {...field}
-                            options={vendorOptions}
-                            isMulti
-                            onChange={(selectedOptions: MultiValue<OptionType>) =>
-                                setValue('vendors', selectedOptions.map(option => option.value))
-                            }
-                            value={vendorOptions.filter(option => selectedVendors.includes(option.value))}
-                            placeholder="Select vendors"
-                            isSearchable
-                            className="basic-single"
-                            classNamePrefix="select"
-                            noOptionsMessage={() => "No vendors found"}
-                            styles={{
-                                menu: (provided) => ({
-                                    ...provided,
-                                    zIndex: 9999,
-                                    position: 'absolute',
-                                    top: '100%',
-                                    maxHeight: '200px',
-                                    overflowY: 'auto',
-                                    overflowX: 'hidden',
-                                }),
-                                menuList: (provided) => ({
-                                    ...provided,
-                                    padding: 0,
-                                    maxHeight: '200px',
-                                    overflowY: 'auto',
-                                }),
-                            }}
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="outline">Add Vendors</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Add Vendors</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="vendors">Select Vendors</Label>
+                        <Controller
+                            name="vendors"
+                            control={control}
+                            render={({ field }) => (
+                                <Select
+                                    onValueChange={(value) => field.onChange([...field.value, value])}
+                                    value={field.value[field.value.length - 1]}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select vendors" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {vendors?.map((vendor: Vendor) => (
+                                            <SelectItem key={vendor._id} value={vendor._id}>
+                                                {`${vendor.name} (${vendor.location})`}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            )}
                         />
-                    )}
-                />
-                {errors.vendors && <p className="text-red-500">{errors.vendors.message}</p>}
-            </div>
-            <button type="submit" className="bg-black text-white py-2 px-4">Submit</button>
-        </form>
-    );
+                        {errors.vendors && <p className="text-sm text-red-500">{errors.vendors.message}</p>}
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                        {selectedVendors.map((vendorId) => {
+                            const vendor = vendors.find((v: Vendor) => v._id === vendorId)
+                            return vendor ? (
+                                <div key={vendor._id} className="flex items-center gap-2 bg-secondary text-secondary-foreground px-2 py-1 rounded-md">
+                                    <span>{vendor.name}</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => setValue('vendors', selectedVendors.filter(id => id !== vendorId))}
+                                        className="text-secondary-foreground/50 hover:text-secondary-foreground"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            ) : null
+                        })}
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                        <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button type="submit" disabled={loading}>
+                            {loading ? 'Adding...' : 'Add Vendors'}
+                        </Button>
+                    </div>
+                </form>
+            </DialogContent>
+        </Dialog>
+    )
 }
-
-export default VendorForm;

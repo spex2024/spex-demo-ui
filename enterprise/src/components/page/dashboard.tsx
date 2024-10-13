@@ -15,6 +15,7 @@ import { AddVendor } from './add-vendor'
 import { VendorMetricsModal } from "@/components/page/vendor-metrics"
 
 import { subMonths, isSameMonth } from 'date-fns'
+import VendorFormDialog from "@/components/page/vendor-form";
 
 interface Meal {
     mealId: string
@@ -398,7 +399,8 @@ export default function Dashboard() {
                         <CardHeader className="flex flex-row items-center justify-between space-y-0">
                             <CardTitle>Vendor Performance</CardTitle>
                             {vendors && vendors.length < 2 && (
-                                <AddVendor/>
+                                // <AddVendor/>
+                                <VendorFormDialog/>
                             )}
                         </CardHeader>
                         <CardContent>

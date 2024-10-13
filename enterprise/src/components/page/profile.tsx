@@ -1,103 +1,167 @@
-'use client';
+'use client'
 
-import React, { useEffect } from 'react';
-import { LogIn, Trash2 } from 'lucide-react';
-import UpdateEntForm from '@/components/page/profile-update';
-import { useUserStore } from '@/store/profile';
-import useAuth from "@/hook/auth";
-import { useRouter } from "next/navigation";
-import Skeleton from "@/components/page/skeleton";
+import React, { useEffect } from 'react'
+import {
+    LogOut,
+    Trash2,
+    MapPin,
+    Mail,
+    Phone,
+    Building,
+    Edit,
+    Camera,
+    SubscriptIcon,
+    BadgeCheck,
+    IdCard
+} from 'lucide-react'
+import UpdateEntForm from '@/components/page/profile-update'
+import { useUserStore } from '@/store/profile'
+import useAuth from "@/hook/auth"
+import { useRouter } from "next/navigation"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 
-// Define the expected shape of your User or Enterprise object
 interface Enterprise {
-    _id: string;
-    company: string;
-    branch: string;
-    code: string;
-    location: string;
-    email: string;
-    phone: string;
-    imageUrl: string;
+    _id: string
+    company: string
+    branch: string
+    code: string
+    location: string
+    email: string
+    phone: string
+    imageUrl: string
+    subscription:{
+        plan:string
+    }
 }
 
-const ProfileTab: React.FC = () => {
-    const { logout, success, error } = useAuth();
-    const router = useRouter();
+export default function ProfileTab() {
+    const { logout } = useAuth()
+    const router = useRouter()
 
     const handleLogout = async () => {
-        await logout();
-        router.push('/login'); // Redirect to the login page after logout
-    };
+        await logout()
+        router.push('/login')
+    }
 
     return (
-        <div className="w-[80%] flex flex-col gap-20 ">
-            <Card />
-
-            <div className="w-[80%] flex flex-col items-start justify-center mx-auto mt-5 text-red-700 cursor-pointer">
-                <span className="w-full flex items-center gap-3 border-b py-3" onClick={handleLogout}>
-                    <LogIn />
-                    <p>Logout</p>
-                </span>
-                <span className="w-full flex items-center gap-3 py-3">
-                    <Trash2 />
-                    <p>Delete</p>
-                </span>
-            </div>
+        <div className="container mx-auto px-4 py-8 space-y-8 max-w-4xl">
+            <EnterpriseCard />
+            <Card className="overflow-hidden">
+                <CardContent className="p-0">
+                    <Button
+                        variant="ghost"
+                        className="w-full py-6 px-4 justify-start text-red-600 hover:text-red-700 hover:bg-red-50 rounded-none"
+                        onClick={handleLogout}
+                    >
+                        <LogOut className="mr-2 h-5 w-5" />
+                        Logout
+                    </Button>
+                    <hr className="border-gray-200" />
+                    <Button
+                        variant="ghost"
+                        className="w-full py-6 px-4 justify-start text-red-600 hover:text-red-700 hover:bg-red-50 rounded-none"
+                    >
+                        <Trash2 className="mr-2 h-5 w-5" />
+                        Delete Account
+                    </Button>
+                </CardContent>
+            </Card>
         </div>
-    );
-};
+    )
+}
 
-export default ProfileTab;
-
-const Card = () => {
-    const { user, fetchUser, loading } = useUserStore() as { user: Enterprise | null; fetchUser: () => void; loading: boolean };
+function EnterpriseCard() {
+    const { user, fetchUser, loading } = useUserStore() as { user: Enterprise | null; fetchUser: () => void; loading: boolean }
 
     useEffect(() => {
-        fetchUser();
-    }, [fetchUser]);
+        fetchUser()
+    }, [fetchUser])
 
     if (loading) {
-        return <Skeleton />;
+        return <EnterpriseCardSkeleton />
     }
 
     if (!user) {
-        return <div className="w-full flex justify-center items-center text-gray-500">No user data available</div>;
+        return (
+            <Card className="w-full">
+                <CardContent className="p-6 text-center text-gray-500">
+                    No user data available
+                </CardContent>
+            </Card>
+        )
     }
 
     return (
-        <div className="w-full bg-white flex items-center flex-row flex-wrap p-3">
-            <div className="mx-auto w-full">
-                <div
-                    className="w-full flex items-center justify-center h-52 px-3"
-                    style={{
-                        backgroundImage: "url('https://images.unsplash.com/photo/1578836537282-3171d77f8632?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80')",
-                        backgroundRepeat: 'no-repeat',
-                        backgroundSize: 'cover',
-                        backgroundBlendMode: 'multiply',
-                    }}
+        <Card className="w-full overflow-hidden bg-white shadow-lg">
+            <div className="h-48 bg-gradient-to-r from-blue-600 to-purple-600 relative">
+                <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-black/50 to-transparent" />
+                <Button
+                    size="icon"
+                    variant="secondary"
+                    className="absolute top-4 right-4 rounded-full"
                 >
-                    <div className="h-full w-[60%] flex items-center justify-center">
-                        <img
-                            className="rounded-full lg:h-36 lg:w-32 h-24 w-20"
-                            src={user?.imageUrl}
-                            alt="Profile"
-                        />
-                    </div>
-                    <div className="w-full flex flex-row flex-wrap h-full">
-                        <div className="w-full flex flex-col items-center justify-center gap-5 text-gray-700 font-semibold relative">
-                            <div className="w-full text-sm flex flex-col gap-1 text-black">
-                                <p>{user.company} - ({user.code})</p>
-                                <p>{user.location}</p>
-                                <p>{user.email}</p>
-                                <p>{user.phone}</p>
-                            </div>
-                            <div className="w-full text-gray-300 hover:text-gray-400 cursor-pointer ">
-                                <UpdateEntForm agency={user} />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <Camera className="h-4 w-4" />
+                </Button>
             </div>
+            <CardContent className="p-6 pt-0 relative">
+                <div className="flex justify-between items-end mb-4">
+                    <Avatar className="h-32 w-32 border-4 border-white shadow-xl -mt-16">
+                        <AvatarImage src={user?.imageUrl} alt={user?.company} />
+                        <AvatarFallback>{user?.company.charAt(0)}</AvatarFallback>
+                    </Avatar>
+
+                   <UpdateEntForm agency={user}/>
+
+
+                </div>
+                <div className="w-full space-y-1 mb-4">
+                    <h2 className="text-2xl font-bold">{user?.company}</h2>
+                    <p className="text-sm text-gray-500 flex items-center justify-items-center gap-5"> <IdCard size={20}/> Account ID: {user?.code}</p>
+                    <p className="text-sm text-gray-500 flex items-center justify-items-center gap-5"><BadgeCheck size={20}/> Plan: {user?.subscription.plan}</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <InfoItem icon={MapPin} text={user?.location} />
+                    <InfoItem icon={Mail} text={user?.email} />
+                    <InfoItem icon={Phone} text={user?.phone} />
+                    <InfoItem icon={Building} text={user?.branch} />
+                </div>
+            </CardContent>
+        </Card>
+    )
+}
+
+function InfoItem({ icon: Icon, text }: { icon: React.ElementType; text: string }) {
+    return (
+        <div className="flex items-center text-sm text-gray-600 bg-gray-50 rounded-md p-3">
+            <Icon className="mr-3 h-5 w-5 text-gray-400" />
+            <span className="font-medium">{text}</span>
         </div>
-    );
-};
+    )
+}
+
+function EnterpriseCardSkeleton() {
+    return (
+        <Card className="w-full overflow-hidden bg-white shadow-lg">
+            <div className="h-48 bg-gray-200 animate-pulse" />
+            <CardContent className="p-6 pt-0 relative">
+                <div className="flex justify-between items-end mb-4">
+                    <Skeleton className="h-32 w-32 rounded-full -mt-16" />
+                    <Skeleton className="h-9 w-28" />
+                </div>
+                <div className="space-y-2 mb-4">
+                    <Skeleton className="h-8 w-64" />
+                    <Skeleton className="h-4 w-40" />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {[...Array(4)].map((_, i) => (
+                        <Skeleton key={i} className="h-12 w-full" />
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
+    )
+}

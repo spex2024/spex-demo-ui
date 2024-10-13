@@ -18,7 +18,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { LucideEdit3 } from 'lucide-react';
+import {Edit, LucideEdit3} from 'lucide-react';
 
 // Zod schema with optional email for updating a vendor
 const schema = z.object({
@@ -111,12 +111,9 @@ const UpdateEntForm: React.FC<UpdateEntProps> = ({ agency }) => {
     return (
         <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="w-[50%] bg-black rounded-none flex items-center justify-center gap-2"
-                >
-                    <LucideEdit3 size={16} /> update profile
+                <Button variant="outline" size="sm">
+                    <Edit className="mr-2 h-4 w-4" />
+                    Edit Profile
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
