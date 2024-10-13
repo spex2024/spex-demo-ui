@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import axios from 'axios';
 
 // const baseurl = 'http://localhost:8080';
-const baseurl = 'https://api.spexafrica.site';
+const baseurl = 'https://api.spexafrica.app';
 
 const useUserStore = create(
     persist(

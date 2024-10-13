@@ -10,7 +10,7 @@ const useAuth = () => {
     const { setIsAuthenticated } = useAuthStore()
     const router = useRouter();
     // const baseurl = 'http://localhost:8080';
-    const baseurl = 'https://api.spexafrica.site';
+    const baseurl = 'https://api.spexafrica.app';
 
     const login = async (data) => {
         setError(null);

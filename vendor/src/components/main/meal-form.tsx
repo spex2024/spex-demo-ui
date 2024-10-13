@@ -46,7 +46,7 @@ const AddMealForm= () => {
     const buttonDel = "flex items-center justify-start gap-1 bg-red-500 rounded-none";
     const buttonStyle = "w-full md:w-1/3 rounded-none";
     const buttonMain = "w-full md:w-1/3 rounded-none mt-5 bg-transparent border border-black text-black hover:bg-black hover:text-white py-7 text-xl";
-    const baseurl = 'https://api.spexafrica.site';
+    const baseurl = 'https://api.spexafrica.app';
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setMeal(prevMeal => ({
