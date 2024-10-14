@@ -1,35 +1,50 @@
-'use client'
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Dashboard from '@/components/page/dashboard';
 import Footer from "@/components/page/footer";
-import {useUserStore} from "@/store/profile";
+import { useUserStore } from "@/store/profile";
+import {ClimbingBoxLoader} from "react-spinners";
+
 interface User {
-    packs?: number
-    subscription?:string
-
+    packs?: number;
+    subscription?: string;
 }
+
 interface UserStore {
-    user?: User
-    fetchUser: () => Promise<void>
+    user?: User;
+    fetchUser: () => Promise<void>;
 }
+
 const App: React.FC = () => {
+    const { user, fetchUser } = useUserStore() as UserStore;
+    const router = useRouter();
+    const [loading, setLoading] = useState(true);
 
-    const { user, fetchUser } = useUserStore() as UserStore
-    const router = useRouter()
     useEffect(() => {
-        fetchUser()
-    }, [fetchUser])
+        const loadUser = async () => {
+            await fetchUser();
+            setLoading(false); // Set loading to false after fetching user data
+        };
 
-    if(!user?.subscription){
-        router.push('/subscribe')
+        loadUser();
+    }, [fetchUser]);
+
+    if (loading) {
+        // Optionally show a loading indicator while user data is being fetched
+        return <ClimbingBoxLoader color="#71bc44" size={20} />;
     }
+
+    if (!user?.subscription) {
+        router.push('/subscribe');
+        return null; // Prevent rendering the rest of the component after redirect
+    }
+
     return (
         <div>
-            <Dashboard/>
-            <Footer/>
-
+            <Dashboard />
+            <Footer />
         </div>
     );
 };

@@ -4,6 +4,7 @@ import Header from "@/components/page/header";
 import Footer from "@/components/page/footer";
 import { useUserStore } from "@/store/profile";
 import { useRouter } from "next/navigation";
+import {ClimbingBoxLoader} from "react-spinners";
 
 interface LayoutProps {
     children: ReactNode;
@@ -22,12 +23,25 @@ interface UserStore {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
     const { user, fetchUser } = useUserStore() as UserStore
     const router = useRouter()
-    useEffect(() => {
-        fetchUser()
-    }, [fetchUser])
+    const [loading, setLoading] = useState(true);
 
-    if(!user?.subscription){
-        router.push('/subscribe')
+    useEffect(() => {
+        const loadUser = async () => {
+            await fetchUser();
+            setLoading(false); // Set loading to false after fetching user data
+        };
+
+        loadUser();
+    }, [fetchUser]);
+
+    if (loading) {
+        // Optionally show a loading indicator while user data is being fetched
+        return <ClimbingBoxLoader color="#71bc44" size={20} />;
+    }
+
+    if (!user?.subscription) {
+        router.push('/subscribe');
+        return null; // Prevent rendering the rest of the component after redirect
     }
 
     return (
