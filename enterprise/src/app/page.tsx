@@ -7,6 +7,7 @@ import Footer from "@/components/page/footer";
 import {useUserStore} from "@/store/profile";
 interface User {
     packs?: number
+    subscription?:string
 
 }
 interface UserStore {
@@ -21,7 +22,7 @@ const App: React.FC = () => {
         fetchUser()
     }, [fetchUser])
 
-    if(user?.packs === 0){
+    if(!user?.subscription){
         router.push('/subscribe')
     }
     return (

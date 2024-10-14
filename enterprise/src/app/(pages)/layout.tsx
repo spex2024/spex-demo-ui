@@ -11,6 +11,7 @@ interface LayoutProps {
 
 interface User {
     packs?: number;
+    subscription?: string;
 }
 
 interface UserStore {
@@ -19,13 +20,13 @@ interface UserStore {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-    const { user, fetchUser } = useUserStore() as UserStore;
+    const { user, fetchUser } = useUserStore() as UserStore
     const router = useRouter()
     useEffect(() => {
         fetchUser()
     }, [fetchUser])
 
-    if(user?.packs === 0){
+    if(!user?.subscription){
         router.push('/subscribe')
     }
 
