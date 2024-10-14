@@ -36,7 +36,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
     if (loading) {
         // Optionally show a loading indicator while user data is being fetched
-        return <ClimbingBoxLoader color="#71bc44" size={20} />;
+        return <div className={`flex items-center justify-center h-screen`}>
+            <ClimbingBoxLoader color="#71bc44" size={20}/>;
+        </div>;
     }
 
     if (!user?.subscription) {
