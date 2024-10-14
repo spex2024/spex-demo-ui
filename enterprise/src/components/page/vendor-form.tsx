@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
+import {LucidePlusCircle} from "lucide-react";
 
 // Define schema for validation
 const schema = z.object({
@@ -69,7 +70,7 @@ export default function VendorFormDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline">Add Vendors</Button>
+                <Button variant="outline" size={'sm'} className={`h-10 bg-black text-white px-3 flex items-center gap-2`}>  <LucidePlusCircle size={14} strokeWidth={2}/> Add Vendor</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>

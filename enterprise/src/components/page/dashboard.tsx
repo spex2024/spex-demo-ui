@@ -398,7 +398,7 @@ export default function Dashboard() {
                     <Card className="col-span-3">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0">
                             <CardTitle>Vendor Performance</CardTitle>
-                            {vendors && vendors.length < 2 && (
+                            {vendors && vendors.length < 3 && (
                                 // <AddVendor/>
                                 <VendorFormDialog/>
                             )}
@@ -407,7 +407,7 @@ export default function Dashboard() {
                             {vendors?.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center h-[400px]">
                                     <p className="text-muted-foreground mb-4">No vendors added yet</p>
-                                    <AddVendor/>
+                                    <VendorFormDialog/>
                                 </div>
                             ) : (
                                 <ScrollArea className="h-[400px] pr-4">
