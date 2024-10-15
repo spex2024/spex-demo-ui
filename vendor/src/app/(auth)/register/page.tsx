@@ -1,12 +1,24 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import Link from 'next/link';
 import useAuth from "@/app/hook/auth";
 import { toast } from "react-hot-toast";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, EffectFade, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/effect-fade';
+import 'swiper/css/autoplay';
+import 'swiper/css/pagination';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { UserIcon, MapPinIcon, MailIcon, PhoneIcon, LockIcon, CameraIcon, CheckCircleIcon } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const schema = z.object({
     company: z.string().nonempty('Company name is required'),
@@ -25,11 +37,13 @@ const schema = z.object({
 type SignUpFormInputs = z.infer<typeof schema>;
 
 const SignUp: React.FC = () => {
-    const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm<SignUpFormInputs>({
+    const { register, handleSubmit, reset, watch, setValue, formState: { errors, isValid } } = useForm<SignUpFormInputs>({
         resolver: zodResolver(schema),
+        mode: 'onChange'
     });
 
     const { addVendor, success, error } = useAuth();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (success) {
@@ -39,137 +53,170 @@ const SignUp: React.FC = () => {
         }
     }, [success, error]);
 
-    // Map user data to options for the Select component
-
-
     const onSubmit: SubmitHandler<SignUpFormInputs> = async (data) => {
+        setIsSubmitting(true);
         const formData = new FormData();
-        formData.append('company', data.company);
-        formData.append('location', data.location);
-        formData.append('email', data.email);
-        formData.append('phone', data.phone);
-        formData.append('password', data.password);
-        formData.append('confirmPassword', data.confirmPassword);
-        formData.append('owner', data.owner);
-        if (data.profilePhoto && data.profilePhoto[0]) {
-            formData.append('profilePhoto', data.profilePhoto[0]);
-        } else {
-            console.error('No file selected or file length is zero');
-        }
+        Object.entries(data).forEach(([key, value]) => {
+            if (key === 'profilePhoto' && value[0]) {
+                formData.append(key, value[0]);
+            } else if (typeof value === 'string') {
+                formData.append(key, value);
+            }
+        });
 
         try {
             await addVendor(formData);
             reset();
         } catch (error) {
-            console.error('There was an error uploading the image:', error);
+            console.error('There was an error during sign up:', error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     const profilePhoto = watch('profilePhoto');
 
+    const carouselImages = [
+        "https://res.cloudinary.com/ddwet1dzj/image/upload/v1720541196/spex_jrkich.jpg",
+        "https://res.cloudinary.com/ddwet1dzj/image/upload/v1728939934/image_ghxi2u.jpg",
+        "https://res.cloudinary.com/ddwet1dzj/image/upload/v1720541343/hero-1_raxkds.jpg"
+    ];
 
-    const inputClass = 'w-full flex-1 appearance-none border border-gray-300 bg-white px-4 py-2 text-base text-gray-700 placeholder-gray-400 text-sm focus:outline-none';
-    const errorClass = 'text-red-500';
+    const inputVariants = {
+        focus: { scale: 1.02, transition: { type: 'spring', stiffness: 300 } },
+    };
+
+    const formFields = [
+        { name: 'company', label: 'Company Name', icon: UserIcon, placeholder: ' Boheneko Restaurant', fullWidth: true },
+        { name: 'location', label: 'Location', icon: MapPinIcon, placeholder: 'Adenta Muncipality' },
+        { name: 'email', label: 'Email Address', icon: MailIcon, placeholder: ' boheneko@gmail.com', type: 'email' },
+        { name: 'phone', label: 'Phone Number', icon: PhoneIcon, placeholder: '0244 000 000 / +233 244 000 000', type: 'tel' },
+        { name: 'owner', label: 'Owner Name', icon: UserIcon, placeholder: 'David Osei' },
+        { name: 'password', label: 'Password', icon: LockIcon, placeholder: '••••••••', type: 'password' },
+        { name: 'confirmPassword', label: 'Confirm Password', icon: LockIcon, placeholder: '••••••••', type: 'password' },
+    ];
 
     return (
-        <div className="flex flex-wrap">
-            <div className="flex w-full justify-center items-center min-h-screen flex-col md:w-1/3 px-5">
-                <div className="w-full text-center">
-                    <div className="flex justify-center ">
-                        <img
-                            alt="spex-africa"
-                            className="w-auto h-32 sm:h-20"
-                            src="https://res.cloudinary.com/ddwet1dzj/image/upload/v1722177650/spex_logo-03_png_dui5ur.png"
-                        />
-                    </div>
+        <div className="flex flex-col md:flex-row min-h-screen bg-gradient-to-br from-gray-100 to-gray-200">
+            <Card className="w-full md:w-1/3 overflow-y-auto p-4 md:p-6 bg-[#f0f4f8] shadow-2xl rounded-none">
+                <CardHeader className="text-center pb-4">
+                    <motion.img
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                        alt="spex-africa"
+                        className="w-auto h-20 md:h-36 mx-auto mb-4 animate-pulse"
+                        src="https://res.cloudinary.com/ddwet1dzj/image/upload/v1722177650/spex_logo-03_png_dui5ur.png"
+                    />
+                    <CardTitle className="text-3xl font-bold text-gray-800 mb-2">Join SPEX</CardTitle>
+                    <p className="text-gray-600 text-sm">Start your sustainable food journey today</p>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {formFields.map((field) => (
+                                <div key={field.name} className={`space-y-1 ${field.fullWidth ? 'md:col-span-2' : ''}`}>
+                                    <Label htmlFor={field.name} className="text-gray-700 text-sm font-medium">{field.label}</Label>
+                                    <motion.div className="relative" variants={inputVariants} whileFocus="focus">
+                                        <field.icon className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                                        <Input
+                                            id={field.name}
+                                            type={field.type || 'text'}
+                                            {...register(field.name as keyof SignUpFormInputs)}
+                                            placeholder={field.placeholder}
+                                            className="pl-8 pr-2 py-1 text-sm border-gray-300 bg-transparent focus:border-[#71bc44] focus:ring-[#71bc44] rounded-md placeholder:text-xs"
+                                        />
+                                        {errors[field.name as keyof SignUpFormInputs] && (
+                                            <p className="text-red-500 text-xs mt-1">{errors[field.name as keyof SignUpFormInputs]?.message as string}</p>
+                                        )}
+                                    </motion.div>
+                                </div>
+                            ))}
+                        </div>
 
-                    <p className=" text-gray-500 dark:text-gray-300 text-sm">
-                        Create a new account
-                    </p>
-                </div>
-                <div className="w-full flex flex-col justify-center  md:justify-start md:px-4 md:pt-0  ">
-                    <form className="flex flex-col gap-2  px-5" onSubmit={handleSubmit(onSubmit)}>
-                        <div className="flex flex-col pt-4">
-                            <input type="text" {...register('company')} className={inputClass}
-                                   placeholder="Vendor / Restaurant"/>
-                            {errors.company && <p className={errorClass}>{errors.company.message}</p>}
-                        </div>
-                        <div className="flex flex-col pt-4">
-                            <input type="text" {...register('location')} className={inputClass} placeholder="Location"/>
-                            {errors.location && <p className={errorClass}>{errors.location.message}</p>}
-                        </div>
-                        <div className="flex flex-col pt-4">
-                            <input type="email" {...register('email')} className={inputClass}
-                                   placeholder="john@gcb.org"/>
-                            {errors.email && <p className={errorClass}>{errors.email.message}</p>}
-                        </div>
-
-
-                        <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3  h-auto">
-                            <div className="w-full flex flex-col pt-4">
-                                <input type="text" {...register('owner')} className={inputClass} placeholder="Owner"/>
-                                {errors.owner && <p className={errorClass}>{errors.owner.message}</p>}
-                            </div>
-                            <div className="w-full flex flex-col pt-4">
-                                <input type="tel" {...register('phone')} className={inputClass} placeholder="Phone"/>
-                                {errors.phone && <p className={errorClass}>{errors.phone.message}</p>}
-                            </div>
-                        </div>
-                        <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3  h-auto">
-                            <div className="w-full flex flex-col pt-4">
-                                <input type="password" {...register('password')} className={inputClass}
-                                       placeholder="Password"/>
-                                {errors.password && <p className={errorClass}>{errors.password.message}</p>}
-                            </div>
-                            <div className="w-full flex flex-col pt-4">
-                                <input type="password" {...register('confirmPassword')} className={inputClass}
-                                       placeholder="Confirm Password"/>
-                                {errors.confirmPassword &&
-                                    <p className={errorClass}>{errors.confirmPassword.message}</p>}
-                            </div>
-                        </div>
-                        <div className="flex items-center space-x-6 pt-4">
+                        <div className="flex items-center space-x-4 bg-transparent p-3 rounded-lg">
                             <div className="shrink-0">
-                                <img id='preview_img'
-                                     className="h-10 w-10 object-cover rounded-full border-2 border-black"
-                                     src={profilePhoto?.length ? URL.createObjectURL(profilePhoto[0]) : 'https://res.cloudinary.com/ddwet1dzj/image/upload/v1722177650/spex_logo-03_png_dui5ur.png'}
-                                     alt="Current profile photo"/>
-                            </div>
-                            <label className="block">
-                                <span className="sr-only">Choose profile photo</span>
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={(e) => {
-                                        if (e.target.files && e.target.files.length > 0) {
-                                            setValue('profilePhoto', e.target.files);
-                                        }
-                                    }}
-                                    className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
+                                <img
+                                    className="h-16 w-16 object-cover rounded-full border-2 border-[#71bc44] shadow-lg"
+                                    src={profilePhoto?.length ? URL.createObjectURL(profilePhoto[0]) : 'https://res.cloudinary.com/ddwet1dzj/image/upload/v1722177650/spex_logo-03_png_dui5ur.png'}
+                                    alt="Profile photo preview"
                                 />
+                            </div>
+                            <label className="block flex-1">
+                                <span className="sr-only">Choose profile photo</span>
+                                <div className="relative">
+                                    <Input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => {
+                                            if (e.target.files && e.target.files.length > 0) {
+                                                setValue('profilePhoto', e.target.files);
+                                            }
+                                        }}
+                                        className="block w-full text-xs text-gray-500 bg-transparent file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#71bc44] file:text-white hover:file:bg-[#5fa439] transition-all duration-300"
+                                    />
+                                    <CameraIcon className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                                </div>
                             </label>
                         </div>
-                        <button type="submit"
-                                className="mt-5 w-[50%] bg-gray-900 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition">Sign
-                            Up
-                        </button>
+
+                        <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                        >
+                            <Button
+                                type="submit"
+                                className="w-full bg-[#71bc44] hover:bg-[#5fa439] text-white py-2 rounded-md transition-all duration-300 flex items-center justify-center space-x-2 text-sm"
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting ? (
+                                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                                ) : (
+                                    <>
+                                        <CheckCircleIcon size={18} />
+                                        <span>Create Account</span>
+                                    </>
+                                )}
+                            </Button>
+                        </motion.div>
                     </form>
-                    <div className="mt-5 w-full flex items-start justify-start px-5 text-sm">
-                        <p className="whitespace-nowrap text-gray-600 flex gap-4 w-full items-center ">
-                            Already have an account?
-                            <Link href={'/login'} className="underline-offset-4 font-semibold text-gray-900 underline">Sign
-                                in.</Link>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div className="pointer-events-none relative hidden h-screen select-none bg-black md:block md:w-2/3">
-                <div className="absolute bottom-0 z-10 px-8 text-white opacity-100">
-                    <p className="mb-8 text-3xl font-semibold leading-10">SPEX is a meal marketplace that leverages a
-                        web platform/app to connect food vendors with enterprises and users seeking sustainable food
-                        packaging.</p>
-                </div>
-                <img className="absolute top-0 h-full w-full object-cover opacity-40 -z-1" src="https://res.cloudinary.com/ddwet1dzj/image/upload/v1720541196/spex_jrkich.jpg" alt="Background" />
+                    <p className="mt-4 text-center text-xs text-gray-600">
+                        Already have an account?{' '}
+                        <Link href="/login" className="font-medium text-[#71bc44] hover:text-[#5fa439] transition-colors duration-300">
+                            Sign in
+                        </Link>
+                    </p>
+                </CardContent>
+            </Card>
+
+            <div className="hidden md:block w-2/3 relative overflow-hidden">
+                <Swiper
+                    modules={[Autoplay, EffectFade, Pagination]}
+                    spaceBetween={0}
+                    slidesPerView={1}
+                    effect="fade"
+                    autoplay={{
+                        delay: 5000,
+                        disableOnInteraction: false,
+                    }}
+                    pagination={{
+                        clickable: true,
+                    }}
+                    loop={true}
+                    className="h-full"
+                >
+                    {carouselImages.map((image, index) => (
+                        <SwiperSlide key={index} className="relative h-full">
+                            <img src={image} alt={`Slide ${index + 1}`} className="w-full h-full object-cover" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent flex flex-col justify-end p-8">
+                                <h2 className="text-white text-4xl font-bold mb-4">Elevate Your Food Business with SPEX</h2>
+                                <p className="text-white text-lg  font-light max-w-4xl">
+                                    Join our innovative platform and connect with enterprises seeking sustainable meal packaging solutions. Expand your market reach, increase your sales, and contribute to a more sustainable food industry.
+                                </p>
+                            </div>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
             </div>
         </div>
     );
