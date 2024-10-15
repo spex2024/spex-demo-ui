@@ -63,10 +63,10 @@ export default function Dashboard() {
             return Math.max(growth, 0);
         };
 
-        const orderGrowth = calculateGrowth(currentOrders, previousOrders?.length);
-        const completedGrowth = calculateGrowth(currentCompleted, previousCompleted?.length);
+        const orderGrowth = calculateGrowth(currentOrders, previousOrders?.length || 0);
+        const completedGrowth = calculateGrowth(currentCompleted, previousCompleted?.length || 0);
         const salesGrowth = calculateGrowth(currentSales, previousSales);
-        const agencyGrowth = calculateGrowth(currentAgencies, previousAgencies?.size); // Convert Set to size
+        const agencyGrowth = calculateGrowth(currentAgencies, previousAgencies?.size || 0); // Convert Set to size
 
         setTrends({
             orderGrowth,
