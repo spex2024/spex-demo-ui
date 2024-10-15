@@ -33,18 +33,18 @@ export default function Dashboard() {
         oneWeekAgo.setDate(now.getDate() - 7); // Subtract 7 days for a week
 
         // Filter orders from the last week
-        const previousOrders = vendor.orders.filter((order: { createdAt: string | number | Date }) => new Date(order.createdAt) >= oneWeekAgo);
-        const previousCompleted = previousOrders.filter((order: { status: string }) => order.status === 'completed'); // Adjust based on your status logic
+        const previousOrders = vendor.orders?.filter((order: { createdAt: string | number | Date }) => new Date(order.createdAt) >= oneWeekAgo);
+        const previousCompleted = previousOrders?.filter((order: { status: string }) => order.status === 'completed'); // Adjust based on your status logic
 
         // Updated total sales calculation
         const previousSales = previousOrders.reduce((total: number, order: { meals: Array<{ price: number }> }) => {
             // Calculate the total price of meals for the current order
-            const mealsTotal = order.meals.reduce((mealTotal: number, meal: { price: number }) => mealTotal + (meal.price || 0), 0);
+            const mealsTotal = order.meals?.reduce((mealTotal: number, meal: { price: number }) => mealTotal + (meal.price || 0), 0);
             return total + mealsTotal; // Accumulate to the total sales
         }, 0);
 
         // Calculate unique agencies based on agencyId from orders
-        const previousAgencies = new Set(previousOrders.map((order: { agencyId: any }) => order.agencyId)); // Assuming each order has an agencyId
+        const previousAgencies = new Set(previousOrders?.map((order: { agencyId: any }) => order.agencyId)); // Assuming each order has an agencyId
 
         // Get current order counts
         const currentOrders = vendor.orders.length || 0; // This would be the total count of current orders
@@ -63,10 +63,10 @@ export default function Dashboard() {
             return Math.max(growth, 0);
         };
 
-        const orderGrowth = calculateGrowth(currentOrders, previousOrders.length);
-        const completedGrowth = calculateGrowth(currentCompleted, previousCompleted.length);
+        const orderGrowth = calculateGrowth(currentOrders, previousOrders?.length);
+        const completedGrowth = calculateGrowth(currentCompleted, previousCompleted?.length);
         const salesGrowth = calculateGrowth(currentSales, previousSales);
-        const agencyGrowth = calculateGrowth(currentAgencies, previousAgencies.size); // Convert Set to size
+        const agencyGrowth = calculateGrowth(currentAgencies, previousAgencies?.size); // Convert Set to size
 
         setTrends({
             orderGrowth,
