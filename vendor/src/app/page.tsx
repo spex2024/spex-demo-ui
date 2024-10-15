@@ -37,7 +37,7 @@ export default function Dashboard() {
         const previousCompleted = previousOrders?.filter((order: { status: string }) => order.status === 'completed'); // Adjust based on your status logic
 
         // Updated total sales calculation
-        const previousSales = previousOrders.reduce((total: number, order: { meals: Array<{ price: number }> }) => {
+        const previousSales = previousOrders?.reduce((total: number, order: { meals: Array<{ price: number }> }) => {
             // Calculate the total price of meals for the current order
             const mealsTotal = order.meals?.reduce((mealTotal: number, meal: { price: number }) => mealTotal + (meal.price || 0), 0);
             return total + mealsTotal; // Accumulate to the total sales
@@ -47,7 +47,7 @@ export default function Dashboard() {
         const previousAgencies = new Set(previousOrders?.map((order: { agencyId: any }) => order.agencyId)); // Assuming each order has an agencyId
 
         // Get current order counts
-        const currentOrders = vendor.orders.length || 0; // This would be the total count of current orders
+        const currentOrders = vendor.orders?.length || 0; // This would be the total count of current orders
         const currentCompleted = vendor.completedOrders || 0; // This should be dynamically fetched from your state or API
         const currentSales = vendor.totalSales || 0; // This should be dynamically fetched from your state or API
         const currentAgencies = vendor.agencies?.length || 0; // Adjust as needed
