@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { motion } from "framer-motion"
-import { AtSign, Briefcase, MapPin, Phone, Lock } from 'lucide-react'
+import {AtSign, Briefcase, MapPin, Phone, Lock, Loader2, ArrowRight} from 'lucide-react'
 
 const schema = z.object({
     company: z.string().nonempty('Company is required'),
@@ -81,6 +81,7 @@ export default function Component() {
     })
 
     const { createAgency, success, error } = useAuth()
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (success) {
@@ -104,6 +105,7 @@ export default function Component() {
         }
 
         try {
+            setIsSubmitting(true)
             await createAgency(formData)
             reset()
         } catch (error) {
@@ -217,7 +219,16 @@ export default function Component() {
                                 </Label>
                             </div>
                             <Button type="submit" className="w-full bg-[#71bc44] hover:bg-[#5da438] text-white font-semibold py-2 px-4 rounded-md transition duration-200 ease-in-out transform hover:scale-105">
-                                Sign Up
+                                {isSubmitting ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Signing Up...
+                                    </>
+                                ) : (
+                                    <>
+                                        Sign Up <ArrowRight className="ml-2 h-4 w-4" />
+                                    </>
+                                )}
                             </Button>
                         </form>
                         <p className="mt-6 text-center text-sm text-gray-200">
