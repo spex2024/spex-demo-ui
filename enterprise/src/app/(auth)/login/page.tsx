@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -11,7 +11,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { Eye, EyeOff } from "lucide-react"
+import {ArrowRight, Eye, EyeOff, Loader2} from "lucide-react"
 
 const schema = z.object({
     email: z.string().email({ message: 'Invalid email address' }).nonempty('Email is required'),
@@ -27,6 +27,7 @@ export default function SignIn() {
 
     const { login, success, error } = useAuth()
     const [showPassword, setShowPassword] = React.useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (success) {
@@ -37,6 +38,7 @@ export default function SignIn() {
     }, [success, error])
 
     const onSubmit: SubmitHandler<SignInFormInputs> = async (data) => {
+        setIsSubmitting(true)
         await login(data)
     }
 
@@ -119,7 +121,16 @@ export default function SignIn() {
                                 Forgot password?
                             </Link>
                             <Button type="submit" className="w-full bg-[#71bc44] hover:bg-[#5fa438] text-white text-sm transition-all duration-300 ease-in-out transform hover:scale-105">
-                                Sign In
+                                {isSubmitting ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Signing In...
+                                    </>
+                                ) : (
+                                    <>
+                                        Sign In <ArrowRight className="ml-2 h-4 w-4" />
+                                    </>
+                                )}
                             </Button>
                         </form>
                     </CardContent>
