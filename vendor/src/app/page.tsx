@@ -65,7 +65,7 @@ export default function Dashboard() {
 
         const orderGrowth = calculateGrowth(currentOrders, previousOrders?.length || 0);
         const completedGrowth = calculateGrowth(currentCompleted, previousCompleted?.length || 0);
-        const salesGrowth = calculateGrowth(currentSales, previousSales);
+        const salesGrowth = calculateGrowth(currentSales, previousSales || 0);
         const agencyGrowth = calculateGrowth(currentAgencies, previousAgencies?.size || 0); // Convert Set to size
 
         setTrends({
