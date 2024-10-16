@@ -10,6 +10,7 @@ import {ClimbingBoxLoader} from "react-spinners";
 interface User {
     packs?: number;
     subscription?: string;
+    isActive?: boolean;
 }
 
 interface UserStore {
@@ -38,7 +39,7 @@ const App: React.FC = () => {
         </div>
     }
 
-    if (!user?.subscription) {
+    if (user?.isActive === false) {
         router.push('/subscribe');
         return null; // Prevent rendering the rest of the component after redirect
     }

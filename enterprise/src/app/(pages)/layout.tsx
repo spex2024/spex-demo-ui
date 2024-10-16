@@ -13,6 +13,7 @@ interface LayoutProps {
 interface User {
     packs?: number;
     subscription?: string;
+    isActive?: boolean;
 }
 
 interface UserStore {
@@ -41,7 +42,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>;
     }
 
-    if (!user?.subscription) {
+    if (user?.isActive === false) {
         router.push('/subscribe');
         return null; // Prevent rendering the rest of the component after redirect
     }
