@@ -256,7 +256,7 @@ export default function Dashboard() {
                                                     {agency.users.length} Users
                                                 </Badge>
                                                 <Badge variant="outline" className="text-xs bg-[#c7b730] text-black">
-                                                    {agency.users.reduce((total: any, user: any) => total + user.orders.length, 0)} Orders
+                                                    {agency.vendors.reduce((total: any, user: any) => total + user.orders.length, 0)} Orders
                                                 </Badge>
                                             </div>
                                         </div>
