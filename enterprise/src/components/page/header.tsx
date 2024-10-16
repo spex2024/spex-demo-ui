@@ -89,14 +89,14 @@ const Header: React.FC = () => {
 
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-background">
-            <div className="container max-w-6xl flex h-16 items-center">
+            <div className="container max-w-7xl flex h-16 items-center">
                 <nav className="hidden md:flex md:flex-1">
                     <Link href="/" className="mr-6 flex items-center space-x-2">
                         <Image
                             src="https://res.cloudinary.com/ddwet1dzj/image/upload/v1722177650/spex_logo-03_png_dui5ur.png"
                             alt="Spex Africa"
-                            width={70}
-                            height={70}
+                            width={90}
+                            height={90}
                             priority
                         />
                     </Link>
