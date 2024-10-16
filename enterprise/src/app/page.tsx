@@ -26,7 +26,11 @@ const App: React.FC = () => {
     useEffect(() => {
         const loadUser = async () => {
             await fetchUser();
-            setLoading(false); // Set loading to false after fetching user data
+
+            // Wait for an additional 5 seconds after fetching user data
+            setTimeout(() => {
+                setLoading(false); // Set loading to false after 5 seconds
+            }, 5000);
         };
 
         loadUser();
