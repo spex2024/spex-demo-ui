@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Menu, MapPin, Package2, UsersIcon, CreditCard, HelpCircle, LogOut, Settings } from 'lucide-react'
+import {Menu, MapPin, Package2, UsersIcon, CreditCard, HelpCircle, LogOut, Settings, KeySquareIcon} from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
@@ -89,7 +89,7 @@ const Header: React.FC = () => {
 
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-background">
-            <div className="container flex h-16 items-center">
+            <div className="container max-w-6xl flex h-16 items-center">
                 <nav className="hidden md:flex md:flex-1">
                     <Link href="/" className="mr-6 flex items-center space-x-2">
                         <Image
@@ -179,9 +179,9 @@ const Header: React.FC = () => {
                                 <Settings className="mr-2 h-4 w-4" />
                                 <span>Settings</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => router.push('/billing')}>
-                                <CreditCard className="mr-2 h-4 w-4" />
-                                <span>Billing</span>
+                            <DropdownMenuItem onSelect={() => router.push('/password/request')}>
+                                <KeySquareIcon className="mr-2 h-4 w-4" />
+                                <span>Password Reset</span>
                             </DropdownMenuItem>
                             <DropdownMenuItem onSelect={() => router.push('/support')}>
                                 <HelpCircle className="mr-2 h-4 w-4" />
