@@ -184,7 +184,7 @@ export default function Dashboard() {
                                                     {order.meals.slice(0, 1).map((meal: any) => (
                                                         <span key={meal._id} className="text-sm text-[#333] dark:text-[#e0e0e0]">{meal.main || 'N/A'}</span>
                                                     ))}
-                                                    {order.meals.length > 1 && (
+                                                    {order.meals?.length > 1 && (
                                                         <span className="text-xs text-[#666] dark:text-[#999]">+{order.meals.length - 1} more</span>
                                                     )}
                                                 </div>
@@ -238,7 +238,7 @@ export default function Dashboard() {
                     <Card className="col-span-full lg:col-span-3 bg-white dark:bg-[#2a2a2a] shadow-md hover:shadow-lg transition-all duration-300">
                         <CardHeader>
                             <CardTitle className="text-xl font-bold text-[#333] dark:text-[#e0e0e0]">Enterprise(s)</CardTitle>
-                            <CardDescription className="text-[#666] dark:text-[#999]">You have {agencies.length} associated enterprises.</CardDescription>
+                            <CardDescription className="text-[#666] dark:text-[#999]">You have {agencies?.length} associated enterprises.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
@@ -253,10 +253,10 @@ export default function Dashboard() {
                                             <p className="text-xs text-[#666] dark:text-[#999]">{agency.branch}</p>
                                             <div className="flex flex-wrap items-center gap-2 mt-2">
                                                 <Badge variant="outline" className="text-xs bg-[#71bc44] text-white">
-                                                    {agency.users.length} Users
+                                                    {agency.users?.length} Users
                                                 </Badge>
                                                 <Badge variant="outline" className="text-xs bg-[#c7b730] text-black">
-                                                    {agency.vendors.reduce((total: any, user: any) => total + user.orders.length, 0)} Orders
+                                                    {agency.vendors.reduce((total: any, user: any) => total + user.orders?.length, 0)} Orders
                                                 </Badge>
                                             </div>
                                         </div>
