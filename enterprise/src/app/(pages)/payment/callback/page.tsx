@@ -62,7 +62,7 @@ const PaymentCallback = () => {
     useEffect(() => {
         const redirectDelay = async () => {
             if (!loading && status) {
-                await new Promise(resolve => setTimeout(resolve, 2000)); // Delay for 2 seconds
+                await new Promise(resolve => setTimeout(resolve, 10000)); // Delay for 2 seconds
                 router.push('/'); // Redirect to the homepage after the delay
             }
         };
