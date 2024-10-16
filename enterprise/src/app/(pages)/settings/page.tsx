@@ -48,7 +48,7 @@ export default function AdvancedStylishProfile() {
             // Wait for an additional 5 seconds after fetching user data
             setTimeout(() => {
                 setLoading(false); // Set loading to false after 5 seconds
-            },2000);
+            },1000);
         };
 
         loadUser();
