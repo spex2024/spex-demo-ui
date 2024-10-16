@@ -45,7 +45,6 @@ const App: React.FC = () => {
 
     if (user?.isActive === false) {
         router.push('/subscribe');
-        return null; // Prevent rendering the rest of the component after redirect
     }
 
     return (

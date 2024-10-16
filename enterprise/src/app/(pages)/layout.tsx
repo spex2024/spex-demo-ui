@@ -50,7 +50,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
     if (user?.isActive === false) {
         router.push('/subscribe');
-        return null; // Prevent rendering the rest of the component after redirect
     }
 
     return (
