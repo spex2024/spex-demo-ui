@@ -39,14 +39,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         loadUser();
     }, [fetchUser]);
 
-    if (loading) {
-        // Show a loading indicator for 5 seconds
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <ClimbingBoxLoader color="#71bc44" size={20} />
-            </div>
-        );
-    }
+    // if (loading) {
+    //     // Show a loading indicator for 5 seconds
+    //     return (
+    //         <div className="flex items-center justify-center h-screen">
+    //             <ClimbingBoxLoader color="#71bc44" size={20} />
+    //         </div>
+    //     );
+    // }
 
     if (user?.isActive === false) {
         router.push('/subscribe');

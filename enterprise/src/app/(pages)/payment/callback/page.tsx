@@ -66,7 +66,7 @@ const PaymentCallback = () => {
         const redirectDelay = async () => {
             if (!loading && status) {
                 // Delay for 5 seconds to allow users to read the status message
-                await new Promise(resolve => setTimeout(resolve, 5000));
+                await new Promise(resolve => setTimeout(resolve, 2000));
                 router.push('/'); // Redirect to the homepage after the delay
             }
         };
