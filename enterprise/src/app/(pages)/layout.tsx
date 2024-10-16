@@ -33,7 +33,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             // Wait for an additional 5 seconds after fetching user data
             setTimeout(() => {
                 setLoading(false); // Set loading to false after 5 seconds
-            }, 5000);
+            }, 2000);
         };
 
         loadUser();
