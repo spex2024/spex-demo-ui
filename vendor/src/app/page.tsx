@@ -77,7 +77,7 @@ export default function Dashboard() {
         });
     };
 
-
+ console.log(trends)
     const now = new Date();
     const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
@@ -131,7 +131,7 @@ export default function Dashboard() {
                                         ) : (
                                             <TrendingDown className="h-3 w-3 text-[#c7b730]" />
                                         )}
-                                        {item.trend.toFixed(1)}% from last period
+                                        {item.trend.toFixed(2)}% from last period
                                     </p>
                                 </CardContent>
                             </Card>
