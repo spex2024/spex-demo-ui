@@ -181,7 +181,7 @@ export default function Dashboard() {
                                             </td>
                                             <td className="py-2 px-4">
                                                 <div className="flex flex-col gap-0.5">
-                                                    {order.meals.slice(0, 1).map((meal: any) => (
+                                                    {order.meals?.slice(0, 1).map((meal: any) => (
                                                         <span key={meal._id} className="text-sm text-[#333] dark:text-[#e0e0e0]">{meal.main || 'N/A'}</span>
                                                     ))}
                                                     {order.meals?.length > 1 && (
@@ -256,7 +256,7 @@ export default function Dashboard() {
                                                     {agency.users?.length} Users
                                                 </Badge>
                                                 <Badge variant="outline" className="text-xs bg-[#c7b730] text-black">
-                                                    {agency.vendors.reduce((total: any, user: any) => total + user.orders?.length, 0)} Orders
+                                                    {vendor.orders?.length || 0} Orders
                                                 </Badge>
                                             </div>
                                         </div>
