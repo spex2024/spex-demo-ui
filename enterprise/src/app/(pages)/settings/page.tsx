@@ -1,6 +1,6 @@
 "use client"
 
-import { useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Card, CardContent } from "@/components/ui/card"
 
@@ -9,7 +9,19 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { UserCircle, Info, FileText, LifeBuoy, Loader2, Check, Camera } from "lucide-react"
 
 import ProfileTab from "@/components/page/profile";
+import {useUserStore} from "@/store/profile";
+import {useRouter} from "next/navigation";
+import {ClimbingBoxLoader} from "react-spinners";
+interface User {
+    packs?: number;
+    subscription?: string;
+    isActive?: boolean;
+}
 
+interface UserStore {
+    user?: User;
+    fetchUser: () => Promise<void>;
+}
 
 
 const tabs = [
@@ -25,7 +37,35 @@ export default function AdvancedStylishProfile() {
     const [activeTab, setActiveTab] = useState(tabs[0].id)
 
 
+    const { user, fetchUser } = useUserStore() as UserStore;
+    const router = useRouter();
+    const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        const loadUser = async () => {
+            await fetchUser();
+
+            // Wait for an additional 5 seconds after fetching user data
+            setTimeout(() => {
+                setLoading(false); // Set loading to false after 5 seconds
+            },2000);
+        };
+
+        loadUser();
+    }, [fetchUser]);
+
+    if (loading) {
+        // Show a loading indicator for 5 seconds
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <ClimbingBoxLoader color="#71bc44" size={20} />
+            </div>
+        );
+    }
+
+    if (user?.isActive === false) {
+        router.push('/');
+    }
 
     const renderProfileContent = () => (
         <div className="space-y-6">
