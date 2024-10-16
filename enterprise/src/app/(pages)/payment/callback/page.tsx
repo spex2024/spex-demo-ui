@@ -42,7 +42,6 @@ const PaymentCallback = () => {
         // Delay the loading state for 5 seconds
         const loadingTimeout = setTimeout(async () => {
             await verifyPayment(); // Proceed with payment verification after the loading period
-            setLoading(false); // Set loading to false after the 5-second delay
         }, 5000);
 
         return () => clearTimeout(loadingTimeout); // Clean up the timeout when component unmounts
@@ -62,17 +61,27 @@ const PaymentCallback = () => {
         }
     };
 
-    // Add a delay for redirection
+    // Add a delay for redirection after setting the status
     useEffect(() => {
         const redirectDelay = async () => {
             if (!loading && status) {
-                // await new Promise(resolve => setTimeout(resolve, 5000)); // Delay for 2 seconds
+                // Delay for 5 seconds to allow users to read the status message
+                await new Promise(resolve => setTimeout(resolve, 5000));
                 router.push('/'); // Redirect to the homepage after the delay
             }
         };
 
         redirectDelay();
     }, [loading, status, router]);
+
+    // Set loading to false after the verification is complete
+    useEffect(() => {
+        const loadingTimeout = setTimeout(() => {
+            setLoading(false);
+        }, 5000); // Keep loading for 5 seconds
+
+        return () => clearTimeout(loadingTimeout); // Clean up the timeout when component unmounts
+    }, []);
 
     if (loading) {
         return (
