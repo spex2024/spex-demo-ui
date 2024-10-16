@@ -49,7 +49,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     // }
 
     if (user?.isActive === false) {
-        router.push('/subscribe');
+        router.push('/');
     }
 
     return (

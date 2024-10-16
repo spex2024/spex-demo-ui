@@ -10,7 +10,7 @@ const PaymentCallback = () => {
     const email = searchParams.get('email'); // Get the email from query params
     const plan = searchParams.get('plan'); // Get the plan from query params
     const amount = searchParams.get('amount'); // Get the amount from query params
-    const [loading, setLoading] = useState(true); // Initial loading state set to true
+    const [loading, setLoading] = useState(true);
     const [status, setStatus] = useState<string | null>(null); // Specify type as string or null
     const [paymentSent, setPaymentSent] = useState(false); // New flag to prevent double submission
     const baseurl = 'https://api.spexafrica.app';
@@ -35,16 +35,13 @@ const PaymentCallback = () => {
                 } catch (error) {
                     console.error('Payment verification error:', error);
                     setStatus('Error verifying payment');
+                } finally {
+                    setLoading(false);
                 }
             }
         };
 
-        // Delay the loading state for 5 seconds
-        const loadingTimeout = setTimeout(async () => {
-            await verifyPayment(); // Proceed with payment verification after the loading period
-        }, 5000);
-
-        return () => clearTimeout(loadingTimeout); // Clean up the timeout when component unmounts
+        verifyPayment();
     }, [reference, paymentSent]);
 
     const sendSelectedPlan = async () => {
@@ -56,17 +53,17 @@ const PaymentCallback = () => {
                 reference,
             });
             setPaymentSent(true); // Set the flag to prevent double submission
+            alert('Payment information sent to the backend.');
         } catch (error) {
             console.error('Error sending payment information:', error);
         }
     };
 
-    // Add a delay for redirection after setting the status
+    // Add a delay for redirection
     useEffect(() => {
         const redirectDelay = async () => {
             if (!loading && status) {
-                // Delay for 5 seconds to allow users to read the status message
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                await new Promise(resolve => setTimeout(resolve, 2000)); // Delay for 2 seconds
                 router.push('/'); // Redirect to the homepage after the delay
             }
         };
@@ -74,19 +71,10 @@ const PaymentCallback = () => {
         redirectDelay();
     }, [loading, status, router]);
 
-    // Set loading to false after the verification is complete
-    useEffect(() => {
-        const loadingTimeout = setTimeout(() => {
-            setLoading(false);
-        }, 5000); // Keep loading for 5 seconds
-
-        return () => clearTimeout(loadingTimeout); // Clean up the timeout when component unmounts
-    }, []);
-
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-                <div className="loader animate-spin border-8 border-t-8 border-blue-500 rounded-full w-16 h-16 mb-4"></div>
+                <div className="loader animate-spin border-8 border-t-8 border-blue-500  rounded-full w-16 h-16 mb-4"></div>
                 <p className="text-lg text-gray-700">Verifying payment...</p>
             </div>
         );
