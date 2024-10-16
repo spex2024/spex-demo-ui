@@ -30,7 +30,7 @@ const App: React.FC = () => {
             // Wait for an additional 5 seconds after fetching user data
             setTimeout(() => {
                 setLoading(false); // Set loading to false after 5 seconds
-            }, 5000);
+            }, 3000);
         };
 
         loadUser();
