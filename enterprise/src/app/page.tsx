@@ -45,6 +45,7 @@ const App: React.FC = () => {
 
     if (user?.isActive === false) {
         router.push('/subscribe');
+        return null;
     }
 
     return (
