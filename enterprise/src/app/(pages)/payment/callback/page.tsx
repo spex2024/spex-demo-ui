@@ -53,7 +53,6 @@ const PaymentCallback = () => {
                 reference,
             });
             setPaymentSent(true); // Set the flag to prevent double submission
-            alert('Payment information sent to the backend.');
         } catch (error) {
             console.error('Error sending payment information:', error);
         }
