@@ -7,6 +7,7 @@ type FoodItem = {
 type MainItem = {
     name: string;
     price: number;
+    description: string;
 };
 
 type ListDetailProps = {
@@ -16,85 +17,49 @@ type ListDetailProps = {
     main: MainItem;
 };
 
-const ListDetail: React.FC<ListDetailProps> = ({ protein, sauce, extra, main }) => {
+export default function ListDetail({ protein, sauce, extra, main }: ListDetailProps = {
+    protein: [],
+    sauce: [],
+    extra: [],
+    main: { name: 'Sample Meal', price: 10, description: 'Assorted fried rice with variety of flavour' }
+}) {
+    const options = [
+        { title: ' Option - 1', items: protein },
+        { title: 'Option - 2 ', items: sauce },
+        { title: 'Option - 3', items: extra },
+    ].filter(category => category.items && category.items.length > 0);
+
     return (
-        <div className={`bg-slate-400 w-[80%]`}>
-            <div className="w-full space-y-2 bg-white py-10 mx-auto rounded-lg flex flex-col items-start text-start ">
-                <dl className="flex flex-col sm:flex-row ">
-                    <dt className="min-w-20">
-                        <span className="block text-sm text-gray-900 dark:text-neutral-500 font-bold">Main:</span>
-                    </dt>
-                    <dd>
-                        <ul>
-                            <li className="flex flex-col items-center text-xs text-gray-800 dark:text-neutral-200">
-                                {main.name}
-                            </li>
-                        </ul>
-                    </dd>
-                </dl>
-                <dl className="flex flex-col sm:flex-row ">
-                    <dt className="min-w-20">
-                        <span className="block text-sm text-gray-900 dark:text-neutral-500 font-bold">Price:</span>
-                    </dt>
-                    <dd>
-                        <ul>
-                            <li className="inline-flex text-xs items-center  text-gray-800 dark:text-neutral-200 gap-x-2">
-                                ₵<p>{main.price}.00</p>
-                            </li>
-                        </ul>
-                    </dd>
-                </dl>
+        <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden max-h-[80vh] flex flex-col">
+            <div className="p-6 overflow-y-auto flex-grow">
+                <div className="mb-6">
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{main.name}</h2>
+                    <p className="text-lg font-semibold text-green-600 dark:text-green-400">
+                        ₵{main.price.toFixed(2)}
+                    </p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 mt-2">
+                        {main.description}
+                    </p>
+                </div>
 
-                    <dl className="flex flex-col lg:flex-row  gap-x-1" >
-                        <dt className="min-w-20">
-                            <span className="block text-sm text-gray-900 dark:text-neutral-500 font-bold">Protein:</span>
-                        </dt>
-                        {protein?.map((proteinItem) => (
-                        <dd key={proteinItem.name} className={`min-w-20`}>
-                            <ul>
-                                <li className="w-full flex  items-center text-xs text-gray-800 dark:text-neutral-200">
-                                    {proteinItem.name}
-                                </li>
-                            </ul>
-                        </dd>
+                {options.length > 0 && (
+                    <div className="space-y-4">
+                        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 sticky top-0 bg-white dark:bg-gray-800 py-2">Available Options</h3>
+                        {options.map((category, index) => (
+                            <div key={index} className="space-y-2">
+                                <h4 className="text-md font-medium text-gray-700 dark:text-gray-300">{category.title}</h4>
+                                <ul className="list-disc list-inside pl-4 space-y-1">
+                                    {category.items?.map((item, itemIndex) => (
+                                        <li key={itemIndex} className="text-sm text-gray-600 dark:text-gray-400">
+                                            {item.name}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         ))}
-                    </dl>
-
-
-                    <dl className="w-full flex-col lg:flex-row  gap-x-1" >
-                        <dt className="min-w-20">
-                            <span className="block text-sm text-gray-900 dark:text-neutral-500 font-bold">Sauce:</span>
-                        </dt>
-                        {sauce?.map((sauceItem) => (
-                        <dd  key={sauceItem.name} className={`min-w-20`}>
-                            <ul className={`w-full text-center`}>
-                                <li className="w-full flex items-center text-xs text-gray-800 dark:text-neutral-200">
-                                    {sauceItem.name}
-                                </li>
-                            </ul>
-                        </dd>
-                        ))}
-                    </dl>
-
-
-                    <dl className="w-full flex-col lg:flex-row    gap-x-1  " >
-                        <dt className="min-w-20">
-                            <span className="block text-sm text-gray-900 font-bold dark:text-neutral-500">Extra:</span>
-                        </dt>
-                        {extra?.map((extraItem) => (
-                        <dd key={extraItem.name} className={``}>
-                            <ul className={`w-full text-center `}>
-                                <li className="w-full flex  items-center justify-center h-full text-xs text-gray-800 dark:text-neutral-200 ">
-                                    {extraItem.name}
-                                </li>
-                            </ul>
-                        </dd>
-                        ))}
-                    </dl>
-
+                    </div>
+                )}
             </div>
         </div>
     );
-};
-
-export default ListDetail;
+}

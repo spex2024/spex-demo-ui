@@ -1,102 +1,75 @@
 'use client'
 
-import React, { useState, FormEvent } from 'react';
-import ListDetail from "@/components/main/list";
+import React, { useState, FormEvent } from 'react'
+import ListDetail from "@/components/main/list"
+import { X } from "lucide-react"
 
 interface ModalProps {
-    mealDetail: any; // You should define the type according to your mealDetail structure
-    setSelectedMeal: (meal: any | null) => void;
-    image : any;
-    name: string;
+    mealDetail: any
+    setSelectedMeal: (meal: any | null) => void
+    image: string
+    name: string
 }
 
-const Modal: React.FC<ModalProps> = ({ mealDetail, setSelectedMeal , image, name }) => {
-    const [isOpen, setIsOpen] = useState<boolean>(true);
+export default function MealDetails({ mealDetail, setSelectedMeal, image, name }: ModalProps = {
+    mealDetail: {},
+    setSelectedMeal: () => {},
+    image: '',
+    name: 'Sample Meal'
+}) {
+    const [isOpen, setIsOpen] = useState<boolean>(true)
 
-    const {protein, sauce , extras , main}= mealDetail
+    const { protein, sauce, extras, main } = mealDetail
 
     const handleSubmit = (event: FormEvent) => {
-        event.preventDefault();
-        setSelectedMeal(null);
-        // Handle form submission logic here
-    };
+        event.preventDefault()
+        setSelectedMeal(null)
+    }
 
+    const handleClose = () => {
+        setIsOpen(false)
+        setSelectedMeal(null)
+    }
 
-
-    if (!isOpen) return null;
+    if (!isOpen) return null
 
     return (
-        <div className="text-center">
-            <div
-                id="hs-ai-modal"
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-x-hidden overflow-y-auto"
-                role="dialog"
-                tabIndex={-1}
-                aria-labelledby="hs-ai-modal-label"
-                aria-modal="true"
-            >
-                <div className="relative w-full lg:max-w-3xl bg-white rounded-lg shadow-xl dark:bg-neutral-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+            <div className="relative w-full max-w-md bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all">
+                <button
+                    onClick={handleClose}
+                    className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                >
+                    <X className="h-6 w-6" />
+                </button>
+
+                <div className="relative h-40 bg-gradient-to-b from-green-500 to-green-300"  style={{ backgroundImage: `url(${mealDetail.imageUrl})`,backgroundSize:"cover", backgroundRepeat:"no-repeat", backgroundPosition:"center" }}>
                     <div
-                        className="relative  overflow-hidden min-h-72 bg-gray-900 bg-cover bg-center text-center rounded-t-lg dark:bg-neutral-950"
-                        style={{backgroundImage: `url(${mealDetail.imageUrl})`}}>
-                        <div className="absolute top-2 right-2">
-                            <button
-                                type="button"
-                                className="w-8 h-8 inline-flex  justify-center items-center rounded-full border border-transparent bg-black text-white hover:bg-white/20 focus:outline-none focus:bg-white/20"
-                                aria-label="Close"
-                                onClick={() => setSelectedMeal(null)}
-                            >
-                                <span className="sr-only">Close</span>
-                                <svg
-                                    className="w-4 h-4"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <path d="M18 6L6 18"/>
-                                    <path d="M6 6l12 12"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <figure className="absolute inset-x-0 bottom-0 -mb-px">
-                            <svg
-                                preserveAspectRatio="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 1920 100.1"
-                            >
-                                <path
-                                    fill="currentColor"
-                                    className="fill-white dark:fill-neutral-800"
-                                    d="M0,0c0,0,934.4,93.4,1920,0v100.1H0L0,0z"
-                                ></path>
-                            </svg>
-                        </figure>
+                        className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-24 h-24 rounded-full border-4 border-white shadow-lg bg-center bg-cover"
+                        style={{ backgroundImage: `url(${image})` }}
+                    ></div>
+                </div>
+
+                <div className="px-4 pt-16 pb-4 text-center">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{name}</h3>
+                    <div className="text-sm text-gray-500 mb-4">Delicious and nutritious!</div>
+                </div>
+
+                <div className="px-4 pb-4 max-h-60 overflow-y-auto">
+                    <div className="bg-green-50 rounded-lg p-4">
+                        <ListDetail protein={protein} sauce={sauce} extra={extras} main={main} />
                     </div>
+                </div>
 
-                    <div className="relative z-10 -mt-12">
-            <span
-                className="mx-auto flex justify-center items-center w-16 h-16 rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 bg-center bg-cover"
-                style={{backgroundImage: `url(${image})`}}>
-
-            </span>
-                    </div>
-
-
-                    <div className=" w-full  sm:p-7  flex flex-col items-center justify-center">
-                        <h1 className={`font-bold text-xl`}>{name}</h1>
-
-                        <ListDetail protein={protein} sauce={sauce} extra={extras} main={main}/>
-
-
-                    </div>
+                <div className="px-4 py-3 bg-gray-50 text-right">
+                    <button
+                        onClick={handleSubmit}
+                        className="px-4 py-2 bg-green-500 text-white rounded-full text-sm font-medium hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+                    >
+                        Close
+                    </button>
                 </div>
             </div>
         </div>
-    );
-};
-
-export default Modal;
+    )
+}

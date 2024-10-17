@@ -141,7 +141,7 @@ const Header: React.FC = () => {
                 <div className="flex flex-1 items-center justify-end space-x-4">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="secondary" size="icon" className="rounded-full">
+                            <Button variant="secondary" size="icon" className="rounded-full border-2 border-[]">
                                 {imageUrl ? (
                                     <Image
                                         src={imageUrl}
