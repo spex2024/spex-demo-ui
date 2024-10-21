@@ -1,42 +1,61 @@
-import { CheckCircle } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { CheckCircle, Users, MessageSquare } from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 
 export default function CustomPlan() {
     return (
-        <Card className="w-full max-w-3xl mx-auto mt-10">
-            <CardHeader>
+        <Card className="w-full max-w-5xl mx-auto mt-10 shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border-[#71bc44] border-t-4">
+            <CardHeader className="relative bg-gradient-to-r from-[#71bc44] to-[#71bc44]/80 text-white p-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <CardTitle className="text-2xl font-bold">Custom Plan</CardTitle>
-                        <CardDescription className={`text-xs`}>Tailored to your specific needs</CardDescription>
+                        <CardTitle className="text-3xl font-bold">Custom Plan</CardTitle>
+                        <CardDescription className="text-white/90 mt-2">Tailored for large enterprises</CardDescription>
                     </div>
-                    <Badge
-                        style={{ backgroundColor: '#22c55e', color: 'white' }}
-                        className="text-sm font-medium"
-                    >
+                    <Badge className="bg-white text-[#71bc44] text-sm font-medium">
                         Contact us
                     </Badge>
                 </div>
+                <div className="mt-4 space-y-2">
+                    <span className="text-2xl font-bold">Starts from 100 staff</span>
+                    <p className="text-white/90">Flexible pricing based on your needs</p>
+                </div>
             </CardHeader>
-            <CardContent>
-                <ul className="grid gap-4 sm:grid-cols-2">
+            <CardContent className="p-6">
+                <ul className="grid gap-4 sm:grid-cols-2 gap-6">
                     {[
                         "Customized pack quantities",
                         "Flexible payment plan",
-                        "Access to SPEX platform",
-                        "Pack customization",
+                        "Full access to SPEX platform",
+                        "Advanced pack customization",
                         "Choose up to 2 vendors",
-                        "Email and phone support",
-                        "Bring your own vendor or choose from our platform"
+                        "Email or phone support",
+                        "Bring your own vendor or choose from our platform",
                     ].map((feature, index) => (
-                        <li key={index} className="flex items-center gap-2 text-xs">
-                            <CheckCircle style={{ color: '#22c55e' }} className="h-5 w-5" />
+                        <li key={index} className="flex items-start gap-2 text-base">
+                            <CheckCircle className="h-5 w-5 text-[#71bc44] mt-1 flex-shrink-0" />
                             <span>{feature}</span>
                         </li>
                     ))}
                 </ul>
             </CardContent>
+            <CardFooter className="p-6 bg-[#71bc44]/10">
+                <div className="w-full space-y-4">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                            <Users className="h-5 w-5 text-[#71bc44]" />
+                            <span className="text-sm">100+ staff members</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <MessageSquare className="h-5 w-5 text-[#71bc44]" />
+                            <span className="text-sm">Dedicated account manager</span>
+                        </div>
+                    </div>
+                    <Button className="w-full bg-[#71bc44] hover:bg-[#71bc44]/90" size="lg">
+                        Contact Sales for Custom Quote
+                    </Button>
+                </div>
+            </CardFooter>
         </Card>
     )
 }

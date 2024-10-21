@@ -33,6 +33,8 @@ interface Plan {
     paymentType: 'one-time' | 'monthly'
     staff: number
     features: string[]
+    installmentDuration: number
+    monthlyPayment: number
 }
 
 interface UserStore {
@@ -40,7 +42,7 @@ interface UserStore {
     fetchUser: () => Promise<void>
 }
 
-export default function OneTime() {
+export default function ThreeMonths() {
     const {user, fetchUser} = useUserStore() as UserStore
     const {plans, fetchPlans} = usePlans()
     const [email, setEmail] = useState<string>('')
@@ -96,27 +98,25 @@ export default function OneTime() {
 
     const openModal = (plan: Plan) => {
         setSelectedPlan(plan)
-        const discountedPrice = plan.paymentType === 'one-time' ? plan.price * 0.9 : plan.price
-        setAmount(discountedPrice.toFixed(2))
+        setAmount(plan.monthlyPayment.toString())
     }
 
-    const calculatePricePerUser = (plan: Plan, discounted: boolean = false) => {
-        const price = discounted && plan.paymentType === 'one-time' ? plan.price * 0.9 : plan.price
-        return (price / plan.staff).toFixed(2)
+    const calculatePricePerUser = (plan: Plan) => {
+        return (plan.monthlyPayment / plan.staff).toFixed(2)
     }
 
-    const oneTimePlans = plans.filter((plan: { paymentType: string }) => plan.paymentType === 'one-time');
+    const installmentPlans = plans.filter((plan: { installmentDuration: number }) => plan.installmentDuration === 3);
 
-    const sortedPlans = [...oneTimePlans].sort((a, b) => {
-        if (a.paymentType === 'one-time' && b.paymentType !== 'one-time') return -1
-        if (a.paymentType !== 'one-time' && b.paymentType === 'one-time') return 1
+    const sortedPlans = [...installmentPlans].sort((a, b) => {
+        if (a.paymentType === 'installment' && b.paymentType !== 'installment') return -1
+        if (a.paymentType !== 'installment' && b.paymentType === 'installment') return 1
         return 0
     })
 
     return (
         <div className="container mx-auto px-4 py-16 bg-gradient-to-b from-background to-[#71bc44]/10">
-            <h1 className="text-4xl font-bold text-center mb-12 text-[#71bc44]">Choose Your One-Time Plan</h1>
-            {oneTimePlans.length > 0 ? (
+            <h1 className="text-4xl font-bold text-center mb-12 text-[#71bc44]">Choose Your 3-Months Plan</h1>
+            {installmentPlans.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {sortedPlans.map((plan, index) => (
                         <motion.div
@@ -130,21 +130,19 @@ export default function OneTime() {
                                 <CardHeader
                                     className="relative bg-gradient-to-r from-[#71bc44] to-[#71bc44]/80 text-white p-6">
                                     <Badge className="absolute top-4 right-4 bg-white text-[#71bc44]">
-                                        {plan.paymentType} payment
+                                        {`${plan.installmentDuration} months  ${plan.paymentType}`}
                                     </Badge>
                                     <CardTitle className="text-3xl mb-2">
                                         {plan.plan}
                                     </CardTitle>
                                     <CardDescription className="text-white/90">
                                         <div className="flex flex-col space-y-2 mt-2">
-                      <span className={`text-2xl font-bold ${plan.paymentType === "one-time" ? "line-through" : ""}`}>
-                        GHS {plan.price.toFixed(2)}
+                      <span className="text-2xl font-bold">
+                        GHS {plan.monthlyPayment} / month
                       </span>
-                                            {plan.paymentType === "one-time" && (
-                                                <span className="text-2xl font-bold">
-                          GHS {(plan.price * 0.9).toFixed(2)} <span className="text-sm font-normal">(10% off)</span>
-                        </span>
-                                            )}
+                                            <span className="text-lg">
+                        Total: GHS {plan.price}
+                      </span>
                                         </div>
                                     </CardDescription>
                                 </CardHeader>
@@ -154,16 +152,7 @@ export default function OneTime() {
                                             className="flex items-center justify-between p-3 bg-[#71bc44]/10 rounded-lg">
                                             <span className="text-sm font-medium">Price per user:</span>
                                             <span className="text-sm font-semibold text-[#71bc44]">
-                        {plan.paymentType === "one-time" ? (
-                            <>
-                            <span className="line-through text-muted-foreground mr-2">
-                              GHS {calculatePricePerUser(plan)}
-                            </span>
-                                GHS {calculatePricePerUser(plan, true)}
-                            </>
-                        ) : (
-                            <>GHS {calculatePricePerUser(plan)}</>
-                        )}
+                        GHS {calculatePricePerUser(plan)} / month
                       </span>
                                         </div>
                                         <div className="flex items-center space-x-2 text-sm">
@@ -189,7 +178,7 @@ export default function OneTime() {
                                         </DialogTrigger>
                                         <DialogContent className="sm:max-w-[425px]">
                                             <DialogHeader>
-                                                <DialogTitle>Confirm Your Payment</DialogTitle>
+                                                <DialogTitle>Confirm Your Subscription</DialogTitle>
                                                 <DialogDescription>
                                                     You are about to subscribe to the {selectedPlan?.plan} plan.
                                                 </DialogDescription>
@@ -206,7 +195,7 @@ export default function OneTime() {
                                                         />
                                                     </div>
                                                     <div className="space-y-2">
-                                                        <Label htmlFor="amount">Amount</Label>
+                                                        <Label htmlFor="amount">Monthly Payment</Label>
                                                         <Input
                                                             id="amount"
                                                             value={amount}
@@ -224,7 +213,7 @@ export default function OneTime() {
                                                         ) : (
                                                             <>
                                                                 <CreditCard className="mr-2 h-4 w-4" />
-                                                                Confirm Payment
+                                                                Confirm Subscription
                                                             </>
                                                         )}
                                                     </Button>
