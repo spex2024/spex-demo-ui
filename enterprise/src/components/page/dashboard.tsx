@@ -311,7 +311,7 @@ export default function Dashboard() {
                             <div className="text-2xl font-bold">{user?.emissionSaved || 0} <sub
                                 className="text-xs">(plastics)</sub>
                                 = {user?.gramPoints || 0}Kg <sub className="text-xs">(points)</sub></div>
-                            <div className=" w-[30%] flex justify-center gap-3 items-center text-xs text-muted-foreground ">
+                            <div className=" w-[30%] flex flex-col sm:flex-row justify-center gap-3 items-center text-xs text-muted-foreground ">
                                 <div className="flex flex-col items-start">
                                     <span>Plastics</span>
                                     <span> 4 </span>

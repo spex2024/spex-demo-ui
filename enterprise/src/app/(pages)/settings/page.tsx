@@ -1,16 +1,11 @@
 "use client"
 
-import { useState} from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Card, CardContent } from "@/components/ui/card"
-
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
-import { UserCircle, Info, FileText, LifeBuoy, Loader2, Check, Camera } from "lucide-react"
-
-import ProfileTab from "@/components/page/profile";
-
-
+import { UserCircle, Info, FileText, LifeBuoy } from "lucide-react"
+import ProfileTab from "@/components/page/profile"
 
 const tabs = [
     { id: 'profile', label: 'Profile', icon: UserCircle },
@@ -19,17 +14,12 @@ const tabs = [
     { id: 'support', label: 'Support', icon: LifeBuoy },
 ]
 
-
-
-export default function AdvancedStylishProfile() {
+export default function SimpleResponsiveProfile() {
     const [activeTab, setActiveTab] = useState(tabs[0].id)
-
-
-
 
     const renderProfileContent = () => (
         <div className="space-y-6">
-           <ProfileTab/>
+            <ProfileTab/>
         </div>
     )
 
@@ -94,18 +84,18 @@ export default function AdvancedStylishProfile() {
     )
 
     return (
-        <div className="container mx-auto py-10">
-            <Card className="w-full max-w-6xl mx-auto">
+        <div className="container mx-auto py-6 px-4">
+            <Card className="w-full max-w-4xl mx-auto">
                 <CardContent className="p-6">
                     <div className="flex flex-col space-y-6">
-                        <div className="flex justify-between items-center border-b pb-4">
-                            <h2 className="text-3xl font-bold">Settings</h2>
-                            <Tabs value={activeTab} onValueChange={setActiveTab}>
-                                <TabsList>
+                        <div className="flex flex-col sm:flex-row justify-between items-center border-b pb-4">
+                            <h2 className="text-2xl font-bold mb-4 sm:mb-0">Settings</h2>
+                            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
+                                <TabsList className="grid grid-cols-1 sm:flex sm:space-x-2">
                                     {tabs.map((tab) => (
-                                        <TabsTrigger key={tab.id} value={tab.id} className="flex items-center space-x-2">
+                                        <TabsTrigger key={tab.id} value={tab.id} className="flex items-center space-x-2 px-3 py-2">
                                             <tab.icon className="h-4 w-4" />
-                                            <span>{tab.label}</span>
+                                            <span className="hidden sm:inline">{tab.label}</span>
                                         </TabsTrigger>
                                     ))}
                                 </TabsList>
@@ -118,15 +108,12 @@ export default function AdvancedStylishProfile() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.2 }}
-                                className="min-h-[400px]"
+                                className="min-h-[400px] mt-20 sm:mt-5"
                             >
-
-                                    <>
-                                        {activeTab === 'profile' && renderProfileContent()}
-                                        {activeTab === 'about' && renderAboutContent()}
-                                        {activeTab === 'policy' && renderPolicyContent()}
-                                        {activeTab === 'support' && renderSupportContent()}
-                                    </>
+                                {activeTab === 'profile' && renderProfileContent()}
+                                {activeTab === 'about' && renderAboutContent()}
+                                {activeTab === 'policy' && renderPolicyContent()}
+                                {activeTab === 'support' && renderSupportContent()}
                             </motion.div>
                         </AnimatePresence>
                     </div>
