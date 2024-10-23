@@ -6,8 +6,8 @@ export default function Footer() {
 
     return (
         <footer className="bg-white text-gray-800 py-12 px-4">
-            <div className="container mx-auto">
-                <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 place-items-center">
+            <div className="w-full mx-auto px-10">
+                <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 place-items-center ">
                     <div>
                         <h2 className="text-2xl font-bold mb-4">Spex Africa</h2>
                         <p className="text-xs mb-4">

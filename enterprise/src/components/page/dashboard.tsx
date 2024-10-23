@@ -80,6 +80,7 @@ interface User {
     returnedPack?: number
     moneyBalance?: number
     subscription?:Subcription
+    gramPoints?:number
 }
 
 interface UserStore {
@@ -293,7 +294,7 @@ export default function Dashboard() {
                     />
                     <StatCard
                         title="Active Packs"
-                        value={currentActivePacks}
+                        value={user?.activePack}
                         icon={<Activity className="h-4 w-4"/>}
                         trend={trendActivePacks}
                     />
@@ -304,8 +305,23 @@ export default function Dashboard() {
                         trend={trendReturnedPacks}
                     />
                     <StatCard
-                        title="Emission Saved"
-                        value={`${currentEmissionSaved.toFixed(2)} kg`}
+                        title="Plastics Saved"
+                        value={<div className="w-full flex  justify-between">
+                            <div className="text-2xl font-bold">{user?.emissionSaved || 0} <sub
+                                className="text-xs">(plastics)</sub>
+                                = {user?.gramPoints || 0}Kg <sub className="text-xs">(points)</sub></div>
+                            <div className=" w-[30%] flex justify-center gap-3 items-center text-xs text-muted-foreground ">
+                                <div className="flex flex-col items-start">
+                                    <span>Plastics</span>
+                                    <span> 4 </span>
+                                </div>
+                                =
+                                <div className="flex flex-col items-end">
+                                    <span>Points</span>
+                                    <span>0.07kg</span>
+                                </div>
+                            </div>
+                        </div>}
                         icon={<Leaf className="h-4 w-4"/>}
                         trend={trendEmissionSaved}
                     />
