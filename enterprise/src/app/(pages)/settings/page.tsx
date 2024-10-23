@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -14,8 +14,23 @@ const tabs = [
     { id: 'support', label: 'Support', icon: LifeBuoy },
 ]
 
-export default function SimpleResponsiveProfile() {
+export default function HorizontalScrollTabsProfile() {
     const [activeTab, setActiveTab] = useState(tabs[0].id)
+    const tabsRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        const tabsElement = tabsRef.current
+        if (tabsElement) {
+            const activeTabElement = tabsElement.querySelector('[data-state="active"]')
+            if (activeTabElement) {
+                activeTabElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                    inline: 'center'
+                })
+            }
+        }
+    }, [activeTab])
 
     const renderProfileContent = () => (
         <div className="space-y-6">
@@ -88,18 +103,24 @@ export default function SimpleResponsiveProfile() {
             <Card className="w-full max-w-4xl mx-auto">
                 <CardContent className="p-6">
                     <div className="flex flex-col space-y-6">
-                        <div className="flex flex-col sm:flex-row justify-between items-center border-b pb-4">
-                            <h2 className="text-2xl font-bold mb-4 sm:mb-0">Settings</h2>
-                            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
-                                <TabsList className="grid grid-cols-1 sm:flex sm:space-x-2">
-                                    {tabs.map((tab) => (
-                                        <TabsTrigger key={tab.id} value={tab.id} className="flex items-center space-x-2 px-3 py-2">
-                                            <tab.icon className="h-4 w-4" />
-                                            <span className="hidden sm:inline">{tab.label}</span>
-                                        </TabsTrigger>
-                                    ))}
-                                </TabsList>
-                            </Tabs>
+                        <div className="flex flex-col space-y-4">
+                            <h2 className="text-2xl font-bold">Settings</h2>
+                            <div className="overflow-x-auto pb-2" ref={tabsRef}>
+                                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                                    <TabsList className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground w-auto">
+                                        {tabs.map((tab) => (
+                                            <TabsTrigger
+                                                key={tab.id}
+                                                value={tab.id}
+                                                className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+                                            >
+                                                <tab.icon className="h-4 w-4 mr-2" />
+                                                {tab.label}
+                                            </TabsTrigger>
+                                        ))}
+                                    </TabsList>
+                                </Tabs>
+                            </div>
                         </div>
                         <AnimatePresence mode="wait">
                             <motion.div
@@ -108,7 +129,7 @@ export default function SimpleResponsiveProfile() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.2 }}
-                                className="min-h-[400px] mt-20 sm:mt-5"
+                                className="min-h-[400px]"
                             >
                                 {activeTab === 'profile' && renderProfileContent()}
                                 {activeTab === 'about' && renderAboutContent()}
