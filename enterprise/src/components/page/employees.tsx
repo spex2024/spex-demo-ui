@@ -154,7 +154,7 @@ export default function EmployeeData() {
                                                     <TableCell>{userItem.points.toFixed(2)}</TableCell>
                                                     <TableCell className="hidden sm:table-cell">{userItem.code}</TableCell>
                                                     <TableCell>
-                                                        <Badge variant={userItem.isVerified ? "outline" : "secondary"}>
+                                                        <Badge className={userItem.isVerified ? "bg-green-500 text-white" : "bg-gray-400 text-white"}>
                                                             {userItem.isVerified ? "Active" : "Inactive"}
                                                         </Badge>
                                                     </TableCell>

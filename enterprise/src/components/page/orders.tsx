@@ -1,247 +1,219 @@
 'use client'
 
-import Image from "next/image";
-import {
-    CircleArrowLeft,
-    CircleArrowRight,
-    File,
-    ListFilter,
-} from "lucide-react";
-import { format } from "date-fns";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-} from "@/components/ui/tabs";
-import { useUserStore } from "@/store/profile";
-import { useEffect, useState } from "react";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { CircleArrowLeft, CircleArrowRight, File, ListFilter } from "lucide-react"
+import { format } from "date-fns"
+import { useEffect, useState } from "react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useUserStore } from "@/store/profile"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
-// Define types for user data and orders
 interface Meal {
-    main: string;
-    // Add other properties of Meal if necessary
+    main: string
+    protein?: string
+    sauce?: string
+    extras?: string
 }
 
 interface Vendor {
-    name: string;
-    // Add other properties of Vendor if necessary
+    name: string
 }
 
 interface Order {
-    orderId: string;
-    meals: Meal[]; // Changed to an array of Meal objects
-    quantity: number;
-    status: string;
-    createdAt: string; // Assuming ISO date string
-    user: { // Added user details
-        firstName: string;
-        lastName: string;
-    };
-    vendor: Vendor; // Added vendor details
+    orderId: string
+    meals: Meal[]
+    quantity: number
+    status: string
+    createdAt: string
+    user: {
+        firstName: string
+        lastName: string
+    }
+    vendor: Vendor
 }
 
 interface User {
-    imageUrl: string | StaticImport;
-    firstName: string;
-    lastName: string;
-    email: string;
-    points: number;
-    code: string;
-    createdAt: string; // Assuming ISO date string
-    phone: string;
-    isVerified: boolean;
-    orders: Order[]; // Orders associated with the user
+    imageUrl: string
+    firstName: string
+    lastName: string
+    email: string
+    points: number
+    code: string
+    createdAt: string
+    phone: string
+    isVerified: boolean
+    orders: Order[]
 }
 
 interface UserState {
     user: {
-        users: User[]; // Sub-array of users
-    } | null; // Handle possible null value
-    loading: boolean;
-    error: string | null;
-    fetchUser: () => Promise<void>;
+        users: User[]
+    } | null
+    loading: boolean
+    error: string | null
+    fetchUser: () => Promise<void>
 }
 
-export default function OrderData() {
-    const { user, fetchUser } = useUserStore() as UserState;
-    const [currentPage, setCurrentPage] = useState(1);
-    const ordersPerPage = 10;
+export default function Component() {
+    const { user, fetchUser } = useUserStore() as UserState
+    const [currentPage, setCurrentPage] = useState(1)
+    const ordersPerPage = 10
 
     useEffect(() => {
-        fetchUser();
-    }, [fetchUser]);
+        fetchUser()
+    }, [fetchUser])
 
-    // Handle case where user might be null
-    const users = user?.users || [];
+    const users = user?.users || []
+    const orders = users.flatMap(user => user.orders)
 
-    // Extract orders from users
-    const orders = users.flatMap(user => user.orders); // Flatten orders from all users
-
-    // Calculate the index of the first and last order on the current page
-    const indexOfLastOrder = currentPage * ordersPerPage;
-    const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-
-    // Slice orders to display only those on the current page
-    const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
-
-    // Calculate total number of pages
-    const totalPages = Math.ceil(orders.length / ordersPerPage);
+    const indexOfLastOrder = currentPage * ordersPerPage
+    const indexOfFirstOrder = indexOfLastOrder - ordersPerPage
+    const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder)
+    const totalPages = Math.ceil(orders.length / ordersPerPage)
 
     return (
-        <div className="flex min-h-screen w-full flex-col bg-muted/40">
-            <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-                <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-                    <Tabs defaultValue="all">
-                        <div className="flex items-center">
-                            <TabsList>
-                                <TabsTrigger value="all">All</TabsTrigger>
-                                <TabsTrigger value="active">Completed</TabsTrigger>
-                                <TabsTrigger value="draft">Cancelled</TabsTrigger>
-                            </TabsList>
-                            <div className="ml-auto flex items-center gap-2">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="outline" size="sm" className="h-7 gap-1">
-                                            <ListFilter className="h-3.5 w-3.5"/>
-                                            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                                Filter
-                                            </span>
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                                        <DropdownMenuSeparator/>
-                                        <DropdownMenuCheckboxItem>
-                                            Completed
-                                        </DropdownMenuCheckboxItem>
-                                        <DropdownMenuCheckboxItem>Cancelled</DropdownMenuCheckboxItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                                <Button size="sm" variant="outline" className="h-7 gap-1">
-                                    <File className="h-3.5 w-3.5"/>
-                                    <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                        Export
-                                    </span>
-                                </Button>
-                            </div>
+        <div className="min-h-screen w-full bg-gradient-to-b from-gray-50 to-white">
+            <div className="container mx-auto px-4 py-8">
+                <Tabs defaultValue="all" className="space-y-6">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+                        <TabsList className="bg-white shadow rounded-lg">
+                            <TabsTrigger value="all">All</TabsTrigger>
+                            <TabsTrigger value="completed">Completed</TabsTrigger>
+                            <TabsTrigger value="cancelled">Cancelled</TabsTrigger>
+                        </TabsList>
+                        <div className="flex flex-wrap items-center gap-2">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" size="sm" className="bg-white text-gray-700">
+                                        <ListFilter className="h-4 w-4 mr-2" />
+                                        Filter
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel>Filter by</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuCheckboxItem>Completed</DropdownMenuCheckboxItem>
+                                    <DropdownMenuCheckboxItem>Cancelled</DropdownMenuCheckboxItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                            <Button size="sm" variant="outline" className="bg-white text-gray-700">
+                                <File className="h-4 w-4 mr-2" />
+                                Export
+                            </Button>
                         </div>
-                        <TabsContent value="all">
-                            <Card x-chunk="dashboard-06-chunk-0">
-                                <CardHeader>
-                                    <CardTitle>Orders</CardTitle>
-                                    <CardDescription>
-                                        Manage your orders and view their information.
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead>
-                                                    <span>Vendor</span>
-                                                </TableHead>
-                                                <TableHead>Order ID</TableHead>
-                                                <TableHead>Meal</TableHead>
-                                                <TableHead>Quantity</TableHead>
-                                                <TableHead>Status</TableHead>
-                                                <TableHead>Ordered By</TableHead>
-                                                <TableHead className="hidden md:table-cell">
-                                                    Created At
-                                                </TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {currentOrders.map((order) => (
-                                                <TableRow key={order.orderId}>
-                                                    <TableCell className="hidden sm:table-cell">
-                                                        {order.vendor.name}  {/* Display vendor */}
-                                                    </TableCell>
-                                                    <TableCell className="font-medium">
-                                                        {order.orderId}
-                                                    </TableCell>
-                                                    {order.meals.map((meal, index) => (
-                                                        <TableCell key={index}>
-                                                            {meal.main}
-                                                        </TableCell>
-                                                    ))}
-                                                    <TableCell>{order.quantity}</TableCell>
-                                                    <TableCell>
-                                                        <Badge variant={order.status === 'Completed' ? "outline" : "secondary"}>
-                                                            {order.status}
-                                                        </Badge>
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {order.user.firstName} {order.user.lastName} {/* Display user */}
-                                                    </TableCell>
-                                                    <TableCell className="hidden md:table-cell">
-                                                        {format(new Date(order.createdAt), 'MMM d, yyyy')}
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </CardContent>
-                                <CardFooter className={`w-full`}>
-                                    <div className="w-full flex justify-between items-center">
-                                        <div className="text-xs text-muted-foreground">
-                                            Showing <strong>{indexOfFirstOrder + 1}-{Math.min(indexOfLastOrder, orders.length)}</strong> of <strong>{orders.length}</strong> orders
-                                        </div>
-                                        <div className="flex gap-4">
-                                            <Button
-                                                variant={'ghost'}
-                                                className={`flex gap-x-2 items-center`}
-                                                size="sm"
-                                                disabled={currentPage === 1}
-                                                onClick={() => setCurrentPage(prevPage => Math.max(prevPage - 1, 1))}
-                                            >
-                                                <CircleArrowLeft size={20} strokeWidth={1} /> Previous
-                                            </Button>
-                                            <Button
-                                                className={`flex gap-x-2 items-center justify-center`}
-                                                variant="ghost"
-                                                size="sm"
-                                                disabled={currentPage === totalPages}
-                                                onClick={() => setCurrentPage(prevPage => Math.min(prevPage + 1, totalPages))}
-                                            >
-                                                Next <CircleArrowRight size={20} strokeWidth={1} />
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </CardFooter>
-                            </Card>
-                        </TabsContent>
-                    </Tabs>
-                </main>
+                    </div>
+                    <TabsContent value="all">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Orders</CardTitle>
+                                <CardDescription>Manage your orders and view their information.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="overflow-x-auto">
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Vendor</TableHead>
+                                            <TableHead>Order ID</TableHead>
+                                            <TableHead>Meal</TableHead>
+                                            <TableHead>Quantity</TableHead>
+                                            <TableHead>Status</TableHead>
+                                            <TableHead>Ordered By</TableHead>
+                                            <TableHead className="hidden md:table-cell">Created At</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {currentOrders.map((order) => (
+                                            <TooltipProvider delayDuration={300} key={order.orderId}>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <TableRow  className="hover:bg-gray-100 transition-colors duration-200 cursor-pointer">
+                                                            <TableCell className="font-medium">{order.vendor.name}</TableCell>
+                                                            <TableCell>{order.orderId}</TableCell>
+                                                            <TableCell>{order.meals.map(meal => meal.main).join(", ")}</TableCell>
+                                                            <TableCell>{order.quantity}</TableCell>
+                                                            <TableCell>
+                                                                <Badge className={
+                                                                    `flex justify-center bg-transparent text-sm items-center hover:bg-transparent
+    ${order.status === 'completed' ? " text-green-500" :
+                                                                        order.status === 'pending' ? " text-yellow-500" :
+                                                                            " text-red-500"}`
+                                                                }>
+                                                                    {order.status}
+                                                                </Badge>
+
+                                                            </TableCell>
+                                                            <TableCell className="">
+                                                                {order.user.firstName} {order.user.lastName}
+                                                            </TableCell>
+                                                            <TableCell className="">
+                                                                {format(new Date(order.createdAt), 'MMM d, yyyy')}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent className="p-0 w-80">
+                                                        <div className="text-black bg-white rounded-lg shadow-lg overflow-hidden">
+                                                            <div className="px-4 py-3 bg-[#5da438] border-b border-white">
+                                                                <h3 className="font-semibold text-white">Order Details</h3>
+                                                            </div>
+                                                            <div className="p-4">
+                                                                <p><strong>Order ID:</strong> {order.orderId}</p>
+                                                                <p><strong>Vendor:</strong> {order.vendor.name}</p>
+                                                                <p><strong>Customer:</strong> {order.user.firstName} {order.user.lastName}</p>
+                                                                <p className="mt-2"><strong>Meals:</strong></p>
+                                                                {order.meals.map((meal, index) => (
+                                                                    <ul key={index} className="list-disc pl-5 mt-1">
+                                                                        <li>{meal.main}</li>
+                                                                        <li>{meal.protein}</li>
+                                                                        <li>{meal.sauce}</li>
+                                                                        <li>{meal.extras}</li>
+                                                                    </ul>
+                                                                ))}
+                                                                <p className="mt-2"><strong>Quantity:</strong> {order.quantity}</p>
+                                                                <p><strong>Status:</strong> {order.status}</p>
+                                                                <p><strong>Created At:</strong> {format(new Date(order.createdAt), 'MMM d, yyyy')}</p>
+                                                            </div>
+                                                        </div>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </CardContent>
+                            <CardFooter className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+                                <div className="text-sm text-muted-foreground">
+                                    Showing <strong>{indexOfFirstOrder + 1}-{Math.min(indexOfLastOrder, orders.length)}</strong> of <strong>{orders.length}</strong> orders
+                                </div>
+                                <div className="flex gap-2">
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        className="flex items-center"
+                                        disabled={currentPage === 1}
+                                        onClick={() => setCurrentPage(prevPage => Math.max(prevPage - 1, 1))}
+                                    >
+                                        <CircleArrowLeft size={16} className="mr-2" /> Previous
+                                    </Button>
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        className="flex items-center"
+                                        disabled={currentPage === totalPages}
+                                        onClick={() => setCurrentPage(prevPage => Math.min(prevPage + 1, totalPages))}
+                                    >
+                                        Next <CircleArrowRight size={16} className="ml-2" />
+                                    </Button>
+                                </div>
+                            </CardFooter>
+                        </Card>
+                    </TabsContent>
+                </Tabs>
             </div>
         </div>
-    );
+    )
 }

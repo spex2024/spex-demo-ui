@@ -8,14 +8,15 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area"
 import Header from '@/components/page/header'
 import { useUserStore } from '@/store/profile'
 import { AddVendor } from './add-vendor'
 import { VendorMetricsModal } from "@/components/page/vendor-metrics"
 
-import { subMonths, isSameMonth } from 'date-fns'
+import {subMonths, isSameMonth, format} from 'date-fns'
 import VendorFormDialog from "@/components/page/vendor-form";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 
 interface Meal {
     mealId: string
@@ -338,80 +339,125 @@ export default function Dashboard() {
                         trend={trendMoneyBalance}
                     />
                 </div>
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-7">
                     <Card className="col-span-4">
-                        <CardHeader>
-                            <CardTitle>Recent Orders</CardTitle>
-                            <CardDescription>You made {orders.length} orders this week.</CardDescription>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <div>
+                                <CardTitle className="text-base font-medium">Recent Orders</CardTitle>
+                                <CardDescription className="text-sm text-muted-foreground">
+                                    You made {orders.length} orders this week.
+                                </CardDescription>
+                            </div>
+                            <Button asChild variant="ghost" size="sm">
+                                <Link href="/orders" className="text-xs font-medium">
+                                    View all
+                                    <ArrowUpRight className="ml-1 h-3 w-3" />
+                                </Link>
+                            </Button>
                         </CardHeader>
                         <CardContent>
-                            <ScrollArea className="h-[400px]">
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Vendor</TableHead>
-                                            <TableHead>Meal</TableHead>
-                                            <TableHead>Status</TableHead>
-                                            <TableHead>Date</TableHead>
-                                            <TableHead>Amount</TableHead>
-                                            <TableHead>Ordered By</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {orders.map((order) => (
-                                            <TableRow key={order.orderId}>
-                                                <TableCell>
-                                                    <div className="flex items-center space-x-2">
-                                                        <Avatar className="h-8 w-8">
-                                                            <AvatarImage src={order.vendor.imageUrl}
-                                                                         alt={order.vendor.name}/>
-                                                            <AvatarFallback>{order.vendor.code}</AvatarFallback>
-                                                        </Avatar>
-                                                        <div>
-                                                            <div
-                                                                className="font-medium">{limitWords(order.vendor.name, 3)}</div>
-                                                            <div
-                                                                className="text-sm text-muted-foreground">{order.vendor.code}</div>
-                                                        </div>
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell>
-                                                    {order.meals.map((meal, index) => (
-                                                        <div key={meal.mealId} className="text-sm">
-                                                            {index > 0 && ', '}
-                                                            {limitWords(meal.main || 'N/A', 2)}
-                                                        </div>
-                                                    ))}
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Badge
-                                                        className={
-                                                            order.status === 'completed'
-                                                                ? 'bg-green-200 text-green-800'  // Lighter green with dark green text
-                                                                : order.status === 'pending'
-                                                                    ? 'bg-yellow-200 text-yellow-800' // Lighter yellow with dark yellow text
-                                                                    : order.status === 'cancelled' || order.status === 'failed'
-                                                                        ? 'bg-red-200 text-red-800'       // Lighter red with dark red text
-                                                                        : 'bg-gray-200 text-gray-800'     // Lighter gray with dark gray text for other statuses
-                                                        }
-                                                    >
-                                                        {order.status}
-                                                    </Badge>
-                                                </TableCell>
-                                                <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
-                                                <TableCell>GH₵ {order.meals.reduce((total, meal) => total + (meal.price || 0), 0).toFixed(2)}</TableCell>
-                                                <TableCell>
-                                                    <div
-                                                        className="font-medium">{`${order.user.firstName} ${order.user.lastName}`}</div>
-                                                </TableCell>
+                            <ScrollArea className="h-[400px] w-full">
+                                <div className="min-w-[800px]">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow className="hover:bg-transparent">
+                                                <TableHead className="w-[200px]">Vendor</TableHead>
+                                                <TableHead>Meal</TableHead>
+                                                <TableHead>Status</TableHead>
+                                                <TableHead>Date</TableHead>
+                                                <TableHead className="text-right">Amount</TableHead>
+                                                <TableHead>Ordered By</TableHead>
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {orders.map((order) => (
+                                                <TooltipProvider key={order.orderId}>
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <TableRow className="group cursor-pointer">
+                                                                <TableCell>
+                                                                    <div className="flex items-center space-x-3">
+                                                                        <Avatar className="h-9 w-9">
+                                                                            <AvatarImage src={order.vendor.imageUrl} alt={order.vendor.name} />
+                                                                            <AvatarFallback>{order.vendor.code}</AvatarFallback>
+                                                                        </Avatar>
+                                                                        <div>
+                                                                            <div className="font-medium">{limitWords(order.vendor.name, 2)}</div>
+                                                                            <div className="text-sm text-muted-foreground">{order.vendor.code}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                    {order.meals.map((meal, index) => (
+                                                                        <span key={meal.mealId} className="text-sm">
+                                      {index > 0 && ', '}
+                                                                            {limitWords(meal.main || 'N/A', 2)}
+                                    </span>
+                                                                    ))}
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                    <Badge
+                                                                        variant="outline"
+                                                                        className={`px-2 py-0.5 text-xs ${
+                                                                            order.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                                                                order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                                                                    'bg-red-100 text-red-800'
+                                                                        }`}
+                                                                    >
+                                                                        {order.status}
+                                                                    </Badge>
+                                                                </TableCell>
+                                                                <TableCell>{format(new Date(order.createdAt), 'MMM d, HH:mm')}</TableCell>
+                                                                <TableCell className="text-right">
+                                                                    GH₵ {order.meals.reduce((total, meal) => total + (meal.price || 0), 0).toFixed(2)}
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                    {`${order.user.firstName} ${order.user.lastName}`}
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent side="right" className="p-0 w-80">
+                                                            <div className={`w-full bg-green-500 p-2`}>
+                                                                <h4 className="w-full font-semibold text-base text-white">Order
+                                                                    Details</h4>
+                                                            </div>
+                                                            <div className="space-y-2 p-4">
+                                                                <p><strong>Order ID:</strong> {order.orderId}</p>
+                                                                <p><strong>Vendor:</strong> {order.vendor.name}</p>
+                                                                <p><strong>Meals:</strong></p>
+
+                                                                    {order.meals.map((meal) => (
+                                                                        <ul className="list-disc pl-5"  key={meal.mealId}>
+                                                                        <li>
+                                                                            {meal.main}
+                                                                        </li> <li>
+                                                                            {meal.protein}
+                                                                        </li> <li>
+                                                                            {meal.sauce}
+                                                                        </li><li>
+                                                                            {meal.extras}
+                                                                        </li>
+                                                                        </ul>
+                                                                    ))}
+
+                                                                <p><strong>Total:</strong> GH₵ {order.meals.reduce((total, meal) => total + (meal.price || 0), 0).toFixed(2)}</p>
+                                                                <p><strong>Status:</strong> {order.status}</p>
+                                                                <p><strong>Date:</strong> {format(new Date(order.createdAt), 'PPpp')}</p>
+                                                                <p><strong>Ordered By:</strong> {order.user.firstName} {order.user.lastName}</p>
+                                                            </div>
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                                <ScrollBar orientation="horizontal" />
                             </ScrollArea>
                         </CardContent>
                     </Card>
-                    <Card className="col-span-3">
+
+                    <Card className="sm:col-span-3 col-span-4">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0">
                             <CardTitle>Vendor Performance</CardTitle>
                             {vendors && vendors.length < 3 && (
