@@ -10,6 +10,7 @@ const PaymentCallback = () => {
     const email = searchParams.get('email'); // Get the email from query params
     const plan = searchParams.get('plan'); // Get the plan from query params
     const amount = searchParams.get('amount'); // Get the amount from query params
+    const installmentDuration= searchParams.get('installmentDuration'); // Get the amount from query params
     const [loading, setLoading] = useState(true);
     const [status, setStatus] = useState<string | null>(null); // Specify type as string or null
     const [paymentSent, setPaymentSent] = useState(false); // New flag to prevent double submission
@@ -47,11 +48,12 @@ const PaymentCallback = () => {
 
     const sendSelectedPlan = async () => {
         try {
-            await axios.post(`${baseurl}/api/paystack/record-payment`, {
+            await axios.post(`${baseurl}/api/paystack/record-installment`, {
                 email,
                 plan,
                 amount: parseFloat(amount || '0'), // Handle case where amount may be null
                 reference,
+                installmentDuration:parseInt(installmentDuration || '0'),
             });
             setPaymentSent(true); // Set the flag to prevent double submission
         } catch (error) {

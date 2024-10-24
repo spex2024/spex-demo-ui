@@ -69,10 +69,13 @@ export default function ThreeMonths() {
         e.preventDefault()
         setLoading(true)
 
-        const callbackUrl = new URL(`${window.location.origin}/payment/callback`)
+        const callbackUrl = new URL(`${window.location.origin}/payment/installment`)
         callbackUrl.searchParams.append('email', email)
         callbackUrl.searchParams.append('plan', selectedPlan?.plan || '')
         callbackUrl.searchParams.append('amount', amount)
+
+        // Append the installment duration from the selected plan
+        callbackUrl.searchParams.append('installmentDuration', selectedPlan?.installmentDuration.toString() || '')
 
         try {
             const {data} = await axios.post(`${baseurl}/api/paystack/initialize-payment`, {
@@ -180,7 +183,7 @@ export default function ThreeMonths() {
                                             <DialogHeader>
                                                 <DialogTitle>Confirm Your Subscription</DialogTitle>
                                                 <DialogDescription>
-                                                    You are about to subscribe to the {selectedPlan?.plan} plan.
+                                                    You are about to subscribe to the {selectedPlan?.plan} - {selectedPlan?.installmentDuration} months installment plan.
                                                 </DialogDescription>
                                             </DialogHeader>
                                             <form onSubmit={handlePayment} className="space-y-6">
