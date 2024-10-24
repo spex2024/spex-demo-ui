@@ -310,7 +310,7 @@ export default function Dashboard() {
                         value={<div className="w-full flex  justify-between">
                             <div className="text-2xl font-bold">{user?.emissionSaved || 0} <sub
                                 className="text-xs">(plastics)</sub>
-                                = {user?.gramPoints || 0}Kg <sub className="text-xs">(points)</sub></div>
+                                = {user?.gramPoints || 0}Kg </div>
                             <div className=" w-[30%] flex flex-col sm:flex-row justify-center gap-3 items-center text-xs text-muted-foreground ">
                                 <div className="flex flex-col items-start">
                                     <span>Plastics</span>
@@ -327,13 +327,13 @@ export default function Dashboard() {
                         trend={trendEmissionSaved}
                     />
                     <StatCard
-                        title="Carbon Points"
+                        title="Plastic Credit"
                         value={currentPoints.toFixed(2)}
                         icon={<Zap className="h-4 w-4"/>}
                         trend={trendPoints}
                     />
                     <StatCard
-                        title="Revenue"
+                        title="Earned Incentive"
                         value={`GH₵ ${currentMoneyBalance.toFixed(2)}`}
                         icon={<CreditCard className="h-4 w-4"/>}
                         trend={trendMoneyBalance}

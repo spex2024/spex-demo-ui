@@ -1,102 +1,138 @@
-'use client';
-import { useEffect, useState, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import axios from 'axios';
+'use client'
 
-const PaymentCallback = () => {
-    const router = useRouter();
-    const searchParams = useSearchParams(); // To get query parameters from the URL
-    const reference = searchParams.get('reference'); // Get the payment reference from query params
-    const email = searchParams.get('email'); // Get the email from query params
-    const plan = searchParams.get('plan'); // Get the plan from query params
-    const amount = searchParams.get('amount'); // Get the amount from query params
-    const installmentDuration= searchParams.get('installmentDuration'); // Get the amount from query params
-    const [loading, setLoading] = useState(true);
-    const [status, setStatus] = useState<string | null>(null); // Specify type as string or null
-    const [paymentSent, setPaymentSent] = useState(false); // New flag to prevent double submission
+import { useEffect, useState, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import axios from 'axios'
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { motion } from "framer-motion"
+import { CheckCircle, XCircle, Loader2 } from "lucide-react"
+
+const InstallmentPaymentCallback = () => {
+    const router = useRouter()
+    const searchParams = useSearchParams()
+    const reference = searchParams.get('reference')
+    const email = searchParams.get('email')
+    const plan = searchParams.get('plan')
+    const amount = searchParams.get('amount')
+    const installmentDuration = searchParams.get('installmentDuration')
+    const [loading, setLoading] = useState(true)
+    const [status, setStatus] = useState<string | null>(null)
+    const [paymentSent, setPaymentSent] = useState(false)
     const baseurl = process.env.NODE_ENV === 'development'
         ? 'http://localhost:8080'
-        : 'https://api.spexafrica.app';
+        : 'https://api.spexafrica.app'
 
     useEffect(() => {
         const verifyPayment = async () => {
             if (reference) {
                 try {
-                    const { data } = await axios.get(`${baseurl}/api/paystack/verify-payment/${reference}`);
-                    console.log('Payment Verification Response:', data);
+                    const { data } = await axios.get(`${baseurl}/api/paystack/verify-payment/${reference}`)
+                    console.log('Payment Verification Response:', data)
 
                     if (data.data.status === 'success') {
-                        setStatus('Payment successful');
+                        setStatus('Payment successful')
                         if (!paymentSent) {
-                            // Ensure we send the payment info only once
-                            await sendSelectedPlan();
+                            await sendSelectedPlan()
                         }
                     } else {
-                        setStatus('Payment failed');
+                        setStatus('Payment failed')
                     }
                 } catch (error) {
-                    console.error('Payment verification error:', error);
-                    setStatus('Error verifying payment');
+                    console.error('Payment verification error:', error)
+                    setStatus('Error verifying payment')
                 } finally {
-                    setLoading(false);
+                    setLoading(false)
                 }
             }
-        };
+        }
 
-        verifyPayment();
-    }, [reference, paymentSent]);
+        verifyPayment()
+    }, [reference, paymentSent])
 
     const sendSelectedPlan = async () => {
         try {
             await axios.post(`${baseurl}/api/paystack/record-installment`, {
                 email,
                 plan,
-                amount: parseFloat(amount || '0'), // Handle case where amount may be null
+                amount: parseFloat(amount || '0'),
                 reference,
-                installmentDuration:parseInt(installmentDuration || '0'),
-            });
-            setPaymentSent(true); // Set the flag to prevent double submission
+                installmentDuration: parseInt(installmentDuration || '0'),
+            })
+            setPaymentSent(true)
         } catch (error) {
-            console.error('Error sending payment information:', error);
+            console.error('Error sending payment information:', error)
         }
-    };
-
-    // Add a delay for redirection
-    useEffect(() => {
-        const redirectDelay = async () => {
-            if (!loading && status) {
-                await new Promise(resolve => setTimeout(resolve, 2000)); // Delay for 2 seconds
-                router.push('/'); // Redirect to the homepage after the delay
-            }
-        };
-
-        redirectDelay();
-    }, [loading, status, router]);
+    }
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-                <div className="loader animate-spin border-8 border-t-8 border-blue-500  rounded-full w-16 h-16 mb-4"></div>
-                <p className="text-lg text-gray-700">Verifying payment...</p>
-            </div>
-        );
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex flex-col items-center justify-center min-h-screen bg-[#71bc44]"
+            >
+                <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    className="mb-4"
+                >
+                    <Loader2 className="w-16 h-16 text-white" />
+                </motion.div>
+                <motion.p
+                    initial={{ y: -20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-lg text-white font-semibold"
+                >
+                    Verifying payment...
+                </motion.p>
+            </motion.div>
+        )
     }
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h1 className="text-2xl font-bold text-green-600">{status}</h1>
-            <p className="mt-2 text-lg text-gray-700">Redirecting you to the homepage...</p>
-        </div>
-    );
-};
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="flex flex-col items-center justify-center min-h-screen bg-[#71bc44]"
+        >
+            <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                className="bg-white p-8 rounded-lg shadow-lg text-center"
+            >
+                {status === 'Payment successful' ? (
+                    <CheckCircle className="w-16 h-16 text-[#71bc44] mx-auto mb-4" />
+                ) : (
+                    <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+                )}
+                <h1 className={`text-2xl font-bold mb-4 ${status === 'Payment successful' ? 'text-[#71bc44]' : 'text-red-600'}`}>
+                    {status}
+                </h1>
+                <Link href={'/'}>
+                    <Button className="mt-4 bg-[#71bc44] hover:bg-[#5da036] text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105">
+                        Back to Dashboard
+                    </Button>
+                </Link>
+            </motion.div>
+        </motion.div>
+    )
+}
 
-// Wrap the PaymentCallback component with Suspense
 const PaymentCallbackWrapper = () => {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <PaymentCallback />
+        <Suspense fallback={
+            <div className="flex items-center justify-center min-h-screen bg-[#71bc44]">
+                <Loader2 className="w-12 h-12 text-white animate-spin" />
+            </div>
+        }>
+            <InstallmentPaymentCallback />
         </Suspense>
-    );
-};
+    )
+}
 
-export default PaymentCallbackWrapper;
+export default PaymentCallbackWrapper

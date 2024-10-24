@@ -106,7 +106,7 @@ const AddMealForm= () => {
         formData.append('sauce', JSON.stringify(meal.sauce));
         formData.append('extras', JSON.stringify(meal.extras));
         if (file) {
-            formData.append('image', file); // Change field name to 'image'
+            formData.append('image', file);
         }
 
         formData.forEach((value, key) => {
