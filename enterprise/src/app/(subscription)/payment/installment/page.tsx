@@ -7,6 +7,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 import { CheckCircle, XCircle, Loader2 } from "lucide-react"
+import Verify from "@/components/page/verify";
 
 const InstallmentPaymentCallback = () => {
     const router = useRouter()
@@ -65,30 +66,12 @@ const InstallmentPaymentCallback = () => {
         }
     }
 
+
     if (loading) {
         return (
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="flex flex-col items-center justify-center min-h-screen bg-[#71bc44]"
-            >
-                <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                    className="mb-4"
-                >
-                    <Loader2 className="w-16 h-16 text-white" />
-                </motion.div>
-                <motion.p
-                    initial={{ y: -20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.2 }}
-                    className="text-lg text-white font-semibold"
-                >
-                    Verifying payment...
-                </motion.p>
-            </motion.div>
+          <>
+              <Verify/>
+          </>
         )
     }
 

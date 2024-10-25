@@ -2,6 +2,11 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
+import {motion} from "framer-motion";
+import {Loader2, XCircle} from "lucide-react";
+import Link from "next/link";
+import {Button} from "@/components/ui/button";
+import Verify from "@/components/page/verify";
 
 const PaymentCallback = () => {
     const router = useRouter();
@@ -58,43 +63,116 @@ const PaymentCallback = () => {
             console.error('Error sending payment information:', error);
         }
     };
-
-    // Add a delay for redirection
-    useEffect(() => {
-        const redirectDelay = async () => {
-            if (!loading && status) {
-                await new Promise(resolve => setTimeout(resolve, 2000)); // Delay for 2 seconds
-                router.push('/'); // Redirect to the homepage after the delay
+    const iconVariants = {
+        hidden: { scale: 0, opacity: 0 },
+        visible: {
+            scale: 1,
+            opacity: 1,
+            transition: {
+                type: "spring",
+                stiffness: 260,
+                damping: 20,
+                duration: 0.5
             }
-        };
+        }
+    }
 
-        redirectDelay();
-    }, [loading, status, router]);
+    const pathVariants = {
+        hidden: { pathLength: 0, opacity: 0 },
+        visible: {
+            pathLength: 1,
+            opacity: 1,
+            transition: {
+                duration: 1,
+                ease: "easeInOut",
+                delay: 0.5
+            }
+        }
+    }
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-                <div className="loader animate-spin border-8 border-t-8 border-blue-500  rounded-full w-16 h-16 mb-4"></div>
-                <p className="text-lg text-gray-700">Verifying payment...</p>
-            </div>
-        );
+          <>
+              <Verify/>
+          </>
+        )
     }
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h1 className="text-2xl font-bold text-green-600">{status}</h1>
-            <p className="mt-2 text-lg text-gray-700">Redirecting you to the homepage...</p>
-        </div>
-    );
-};
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex flex-col items-center justify-center min-h-screen bg-white"
+        >
+            <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="bg-[#f0f9eb] p-12 rounded-lg shadow-lg text-center max-w-md w-full"
+            >
+                <motion.div
+                    variants={iconVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="mb-6"
+                >
+                    {status === 'Payment successful' ? (
+                        <svg className="w-24 h-24 mx-auto" viewBox="0 0 24 24" fill="none" stroke="#71bc44" strokeWidth="2">
+                            <motion.path
+                                variants={pathVariants}
+                                d="M22 11.08V12a10 10 0 1 1-5.93-9.14"
+                            />
+                            <motion.path
+                                variants={pathVariants}
+                                d="M22 4L12 14.01l-3-3"
+                            />
+                        </svg>
+                    ) : (
+                        <XCircle className="w-24 h-24 text-red-500 mx-auto" />
+                    )}
+                </motion.div>
+                <motion.h1
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                    className={`text-3xl font-bold mb-4 ${status === 'Payment successful' ? 'text-[#71bc44]' : 'text-red-600'}`}
+                >
+                    {status}
+                </motion.h1>
+                <motion.p
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.3, duration: 0.5 }}
+                    className="text-gray-600 mb-8"
+                >
+                    {status === 'Payment successful'
+                        ? 'Your transaction has been processed successfully.'
+                        : 'There was an issue processing your payment. Please try again.'}
+                </motion.p>
+                <Link href={'/'}>
+                    <Button
+                        className="mt-4 bg-[#71bc44] hover:bg-[#5da036] text-white font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg"
+                    >
+                        Back to Dashboard
+                    </Button>
+                </Link>
+            </motion.div>
+        </motion.div>
+    )
 
-// Wrap the PaymentCallback component with Suspense
+}
+
 const PaymentCallbackWrapper = () => {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={
+            <div className="flex items-center justify-center min-h-screen bg-[#71bc44]">
+                <Loader2 className="w-12 h-12 text-white animate-spin" />
+            </div>
+        }>
             <PaymentCallback />
         </Suspense>
-    );
-};
+    )
+}
 
-export default PaymentCallbackWrapper;
+export default PaymentCallbackWrapper

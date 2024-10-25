@@ -73,14 +73,13 @@ export default function ThreeMonths() {
         callbackUrl.searchParams.append('email', email)
         callbackUrl.searchParams.append('plan', selectedPlan?.plan || '')
         callbackUrl.searchParams.append('amount', amount)
-
-        // Append the installment duration from the selected plan
         callbackUrl.searchParams.append('installmentDuration', selectedPlan?.installmentDuration.toString() || '')
 
         try {
-            const {data} = await axios.post(`${baseurl}/api/paystack/initialize-payment`, {
+            const { data } = await axios.post(`${baseurl}/api/paystack/initialize-payment`, {
                     email,
                     amount: parseFloat(amount),
+                    plan: selectedPlan?.plan, // Add the selected plan to the request
                     callback_url: callbackUrl.toString(),
                 },
                 {
@@ -88,16 +87,19 @@ export default function ThreeMonths() {
                         Authorization: `Bearer ${process.env.NEXT_PUBLIC_PAYSTACK_SECRET_KEY}`,
                         'Content-Type': 'application/json',
                     },
-                })
+                }
+            )
 
             const paystackUrl = data.data.authorization_url
             window.location.href = paystackUrl
         } catch (error) {
             console.error("Payment initialization error:", error)
+            setLoading(false) // Set loading to false if there's an error
         } finally {
             setLoading(false)
         }
     }
+
 
     const openModal = (plan: Plan) => {
         setSelectedPlan(plan)
