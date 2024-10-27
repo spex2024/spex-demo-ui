@@ -109,7 +109,7 @@ const PaymentCallback = () => {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="bg-[#f0f9eb] p-12 rounded-lg shadow-lg text-center max-w-md w-full"
+                className=" p-12 rounded-lg  text-center max-w-md w-full"
             >
                 <motion.div
                     variants={iconVariants}
