@@ -6,6 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import toast from 'react-hot-toast';
 import useAuth from "@/hook/auth";
+import {ArrowRight} from "lucide-react";
+import {Button} from "@/components/ui/button";
 
 
 const schema = z.object({
@@ -44,12 +46,11 @@ const ResendVerificationEmail: React.FC = () => {
                         <input type="email" {...register('email')} className={inputClass} placeholder="Email" />
                         {errors.email && <p className={errorClass}>{errors.email.message}</p>}
                     </div>
-                    <button
-                        type="submit"
-                        className="mt-5 w-full bg-gray-900 px-4 py-2 text-center text-base font-semibold text-white shadow-md transition"
-                    >
-                        Resend Verification Email
-                    </button>
+
+                    <Button type='submit' className="bg-red-500 hover:bg-red-600 text-white w-full group">
+                        Resend Verification
+                        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </Button>
                 </form>
             </div>
         </div>
