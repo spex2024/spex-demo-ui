@@ -21,6 +21,7 @@ import {
 import {Label} from "@/components/ui/label"
 import {Badge} from "@/components/ui/badge"
 import {Loader2, CheckCircle, Users, CreditCard} from "lucide-react"
+import {toast} from "react-hot-toast";
 
 interface User {
     email?: string
@@ -94,7 +95,7 @@ export default function ThreeMonths() {
             window.location.href = paystackUrl
         } catch (error) {
             console.error("Payment initialization error:", error)
-            setLoading(false) // Set loading to false if there's an error
+            toast.error(`${error}`)
         } finally {
             setLoading(false)
         }
