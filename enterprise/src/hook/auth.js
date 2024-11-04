@@ -13,7 +13,7 @@ const useAuth = () => {
 
     const baseurl = process.env.NODE_ENV === 'development'
         ? 'http://localhost:8080'
-        : 'https://api.spexafrica.app';
+        : 'https://api.spexafrica.app' || 'https://api.spexafrica.site' ;
 
 
     const handleRequest = async (request) => {
