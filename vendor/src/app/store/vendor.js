@@ -1,8 +1,12 @@
 import { create } from 'zustand';
 import axios from 'axios';
 
-// const baseurl = 'http://localhost:8080';
-const baseurl = 'https://api.spexafrica.app';
+const baseurl = process.env.NODE_ENV === 'development'
+    ? 'http://localhost:8080'
+    : (typeof window !== 'undefined' && window.location.hostname.endsWith('.site'))
+        ? 'https://api.spexafrica.site'
+        : 'https://api.spexafrica.app';
+
 
 const useVendorStore = create((set) => ({
     vendor: [],

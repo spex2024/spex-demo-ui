@@ -2,8 +2,12 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import axios from 'axios';
 
-// const baseurl = 'http://localhost:8080';
-const baseurl = 'https://api.spexafrica.app';
+const baseurl = process.env.NODE_ENV === 'development'
+    ? 'http://localhost:8080'
+    : (typeof window !== 'undefined' && window.location.hostname.endsWith('.site'))
+        ? 'https://api.spexafrica.site'
+        : 'https://api.spexafrica.app';
+
 
 const useUserStore = create(
     persist(
