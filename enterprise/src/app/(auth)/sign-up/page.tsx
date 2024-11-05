@@ -138,7 +138,7 @@ export default function Component() {
                             />
                         </motion.div>
                         <CardTitle className="text-2xl font-bold text-white mb-4">
-                            <TypewriterText text="Embrace Smart Pack!" />
+                            <h2>Embrace Smart Pack!</h2>
                         </CardTitle>
                         <p className="mt-2 text-sm text-gray-200 mb-5">
                             Be part of the sustainable food packaging revolution! Together, we can make a difference, one smart pack at a time.
