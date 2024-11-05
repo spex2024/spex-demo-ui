@@ -67,39 +67,50 @@ export default function ThreeMonths() {
         : 'https://api.spexafrica.app';
 
     const handlePayment = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        setLoading(true)
+        e.preventDefault();
+        setLoading(true);
 
-        const callbackUrl = new URL(`${window.location.origin}/payment/installment`)
-        callbackUrl.searchParams.append('email', email)
-        callbackUrl.searchParams.append('plan', selectedPlan?.plan || '')
-        callbackUrl.searchParams.append('amount', amount)
-        callbackUrl.searchParams.append('installmentDuration', selectedPlan?.installmentDuration.toString() || '')
+        const callbackUrl = new URL(`${window.location.origin}/payment/installment`);
+        callbackUrl.searchParams.append('email', email);
+        callbackUrl.searchParams.append('plan', selectedPlan?.plan || '');
+        callbackUrl.searchParams.append('amount', amount);
+        callbackUrl.searchParams.append('installmentDuration', selectedPlan?.installmentDuration.toString() || '');
 
         try {
             const { data } = await axios.post(`${baseurl}/api/paystack/initialize-payment`, {
-                    email,
-                    amount: parseFloat(amount),
-                    plan: selectedPlan?.plan, // Add the selected plan to the request
-                    callback_url: callbackUrl.toString(),
+                email,
+                amount: parseFloat(amount),
+                plan: selectedPlan?.plan,
+                callback_url: callbackUrl.toString(),
+            }, {
+                headers: {
+                    Authorization: `Bearer ${process.env.NEXT_PUBLIC_PAYSTACK_SECRET_KEY}`,
+                    'Content-Type': 'application/json',
                 },
-                {
-                    headers: {
-                        Authorization: `Bearer ${process.env.NEXT_PUBLIC_PAYSTACK_SECRET_KEY}`,
-                        'Content-Type': 'application/json',
-                    },
-                }
-            )
+            });
 
-            const paystackUrl = data.data.authorization_url
-            window.location.href = paystackUrl
-        } catch (error) {
-            console.error("Payment initialization error:", error)
-            toast.error(`${error}`)
+            const paystackUrl = data.data.authorization_url;
+            toast.success("Redirecting to Paystack for payment...");
+            window.location.href = paystackUrl;
+        } catch (error: any) {
+            // Network error or server error check
+            if (error.response) {
+                // Server responded with a status other than 2xx
+                const errorMessage = error.response.data.message || "An error occurred on the server.";
+                toast.error(`Payment error: ${errorMessage}`);
+            } else if (error.request) {
+                // The request was made but no response was received
+                toast.error("Network error: Unable to reach the server. Please check your connection.");
+            } else {
+                // An error occurred in setting up the request
+                toast.error("An unexpected error occurred.");
+            }
+            console.error("Payment initialization error:", error);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
+
 
 
     const openModal = (plan: Plan) => {
