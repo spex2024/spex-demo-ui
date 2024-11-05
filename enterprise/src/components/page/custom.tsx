@@ -53,16 +53,6 @@ export default function CustomPlan() {
             </CardContent>
             <CardFooter className="p-6 bg-[#71bc44]/5">
                 <div className="w-full space-y-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                            <Users className="h-5 w-5 text-[#71bc44]" />
-                            <span className="text-sm">100+ staff members</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <MessageSquare className="h-5 w-5 text-[#71bc44]" />
-                            <span className="text-sm">Dedicated account manager</span>
-                        </div>
-                    </div>
                     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                         <DialogTrigger asChild>
                             <Button className="w-full bg-[#71bc44] hover:bg-[#71bc44]/90 text-white" size="lg">
