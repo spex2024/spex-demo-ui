@@ -20,7 +20,10 @@ const PaymentCallback = () => {
     const [paymentSent, setPaymentSent] = useState(false); // New flag to prevent double submission
     const baseurl = process.env.NODE_ENV === 'development'
         ? 'http://localhost:8080'
-        : 'https://api.spexafrica.app' || 'https://api.spexafrica.site' ;
+        : (typeof window !== 'undefined' && window.location.hostname.endsWith('.site'))
+            ? 'https://api.spexafrica.site'
+            : 'https://api.spexafrica.app';
+
 
     useEffect(() => {
         const verifyPayment = async () => {

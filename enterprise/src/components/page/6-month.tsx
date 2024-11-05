@@ -61,10 +61,12 @@ export default function SixMonths() {
             setEmail(user.email)
         }
     }, [user])
-
     const baseurl = process.env.NODE_ENV === 'development'
         ? 'http://localhost:8080'
-        : 'https://api.spexafrica.app' || 'https://api.spexafrica.site' ;
+        : (typeof window !== 'undefined' && window.location.hostname.endsWith('.site'))
+            ? 'https://api.spexafrica.site'
+            : 'https://api.spexafrica.app';
+
 
     const handlePayment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
