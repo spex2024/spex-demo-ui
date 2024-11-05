@@ -30,7 +30,6 @@ export default function CustomPlan() {
                     </Badge>
                 </div>
                 <div className="mt-4 space-y-2">
-                    <span className="text-2xl font-bold">Starts from 100 staff</span>
                     <p className="text-white/90">Flexible pricing based on your needs</p>
                 </div>
             </CardHeader>
@@ -80,11 +79,11 @@ export default function CustomPlan() {
                             <div className="grid gap-4 py-4">
                                 <div className="flex items-center gap-4">
                                     <Phone className="h-5 w-5 text-[#71bc44]" />
-                                    <p className="text-sm font-medium">Phone: (233) 30 252 5384</p>
+                                    <p className="text-sm font-medium">Phone: (233) 302 515 422 | 530 091 529</p>
                                 </div>
                                 <div className="flex items-center gap-4">
                                     <Mail className="h-5 w-5 text-[#71bc44]" />
-                                    <p className="text-sm font-medium">Email: hello@spexafrica.app</p>
+                                    <p className="text-sm font-medium">Email: hello@spexafrica.app | sales@spexafrica.app</p>
                                 </div>
                             </div>
                             <div className="flex justify-end">
