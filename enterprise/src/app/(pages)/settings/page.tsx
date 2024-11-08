@@ -78,9 +78,11 @@ export default function HorizontalScrollTabsProfile() {
             <h3 className="text-lg font-semibold">Need Help?</h3>
             <p>Our support team is here to assist you with any questions or issues you may encounter.</p>
             <div className="bg-muted p-4 rounded-md">
-                <p><strong>Email:</strong> support@example.com</p>
-                <p><strong>Phone:</strong> +1 (555) 123-4567</p>
-                <p><strong>Hours:</strong> Monday - Friday, 9am - 5pm EST</p>
+                <address className="not-italic text-xs">
+                    <p>No. 5 Paterson Ave, Ritz, Adenta - Accra</p>
+                    <p className="mt-2">Phone: +233 302 515 422</p>
+                    <p>Email: hello@spexafrica.app</p>
+                </address>
             </div>
             <div className="mt-6">
                 <h4 className="text-md font-semibold mb-2">Frequently Asked Questions:</h4>

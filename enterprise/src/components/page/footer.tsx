@@ -56,7 +56,7 @@ export default function Footer() {
                         <address className="not-italic text-xs">
                             <p>Paterson Ave</p>
                             <p>Ritz, Adenta - Accra</p>
-                            <p className="mt-2">Phone: (233) 30 252 5384</p>
+                            <p className="mt-2">Phone: +233 302 515 422</p>
                             <p>Email: hello@spexafrica.app</p>
                         </address>
                     </div>
