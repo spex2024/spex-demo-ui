@@ -314,7 +314,7 @@ export default function Dashboard() {
                     Extra options:
                   </span>
                                                                                 <div className="flex flex-wrap gap-1 ml-6">
-                                                                                    {meal.extra.map((extra) => (
+                                                                                    {meal.extras.map((extra) => (
                                                                                         <Badge key={extra} variant="outline" className="text-xs bg-[#71bc44] bg-opacity-10 text-[#71bc44] border-[#71bc44]">
                                                                                             {extra}
                                                                                         </Badge>

@@ -140,10 +140,10 @@ export default function Component() {
                                                 <Tooltip>
                                                     <TooltipTrigger asChild>
                                                         <TableRow  className="hover:bg-gray-100 transition-colors duration-200 cursor-pointer">
-                                                            <TableCell className="font-medium">{order.vendor.name}</TableCell>
-                                                            <TableCell>{order.orderId}</TableCell>
-                                                            <TableCell>{order.mealName}</TableCell>
-                                                            <TableCell>{order.quantity}</TableCell>
+                                                            <TableCell className="font-medium">{order?.vendor?.name}</TableCell>
+                                                            <TableCell>{order?.orderId}</TableCell>
+                                                            <TableCell>{order?.mealName}</TableCell>
+                                                            <TableCell>{order?.quantity}</TableCell>
                                                             <TableCell>
                                                                 <Badge className={
                                                                     `flex justify-center bg-transparent text-sm items-center hover:bg-transparent
@@ -151,7 +151,7 @@ export default function Component() {
                                                                         order.status === 'pending' ? " text-yellow-500" :
                                                                             " text-red-500"}`
                                                                 }>
-                                                                    {order.status}
+                                                                    {order?.status}
                                                                 </Badge>
 
                                                             </TableCell>
@@ -159,7 +159,7 @@ export default function Component() {
                                                                 {order.user.firstName} {order.user.lastName}
                                                             </TableCell>
                                                             <TableCell className="">
-                                                                {format(new Date(order.createdAt), 'MMM d, yyyy')}
+                                                                {format(new Date(order?.createdAt), 'MMM d, yyyy')}
                                                             </TableCell>
                                                         </TableRow>
                                                     </TooltipTrigger>
