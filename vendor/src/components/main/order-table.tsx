@@ -54,6 +54,8 @@ interface OrderTableProps {
     orders: Order[]
 }
 
+// @ts-ignore
+// @ts-ignore
 const styles = StyleSheet.create({
     page: {
         padding: 30,
@@ -91,7 +93,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     table: {
-        display: 'table',
+        display?: 'table',
         width: 'auto',
         marginTop: 10,
         borderStyle: 'solid',

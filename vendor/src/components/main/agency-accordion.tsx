@@ -9,24 +9,27 @@ import OrderTable from "@/components/main/order-table";
 
 // Define TypeScript interface for the order structure
 interface Order {
-    orderId: string;
-    status: string;
-    createdAt: string;
-    meals: {
-        mealId: string;
-        price: number;
-        main: string;
-    }[];
-    orderedBy: string;
-    imageUrl: string;
-    quantity: number;
+    orderId: string
+    status: string
+    createdAt: string
+    mealName: string
+    price: number
+    orderedBy: string
+    imageUrl: string
+    quantity: number
     user: {
-        firstName: string;
-        lastName: string;
-    };
+        firstName: string
+        lastName: string
+    }
     vendor: {
-        name: string;
-    };
+        name: string
+    }
+    selectedDays: string[]
+    options: {
+        protein: string
+        sauce: string
+        extras: string[]
+    }
 }
 
 // Define TypeScript interface for props
