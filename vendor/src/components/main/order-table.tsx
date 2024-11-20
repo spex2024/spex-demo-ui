@@ -56,162 +56,154 @@ interface OrderTableProps {
 
 // @ts-ignore
 // @ts-ignore
-const styles = StyleSheet.create({
-    page: {
-        padding: 30,
-        backgroundColor: '#ffffff',
-        fontFamily: 'Roboto',
-    },
-    header: {
-        flexDirection: 'row',
-        marginBottom: 20,
-        backgroundColor: '#c7b72f',
-        padding: 20,
-        borderRadius: 5,
-    },
-    headerLeft: {
-        flex: 1,
-    },
-    headerRight: {
-        flex: 1,
-        alignItems: 'flex-end',
-    },
-    logo: {
-        width: 120,
-        height: 50,
-        marginBottom: 10,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 10,
-        color: '#ffffff',
-    },
-    subtitle: {
-        fontSize: 14,
-        color: '#ffffff',
-        marginBottom: 5,
-    },
-    table: {
-        display: 'table',
-        width: 'auto',
-        marginTop: 10,
-        borderStyle: 'solid',
-        borderColor: '#c7b72f',
-        borderWidth: 1,
-        borderRightWidth: 0,
-        borderBottomWidth: 0,
-    },
-    tableRow: {
-        flexDirection: 'row',
-        borderBottomColor: '#c7b72f',
-        borderBottomWidth: 1,
-        alignItems: 'center',
-        minHeight: 30,
-    },
-    tableColHeader: {
-        width: '12.5%',
-        borderRightColor: '#c7b72f',
-        borderRightWidth: 1,
-        paddingVertical: 5,
-        paddingHorizontal: 8,
-        backgroundColor: '#71bc44',
-    },
-    tableCol: {
-        width: '12.5%',
-        borderRightColor: '#c7b72f',
-        borderRightWidth: 1,
-        paddingVertical: 5,
-        paddingHorizontal: 8,
-    },
-    tableCellHeader: {
-        fontSize: 10,
-        fontWeight: 'bold',
-        color: '#ffffff',
-    },
-    tableCell: {
-        fontSize: 9,
-        color: '#000000',
-    },
-    footer: {
-        position: 'absolute',
-        bottom: 30,
-        left: 30,
-        right: 30,
-        textAlign: 'center',
-        color: '#71bc44',
-        fontSize: 10,
-    },
-})
+// const style = {
+//     page: {
+//         padding: 30,
+//         backgroundColor: '#ffffff',
+//         fontFamily: 'Roboto, sans-serif',
+//     },
+//     header: {
+//         display: 'flex',
+//         flexDirection: 'row',
+//         marginBottom: 20,
+//         backgroundColor: '#c7b72f',
+//         padding: 20,
+//         borderRadius: 5,
+//     },
+//     headerLeft: {
+//         flex: 1,
+//     },
+//     headerRight: {
+//         flex: 1,
+//         textAlign: 'right',
+//     },
+//     logo: {
+//         width: 120,
+//         height: 50,
+//         marginBottom: 10,
+//     },
+//     title: {
+//         fontSize: 24,
+//         fontWeight: 'bold',
+//         marginBottom: 10,
+//         color: '#ffffff',
+//     },
+//     subtitle: {
+//         fontSize: 14,
+//         color: '#ffffff',
+//         marginBottom: 5,
+//     },
+//     table: {
+//         display: 'table',
+//         width: '100%',
+//         marginTop: 10,
+//         borderCollapse: 'collapse',
+//     },
+//     tableRow: {
+//         display: 'table-row',
+//     },
+//     tableColHeader: {
+//         display: 'table-cell',
+//         width: '12.5%',
+//         border: '1px solid #c7b72f',
+//         padding: '5px 8px',
+//         backgroundColor: '#71bc44',
+//     },
+//     tableCol: {
+//         display: 'table-cell',
+//         width: '12.5%',
+//         border: '1px solid #c7b72f',
+//         padding: '5px 8px',
+//     },
+//     tableCellHeader: {
+//         fontSize: 10,
+//         fontWeight: 'bold',
+//         color: '#ffffff',
+//     },
+//     tableCell: {
+//         fontSize: 9,
+//         color: '#000000',
+//     },
+//     footer: {
+//         position: 'absolute',
+//         bottom: 30,
+//         left: 30,
+//         right: 30,
+//         textAlign: 'center',
+//         color: '#71bc44',
+//         fontSize: 10,
+//     },
+// };
 
-const OrdersPDF = ({ orders, title }: { orders: Order[], title: string }) => (
-    <Document>
-        <Page size="A4" orientation="landscape" style={styles.page}>
-            <View style={styles.header}>
-                <View style={styles.headerLeft}>
-                    <PDFImage
-                        src="https://res.cloudinary.com/ddwet1dzj/image/upload/v1725381965/agency/pt0mh01xihsonzctxyhl.png"
-                        style={styles.logo}
-                    />
-                    <Text style={styles.title}>{title}</Text>
-                    <Text style={styles.subtitle}>Generated on {format(new Date(), 'MMMM dd, yyyy')}</Text>
-                </View>
-                <View style={styles.headerRight}>
-                    <Text style={styles.subtitle}>Spex Africa</Text>
-                    <Text style={styles.subtitle}>No. 5 Paterson Ave</Text>
-                    <Text style={styles.subtitle}>Ritz, Adenta - Accra</Text>
-                    <Text style={styles.subtitle}>+233 302 515 422</Text>
-                    <Text style={styles.subtitle}>hello@spexafrica.app</Text>
-                </View>
-            </View>
 
-            <View style={styles.table}>
-                <View style={styles.tableRow}>
-                    {['Order ID', 'Meal', 'Customer', 'Status', 'Total', 'Protein', 'Sauce', 'Extras', 'Selected Days'].map((header) => (
-                        <View style={styles.tableColHeader} key={header}>
-                            <Text style={styles.tableCellHeader}>{header}</Text>
-                        </View>
-                    ))}
-                </View>
-                {orders.map((order) => (
-                    <View style={styles.tableRow} key={order.orderId}>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>{order.orderId}</Text>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>{order.mealName}</Text>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>{`${order.user.firstName} ${order.user.lastName}`}</Text>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>{order.status}</Text>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>GH₵{order.price * order.quantity}</Text>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>{order.options.protein}</Text>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>{order.options.sauce}</Text>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>{order.options.extras.join(', ')}</Text>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>{order.selectedDays.join(', ')}</Text>
-                        </View>
-                    </View>
-                ))}
-            </View>
-
-            <Text style={styles.footer}>
-                This is an automatically generated report. For any queries, please contact our support team.
-            </Text>
-        </Page>
-    </Document>
-)
+// const OrdersPDF = ({ orders, title }: { orders: Order[], title: string }) => (
+//     <Document>
+//         <Page size="A4" orientation="landscape" style={styles.page}>
+//             <View style={styles.header}>
+//                 <View style={styles.headerLeft}>
+//                     <PDFImage
+//                         src="https://res.cloudinary.com/ddwet1dzj/image/upload/v1725381965/agency/pt0mh01xihsonzctxyhl.png"
+//                         style={styles.logo}
+//                     />
+//                     <Text style={styles.title}>{title}</Text>
+//                     <Text style={styles.subtitle}>Generated on {format(new Date(), 'MMMM dd, yyyy')}</Text>
+//                 </View>
+//                 <View style={styles.headerRight}>
+//                     <Text style={styles.subtitle}>Spex Africa</Text>
+//                     <Text style={styles.subtitle}>No. 5 Paterson Ave</Text>
+//                     <Text style={styles.subtitle}>Ritz, Adenta - Accra</Text>
+//                     <Text style={styles.subtitle}>+233 302 515 422</Text>
+//                     <Text style={styles.subtitle}>hello@spexafrica.app</Text>
+//                 </View>
+//             </View>
+//
+//             <View style={styles.table}>
+//                 <View style={styles.tableRow}>
+//                     {['Order ID', 'Meal', 'Customer', 'Status', 'Total', 'Protein', 'Sauce', 'Extras', 'Selected Days'].map((header) => (
+//                         <View style={styles.tableColHeader} key={header}>
+//                             <Text style={styles.tableCellHeader}>{header}</Text>
+//                         </View>
+//                     ))}
+//                 </View>
+//                 {orders.map((order) => (
+//                     <View style={styles.tableRow} key={order.orderId}>
+//                         <View style={styles.tableCol}>
+//                             <Text style={styles.tableCell}>{order.orderId}</Text>
+//                         </View>
+//                         <View style={styles.tableCol}>
+//                             <Text style={styles.tableCell}>{order.mealName}</Text>
+//                         </View>
+//                         <View style={styles.tableCol}>
+//                             <Text style={styles.tableCell}>{`${order.user.firstName} ${order.user.lastName}`}</Text>
+//                         </View>
+//                         <View style={styles.tableCol}>
+//                             <Text style={styles.tableCell}>{order.status}</Text>
+//                         </View>
+//                         <View style={styles.tableCol}>
+//                             <Text style={styles.tableCell}>GH₵{order.price * order.quantity}</Text>
+//                         </View>
+//                         <View style={styles.tableCol}>
+//                             <Text style={styles.tableCell}>{order.options.protein}</Text>
+//                         </View>
+//                         <View style={styles.tableCol}>
+//                             <Text style={styles.tableCell}>{order.options.sauce}</Text>
+//                         </View>
+//                         <View style={styles.tableCol}>
+//                             <Text style={styles.tableCell}>{order.options.extras.join(', ')}</Text>
+//                         </View>
+//                         <View style={styles.tableCol}>
+//                             <Text style={styles.tableCell}>{order.selectedDays.join(', ')}</Text>
+//                         </View>
+//                     </View>
+//                 ))}
+//             </View>
+//
+//             <Text style={styles.footer}>
+//                 This is an automatically generated report. For any queries, please contact our support team.
+//             </Text>
+//         </Page>
+//     </Document>
+// )
 
 export default function OrderTable({ orders }: OrderTableProps) {
     const [currentPage, setCurrentPage] = useState<number>(1)
@@ -239,22 +231,22 @@ export default function OrderTable({ orders }: OrderTableProps) {
     const totalPages = Math.ceil(filteredOrders.length / rowsPerPage)
     const paginatedOrders = filteredOrders.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
 
-    const generatePDF = async (ordersToDownload: Order[], title: string) => {
-        setIsGeneratingPDF(true)
-        try {
-            const blob = await pdf(<OrdersPDF orders={ordersToDownload} title={title} />).toBlob()
-            const url = URL.createObjectURL(blob)
-            const link = document.createElement('a')
-            link.href = url
-            link.download = `${title.toLowerCase().replace(' ', '_')}.pdf`
-            link.click()
-            URL.revokeObjectURL(url)
-        } catch (error) {
-            console.error('Error generating PDF:', error)
-        } finally {
-            setIsGeneratingPDF(false)
-        }
-    }
+    // const generatePDF = async (ordersToDownload: Order[], title: string) => {
+    //     setIsGeneratingPDF(true)
+    //     try {
+    //         const blob = await pdf(<OrdersPDF orders={ordersToDownload} title={title} />).toBlob()
+    //         const url = URL.createObjectURL(blob)
+    //         const link = document.createElement('a')
+    //         link.href = url
+    //         link.download = `${title.toLowerCase().replace(' ', '_')}.pdf`
+    //         link.click()
+    //         URL.revokeObjectURL(url)
+    //     } catch (error) {
+    //         console.error('Error generating PDF:', error)
+    //     } finally {
+    //         setIsGeneratingPDF(false)
+    //     }
+    // }
 
     const generateExcel = () => {
         setIsGeneratingExcel(true)
@@ -336,7 +328,7 @@ export default function OrderTable({ orders }: OrderTableProps) {
                                     size="sm"
                                     variant="outline"
                                     className="h-7 gap-1"
-                                    onClick={() => generatePDF(filteredOrders, `${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Orders`)}
+                                    // onClick={() => generatePDF(filteredOrders, `${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Orders`)}
                                     disabled={isGeneratingPDF}
                                 >
                                     <FileDown className="h-3.5 w-3.5" />
