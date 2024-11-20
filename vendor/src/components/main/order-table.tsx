@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     table: {
-        display?: 'table',
+        display: 'table',
         width: 'auto',
         marginTop: 10,
         borderStyle: 'solid',
