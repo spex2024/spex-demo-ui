@@ -26,7 +26,15 @@ interface Vendor {
 
 interface Order {
     orderId: string
-    meals: Meal[]
+    mealName: string
+    price: number
+    mealId:string
+    selectedDays:[]
+    options:{
+        protein : string
+        sauce:string
+        extras:[]
+    }
     quantity: number
     status: string
     createdAt: string
@@ -134,7 +142,7 @@ export default function Component() {
                                                         <TableRow  className="hover:bg-gray-100 transition-colors duration-200 cursor-pointer">
                                                             <TableCell className="font-medium">{order.vendor.name}</TableCell>
                                                             <TableCell>{order.orderId}</TableCell>
-                                                            <TableCell>{order.meals.map(meal => meal.main).join(", ")}</TableCell>
+                                                            <TableCell>{order.mealName}</TableCell>
                                                             <TableCell>{order.quantity}</TableCell>
                                                             <TableCell>
                                                                 <Badge className={
@@ -163,19 +171,33 @@ export default function Component() {
                                                             <div className="p-4">
                                                                 <p><strong>Order ID:</strong> {order.orderId}</p>
                                                                 <p><strong>Vendor:</strong> {order.vendor.name}</p>
-                                                                <p><strong>Customer:</strong> {order.user.firstName} {order.user.lastName}</p>
+                                                                <p>
+                                                                    <strong>Customer:</strong> {order.user.firstName} {order.user.lastName}
+                                                                </p>
                                                                 <p className="mt-2"><strong>Meals:</strong></p>
-                                                                {order.meals.map((meal, index) => (
-                                                                    <ul key={index} className="list-disc pl-5 mt-1">
-                                                                        <li>{meal.main}</li>
-                                                                        <li>{meal.protein}</li>
-                                                                        <li>{meal.sauce}</li>
-                                                                        <li>{meal.extras}</li>
-                                                                    </ul>
-                                                                ))}
-                                                                <p className="mt-2"><strong>Quantity:</strong> {order.quantity}</p>
+
+                                                                <ul key={order.mealId} className="list-disc pl-5 mt-1">
+                                                                    <li>{order.mealName}</li>
+                                                                    <li>{order.options.protein}</li>
+                                                                    <li>{order.options.sauce}</li>
+                                                                    {order.options.extras.map((extra, index) => (
+                                                                        <li key={index}>{extra}</li>
+                                                                    ))}
+
+                                                                </ul>
+                                                                <p className="mt-2"><strong>Selected Days:</strong></p>
+                                                                <ul className="list-disc pl-5 mt-1">
+                                                                    {order.selectedDays.map((day, index) => (
+                                                                        <li key={index}>{day}</li>
+                                                                    ))}
+                                                                </ul>
+
+                                                                <p className="mt-2">
+                                                                    <strong>Quantity:</strong> {order.quantity}</p>
                                                                 <p><strong>Status:</strong> {order.status}</p>
-                                                                <p><strong>Created At:</strong> {format(new Date(order.createdAt), 'MMM d, yyyy')}</p>
+                                                                <p><strong>Created
+                                                                    At:</strong> {format(new Date(order.createdAt), 'MMM d, yyyy')}
+                                                                </p>
                                                             </div>
                                                         </div>
                                                     </TooltipContent>

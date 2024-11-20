@@ -10,8 +10,7 @@ import {
     Edit2Icon,
     EyeIcon,
     Trash,
-    Search,
-    Plus,
+    Plus, DollarSignIcon, UtensilsIcon, ClockIcon, CalendarIcon, Droplet, Sandwich, ShoppingCartIcon,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -33,21 +32,22 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Input } from "@/components/ui/input"
-import MealDetail from "@/components/main/detail"
 import useVendorStore from "@/app/store/vendor"
 import useAuth from "@/app/hook/auth"
 import { toast } from "@/components/ui/use-toast"
-import Link from "next/link";
+import Link from "next/link"
 
 type Meal = {
     _id: string
     imageUrl: string
-    main: {
-        name: string
-        price: number
-    }
+    mealName: string
+    price: number
+    protein:string[]
+    sauce:string[]
+    extras:string[]
     createdAt: string
+    description?: string
+    daysAvailable: string[]
 }
 
 type Order = {
@@ -61,7 +61,6 @@ export default function Dashboard() {
     const { vendor, fetchVendor } = useVendorStore()
     const meals: Meal[] = vendor?.meals || []
     const orders: Order[] = vendor?.orders || []
-    const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null)
     const [currentPage, setCurrentPage] = useState(1)
     const [searchTerm, setSearchTerm] = useState("")
     const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all')
@@ -89,21 +88,21 @@ export default function Dashboard() {
     }, [success, error])
 
     const filteredMeals = meals.filter(meal =>
-        meal.main.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (filterStatus === 'all' || (filterStatus === 'active' && meal.main.price > 0) || (filterStatus === 'inactive' && meal.main.price === 0))
+        meal.mealName?.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        (filterStatus === 'all' || (filterStatus === 'active' && meal.price > 0) || (filterStatus === 'inactive' && meal.price === 0))
     )
 
     const totalPages = Math.ceil(filteredMeals.length / ITEMS_PER_PAGE)
     const currentMeals = filteredMeals.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
 
     const calculateTotalOrders = (mealId: string): number => {
-        return orders.flatMap(order => order.meals).filter(meal => meal.mealId === mealId).length
+        return orders.flatMap(order => order.meals).filter(meal => meal?.mealId === mealId).length
     }
 
     const calculateTotalSales = (mealId: string): number => {
         return orders
             .flatMap(order => order.meals)
-            .filter(meal => meal.mealId === mealId)
+            .filter(meal => meal?.mealId === mealId)
             .reduce((acc, meal) => acc + meal.price, 0)
     }
 
@@ -177,10 +176,9 @@ export default function Dashboard() {
                                 </CardDescription>
                             </div>
                             <Link href={'/pages/add-meal'}>
-
-                            <Button className="bg-green-500 hover:bg-green-600 text-white">
-                                <Plus className="mr-2 h-4 w-4" /> Add Meal
-                            </Button>
+                                <Button className="bg-green-500 hover:bg-green-600 text-white">
+                                    <Plus className="mr-2 h-4 w-4" /> Add Meal
+                                </Button>
                             </Link>
                         </CardHeader>
                         <CardContent className="p-0">
@@ -189,7 +187,7 @@ export default function Dashboard() {
                                     <thead className="bg-gray-50 dark:bg-gray-700">
                                     <tr>
                                         <th className="p-3 text-left font-medium text-gray-600 dark:text-gray-200">Meal</th>
-                                        <th className="p-3 text-left font-medium text-gray-600 dark:text-gray-200 hidden">Status</th>
+                                        <th className="p-3 text-left font-medium text-gray-600 dark:text-gray-200 ">Status</th>
                                         <th className="p-3 text-left font-medium text-gray-600 dark:text-gray-200">Price</th>
                                         <th className="p-3 text-left font-medium text-gray-600 dark:text-gray-200">Total Sales</th>
                                         <th className="p-3 text-left font-medium text-gray-600 dark:text-gray-200">Total Orders</th>
@@ -197,7 +195,7 @@ export default function Dashboard() {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {currentMeals.map((meal, index) => (
+                                    {currentMeals?.map((meal, index) => (
                                         <tr key={meal._id} className={`border-b border-gray-200 dark:border-gray-700 ${index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-900'}`}>
                                             <td className="p-3">
                                                 <div className="w-full flex items-center space-x-3">
@@ -208,18 +206,18 @@ export default function Dashboard() {
                                                         src={meal.imageUrl}
                                                         width="48"
                                                     />
-                                                    <span className="font-medium text-gray-800 dark:text-gray-200 text-xs space-x-2">{meal.main.name}</span>
+                                                    <span className="font-medium text-gray-800 dark:text-gray-200 text-xs space-x-2">{meal.mealName}</span>
                                                 </div>
                                             </td>
                                             <td className="p-3">
                                                 <Badge
-                                                    variant={meal.main.price > 0 ? "default" : "secondary"}
-                                                    className={meal.main.price > 0 ? "bg-green-400 text-white" : "bg-gray-500 text-white shadow-none text-xs"}
+                                                    variant={meal.price > 0 ? "default" : "secondary"}
+                                                    className={meal.price > 0 ? "bg-green-400 text-white" : "bg-gray-500 text-white shadow-none text-xs"}
                                                 >
-                                                    {meal.main.price > 0 ? "Active" : "Inactive"}
+                                                    {meal.price > 0 ? "Active" : "Inactive"}
                                                 </Badge>
                                             </td>
-                                            <td className="p-3 text-gray-700 dark:text-gray-300">GH₵{meal.main.price.toFixed(2)}</td>
+                                            <td className="p-3 text-gray-700 dark:text-gray-300">GH₵{meal.price.toFixed(2)}</td>
                                             <td className="p-3 text-gray-700 dark:text-gray-300">GH₵{calculateTotalSales(meal._id).toFixed(2)}</td>
                                             <td className="p-3 text-gray-700 dark:text-gray-300">{calculateTotalOrders(meal._id)}</td>
                                             <td className="p-3">
@@ -243,17 +241,100 @@ export default function Dashboard() {
                                                     <TooltipProvider>
                                                         <Tooltip>
                                                             <TooltipTrigger asChild>
-                                                                <Button
-                                                                    variant="ghost"
-                                                                    size="icon"
-                                                                    onClick={() => setSelectedMeal(meal)}
-                                                                    className="text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200"
-                                                                >
+                                                                <Button variant="outline" size="icon" className="text-white hover:text-white hover:bg-[#71bc44]">
                                                                     <EyeIcon size={16} />
-                                                                    <span className="sr-only">View Details</span>
+                                                                    <span className="sr-only">View Meal Details</span>
                                                                 </Button>
                                                             </TooltipTrigger>
-                                                            <TooltipContent>View Details</TooltipContent>
+                                                            <TooltipContent side="right" sideOffset={5} className="w-full p-0">
+                                                                <Card className="border-t-4 border-t-[#71bc44] rounded-none">
+                                                                    <CardHeader className="pb-2 bg-gradient-to-r from-[#71bc44] to-[#c7b72f] bg-opacity-10">
+                                                                        <CardTitle className="text-xl font-bold text-white">{meal.mealName}</CardTitle>
+                                                                        <div className="flex items-center text-sm text-white">
+                                                                            <ClockIcon size={14} className="mr-1" />
+                                                                            <span>Created: {formatDate(meal.createdAt)}</span>
+                                                                        </div>
+                                                                    </CardHeader>
+                                                                    <CardContent className="pb-2 pt-4">
+                                                                        <div className="grid gap-3">
+                                                                            <div className="flex items-center">
+                                                                                <DollarSignIcon size={16} className="mr-2 text-[#c7b72f]" />
+                                                                                <span className="font-medium mr-2">Price:</span>
+                                                                                <Badge variant="secondary" className="bg-[#c7b72f] bg-opacity-20 text-[#c7b72f]">GH₵{meal.price.toFixed(2)}</Badge>
+                                                                            </div>
+                                                                            <div>
+                  <span className="font-medium flex items-center mb-1">
+                    <UtensilsIcon size={16} className="mr-2 text-[#71bc44]" />
+                    Description:
+                  </span>
+                                                                                <p className="text-sm ml-6">{meal.description || 'No description available.'}</p>
+                                                                            </div>
+                                                                            <div>
+                  <span className="font-medium flex items-center mb-1">
+                    <CalendarIcon size={16} className="mr-2 text-[#c7b72f]" />
+                    Available on:
+                  </span>
+                                                                                <div className="flex flex-wrap gap-1 ml-6">
+                                                                                    {meal.daysAvailable.map((day) => (
+                                                                                        <Badge key={day} variant="outline" className="text-xs bg-[#c7b72f] bg-opacity-10 text-[#c7b72f] border-[#c7b72f]">
+                                                                                            {day}
+                                                                                        </Badge>
+                                                                                    ))}
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                  <span className="font-medium flex items-center mb-1">
+                    <UtensilsIcon size={16} className="mr-2 text-[#71bc44]" />
+                    Protein options:
+                  </span>
+                                                                                <div className="flex flex-wrap gap-1 ml-6">
+                                                                                    {meal.protein.map((protein) => (
+                                                                                        <Badge key={protein} variant="outline" className="text-xs bg-[#71bc44] bg-opacity-10 text-[#71bc44] border-[#71bc44]">
+                                                                                            {protein}
+                                                                                        </Badge>
+                                                                                    ))}
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                  <span className="font-medium flex items-center mb-1">
+                    <Droplet size={16} className="mr-2 text-[#c7b72f]" />
+                    Sauce options:
+                  </span>
+                                                                                <div className="flex flex-wrap gap-1 ml-6">
+                                                                                    {meal.sauce.map((sauce) => (
+                                                                                        <Badge key={sauce} variant="outline" className="text-xs bg-[#c7b72f] bg-opacity-10 text-[#c7b72f] border-[#c7b72f]">
+                                                                                            {sauce}
+                                                                                        </Badge>
+                                                                                    ))}
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                  <span className="font-medium flex items-center mb-1">
+                    <Sandwich size={16} className="mr-2 text-[#71bc44]" />
+                    Extra options:
+                  </span>
+                                                                                <div className="flex flex-wrap gap-1 ml-6">
+                                                                                    {meal.extra.map((extra) => (
+                                                                                        <Badge key={extra} variant="outline" className="text-xs bg-[#71bc44] bg-opacity-10 text-[#71bc44] border-[#71bc44]">
+                                                                                            {extra}
+                                                                                        </Badge>
+                                                                                    ))}
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="flex items-center">
+                                                                                <ShoppingCartIcon size={16} className="mr-2 text-[#c7b72f]" />
+                                                                                <span className="font-medium mr-2">Total Orders:</span>
+                                                                                <Badge className="bg-[#c7b72f] bg-opacity-20 text-[#c7b72f]">{calculateTotalOrders(meal._id)}</Badge>
+                                                                            </div>
+                                                                            <div className="flex items-center">
+                                                                                <DollarSignIcon size={16} className="mr-2 text-[#71bc44]" />
+                                                                                <span className="font-medium mr-2">Total Sales:</span>
+                                                                                <Badge variant="secondary" className="bg-[#71bc44] bg-opacity-20 text-[#71bc44]">GH₵{calculateTotalSales(meal._id).toFixed(2)}</Badge>
+                                                                            </div>
+                                                                        </div>
+                                                                    </CardContent>
+                                                                </Card>
+                                                            </TooltipContent>
                                                         </Tooltip>
                                                     </TooltipProvider>
                                                     <TooltipProvider>
@@ -312,14 +393,6 @@ export default function Dashboard() {
                     </Card>
                 </main>
             </div>
-            {selectedMeal && (
-                <MealDetail
-                    mealDetail={selectedMeal}
-                    setSelectedMeal={setSelectedMeal}
-                    image={vendor?.imageUrl || ""}
-                    name={vendor?.name || ''}
-                />
-            )}
         </div>
     )
 }

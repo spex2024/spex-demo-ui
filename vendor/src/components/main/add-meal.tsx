@@ -10,18 +10,14 @@ import { UploadCloud, Utensils, Check, Trash2, Plus } from "lucide-react"
 import axios from "axios"
 import { toast } from 'react-hot-toast'
 
-interface Option {
-    option: string
-}
-
 interface MealFormState {
     mealName: string
     description: string
     daysAvailable: string[]
     price: string
-    protein: Option[]
-    sauce: Option[]
-    extras: Option[]
+    protein: string[]
+    sauce: string[]
+    extras: string[]
 }
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
@@ -73,21 +69,21 @@ export default function MealForm() {
         }
     }
 
-    const handleOptionChange = (index: number, type: 'protein' | 'sauce' | 'extras', value: string) => {
+    const handleOptionChange = (index: React.Key | null | undefined, type: "protein" | "sauce" | "extras", value: string) => {
         setMeal(prevMeal => ({
             ...prevMeal,
-            [type]: prevMeal[type].map((item, i) => i === index ? { ...item, option: value } : item)
+            [type]: prevMeal[type].map((item, i) => i === index ? value : item)
         }))
     }
 
     const addOption = (type: 'protein' | 'sauce' | 'extras') => {
         setMeal(prevMeal => ({
             ...prevMeal,
-            [type]: [...prevMeal[type], { option: '' }]
+            [type]: [...prevMeal[type], '']
         }))
     }
 
-    const removeOption = (index: number, type: 'protein' | 'sauce' | 'extras') => {
+    const removeOption = (index: React.Key | null | undefined, type: "protein" | "sauce" | "extras") => {
         setMeal(prevMeal => ({
             ...prevMeal,
             [type]: prevMeal[type].filter((_, i) => i !== index)
@@ -217,10 +213,10 @@ export default function MealForm() {
                                 {type.charAt(0).toUpperCase() + type.slice(1)} Options
                             </Label>
                             <div className="bg-gradient-to-r from-[#e8f5e9] to-[#f9f5d7] p-4 rounded-lg">
-                                {meal[type as keyof typeof meal].map((option, index) => (
+                                {(meal[type as keyof typeof meal] as string[]).map((option: string, index: number) => (
                                     <div key={index} className="flex items-center space-x-2 mb-2">
                                         <Input
-                                            value={option.option}
+                                            value={option}
                                             onChange={(e) => handleOptionChange(index, type as 'protein' | 'sauce' | 'extras', e.target.value)}
                                             placeholder={`Enter ${type} option`}
                                             className="flex-grow border-[#c7b72f] focus-visible:ring-[#c7b72f]"
@@ -236,6 +232,7 @@ export default function MealForm() {
                                         </Button>
                                     </div>
                                 ))}
+
                                 <Button
                                     type="button"
                                     variant="outline"

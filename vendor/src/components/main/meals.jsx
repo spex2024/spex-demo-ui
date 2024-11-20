@@ -13,11 +13,11 @@ const MealList = () => {
     return (
         <div className="w-full min-h-screen p-4 flex flex-wrap gap-4">
             <div className="flex p-10 w-full bg-slate-400 h-screen gap-5">
-                {meals.map((meal) => (
+                {meals?.map((meal) => (
                     <div key={meal._id}
                          className="w-64 h-64 flex flex-col items-center justify-around shadow-sm bg-white rounded p-4">
 
-                        <h1>{meal.main.name} - ${meal.main.price}</h1>
+                        <h1>{meal.mealName} - ${meal.price}</h1>
                         <Button onClick={() => openModal(meal)}>Customize</Button>
                     </div>
                 ))}

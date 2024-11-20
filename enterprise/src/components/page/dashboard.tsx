@@ -34,11 +34,18 @@ interface Subcription{
 
 interface Order {
     orderId: string
+    mealId:string
     vendor: Vendor
-    meals: Meal[]
+    mealName: string
     status: string
     createdAt: string
-    totalPrice: number
+    price: number
+    options:{
+        protein:string,
+        sauce:string,
+        extras:[]
+    }
+    selectedDays:[]
     user: {
         firstName: string
         lastName: string
@@ -202,7 +209,9 @@ export default function Dashboard() {
                 const orderDate = new Date(order.createdAt)
                 const isWithinTimeframe = checkTimeframe(orderDate, now, timeframe)
                 if (isWithinTimeframe) {
-                    const orderTotal = order.meals.reduce((orderSum, meal) => orderSum + (meal.price || 0), 0)
+                    const orderTotal = Array.isArray(order)
+                        ? order.reduce((orderSum, item) => orderSum + (item.price || 0), 0)
+                        : 0;
                     return total + orderTotal
                 }
             }
@@ -388,12 +397,7 @@ export default function Dashboard() {
                                                                     </div>
                                                                 </TableCell>
                                                                 <TableCell>
-                                                                    {order.meals.map((meal, index) => (
-                                                                        <span key={meal.mealId} className="text-sm">
-                                      {index > 0 && ', '}
-                                                                            {limitWords(meal.main || 'N/A', 2)}
-                                    </span>
-                                                                    ))}
+                                                                    {order.mealName}
                                                                 </TableCell>
                                                                 <TableCell>
                                                                     <Badge
@@ -409,7 +413,7 @@ export default function Dashboard() {
                                                                 </TableCell>
                                                                 <TableCell>{format(new Date(order.createdAt), 'MMM d, HH:mm')}</TableCell>
                                                                 <TableCell className="text-right">
-                                                                    GH₵ {order.meals.reduce((total, meal) => total + (meal.price || 0), 0).toFixed(2)}
+                                                                    GH₵ {order.price.toFixed(2)}
                                                                 </TableCell>
                                                                 <TableCell>
                                                                     {`${order.user.firstName} ${order.user.lastName}`}
@@ -426,24 +430,41 @@ export default function Dashboard() {
                                                                 <p><strong>Vendor:</strong> {order.vendor.name}</p>
                                                                 <p><strong>Meals:</strong></p>
 
-                                                                    {order.meals.map((meal) => (
-                                                                        <ul className="list-disc pl-5"  key={meal.mealId}>
-                                                                        <li>
-                                                                            {meal.main}
-                                                                        </li> <li>
-                                                                            {meal.protein}
-                                                                        </li> <li>
-                                                                            {meal.sauce}
-                                                                        </li><li>
-                                                                            {meal.extras}
-                                                                        </li>
-                                                                        </ul>
-                                                                    ))}
 
-                                                                <p><strong>Total:</strong> GH₵ {order.meals.reduce((total, meal) => total + (meal.price || 0), 0).toFixed(2)}</p>
+                                                                <ul className="list-disc pl-5" key={order.mealId}>
+                                                                    <li>
+                                                                        {order?.mealName}
+                                                                    </li>
+                                                                    <li>
+                                                                        {order?.options.protein}
+                                                                    </li>
+                                                                    <li>
+                                                                        {order?.options.sauce}
+                                                                    </li>
+                                                                    <li>
+                                                                        {order.options.extras.map((extra, index) => (
+                                                                            <li key={index}>{extra}</li>
+                                                                        ))}
+
+                                                                    </li>
+                                                                </ul>
+
+                                                                <p className="mt-2"><strong>Selected Days:</strong></p>
+                                                                <ul className="list-disc pl-5 mt-1">
+                                                                    {order.selectedDays.map((day, index) => (
+                                                                        <li key={index}>{day}</li>
+                                                                    ))}
+                                                                </ul>
+
+
+                                                                <p><strong>Total:</strong> GH₵ {order.price}</p>
                                                                 <p><strong>Status:</strong> {order.status}</p>
-                                                                <p><strong>Date:</strong> {format(new Date(order.createdAt), 'PPpp')}</p>
-                                                                <p><strong>Ordered By:</strong> {order.user.firstName} {order.user.lastName}</p>
+                                                                <p>
+                                                                    <strong>Date:</strong> {format(new Date(order.createdAt), 'PPpp')}
+                                                                </p>
+                                                                <p><strong>Ordered
+                                                                    By:</strong> {order.user.firstName} {order.user.lastName}
+                                                                </p>
                                                             </div>
                                                         </TooltipContent>
                                                     </Tooltip>
@@ -452,7 +473,7 @@ export default function Dashboard() {
                                         </TableBody>
                                     </Table>
                                 </div>
-                                <ScrollBar orientation="horizontal" />
+                                <ScrollBar orientation="horizontal"/>
                             </ScrollArea>
                         </CardContent>
                     </Card>

@@ -181,12 +181,7 @@ export default function Dashboard() {
                                             </td>
                                             <td className="py-2 px-4">
                                                 <div className="flex flex-col gap-0.5">
-                                                    {order.meals?.slice(0, 1).map((meal: any) => (
-                                                        <span key={meal._id} className="text-sm text-[#333] dark:text-[#e0e0e0]">{meal.main || 'N/A'}</span>
-                                                    ))}
-                                                    {order.meals?.length > 1 && (
-                                                        <span className="text-xs text-[#666] dark:text-[#999]">+{order.meals.length - 1} more</span>
-                                                    )}
+                                                    {order.mealName}
                                                 </div>
                                             </td>
                                             <td className="py-2 px-4">
@@ -205,7 +200,7 @@ export default function Dashboard() {
                                             </td>
                                             <td className="py-2 px-4 text-[#333] dark:text-[#e0e0e0]">{new Date(order?.createdAt).toLocaleDateString()}</td>
                                             <td className="py-2 px-4 text-right font-medium text-[#333] dark:text-[#e0e0e0]">
-                                                GH₵{order.meals.reduce((total: any, meal: any) => total + (meal.price || 0), 0).toFixed(2)}
+                                                GH₵{order.price}
                                             </td>
                                         </tr>
                                     ))}
