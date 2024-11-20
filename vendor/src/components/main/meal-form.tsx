@@ -211,17 +211,19 @@ export default function MealForm() {
                         </div>
                     </div>
 
-                    {['protein', 'sauce', 'extras'].map((type) => (
+                    {(['protein', 'sauce', 'extras'] as const).map((type) => (
                         <div key={type} className="space-y-4">
                             <Label className="text-[#71bc44] text-lg font-semibold">
                                 {type.charAt(0).toUpperCase() + type.slice(1)} Options
                             </Label>
                             <div className="bg-gradient-to-r from-[#e8f5e9] to-[#f9f5d7] p-4 rounded-lg">
-                                {meal[type as keyof typeof meal].map((option, index) => (
+                                {(meal[type] as Option[]).map((option, index) => (
                                     <div key={index} className="flex items-center space-x-2 mb-2">
                                         <Input
                                             value={option.option}
-                                            onChange={(e) => handleOptionChange(index, type as 'protein' | 'sauce' | 'extras', e.target.value)}
+                                            onChange={(e) =>
+                                                handleOptionChange(index, type, e.target.value)
+                                            }
                                             placeholder={`Enter ${type} option`}
                                             className="flex-grow border-[#c7b72f] focus-visible:ring-[#c7b72f]"
                                         />
@@ -229,7 +231,7 @@ export default function MealForm() {
                                             type="button"
                                             variant="ghost"
                                             size="icon"
-                                            onClick={() => removeOption(index, type as 'protein' | 'sauce' | 'extras')}
+                                            onClick={() => removeOption(index, type)}
                                             className="text-red-500 hover:text-red-700 hover:bg-red-100"
                                         >
                                             <Trash2 className="h-4 w-4" />
@@ -240,7 +242,7 @@ export default function MealForm() {
                                     type="button"
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => addOption(type as 'protein' | 'sauce' | 'extras')}
+                                    onClick={() => addOption(type)}
                                     className="mt-2 border-[#71bc44] text-[#71bc44] hover:bg-[#71bc44] hover:text-white"
                                 >
                                     <Plus className="h-4 w-4 mr-2" /> Add {type} option
@@ -248,6 +250,7 @@ export default function MealForm() {
                             </div>
                         </div>
                     ))}
+
 
                     <div className="space-y-2">
                         <Label htmlFor="image" className="text-[#71bc44]">Meal Image</Label>
