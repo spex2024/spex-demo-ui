@@ -32,6 +32,15 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
 import useVendorStore from "@/app/store/vendor"
 import useAuth from "@/app/hook/auth"
 import { toast } from "@/components/ui/use-toast"
@@ -64,6 +73,7 @@ export default function Dashboard() {
     const [currentPage, setCurrentPage] = useState(1)
     const [searchTerm, setSearchTerm] = useState("")
     const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all')
+    const [mealToDelete, setMealToDelete] = useState<string | null>(null)
 
     const { deleteMeal, success, error } = useAuth()
 
@@ -119,10 +129,11 @@ export default function Dashboard() {
         // Implement edit functionality
     }
 
-    const deleteMealItem = async (id: string) => {
-        if (window.confirm("Are you sure you want to delete this meal?")) {
-            await deleteMeal(id)
+    const deleteMealItem = async () => {
+        if (mealToDelete) {
+            await deleteMeal(mealToDelete)
             fetchVendor() // Refresh the vendor data after deletion
+            setMealToDelete(null) // Reset the mealToDelete state
         }
     }
 
@@ -263,17 +274,17 @@ export default function Dashboard() {
                                                                                 <Badge variant="secondary" className="bg-[#c7b72f] bg-opacity-20 text-[#c7b72f]">GH₵{meal.price.toFixed(2)}</Badge>
                                                                             </div>
                                                                             <div>
-                  <span className="font-medium flex items-center mb-1">
-                    <UtensilsIcon size={16} className="mr-2 text-[#71bc44]" />
-                    Description:
-                  </span>
+                                                                              <span className="font-medium flex items-center mb-1">
+                                                                                <UtensilsIcon size={16} className="mr-2 text-[#71bc44]" />
+                                                                                Description:
+                                                                              </span>
                                                                                 <p className="text-sm ml-6">{meal.description || 'No description available.'}</p>
                                                                             </div>
                                                                             <div>
-                  <span className="font-medium flex items-center mb-1">
-                    <CalendarIcon size={16} className="mr-2 text-[#c7b72f]" />
-                    Available on:
-                  </span>
+                                                                              <span className="font-medium flex items-center mb-1">
+                                                                                <CalendarIcon size={16} className="mr-2 text-[#c7b72f]" />
+                                                                                Available on:
+                                                                              </span>
                                                                                 <div className="flex flex-wrap gap-1 ml-6">
                                                                                     {meal?.daysAvailable?.map((day) => (
                                                                                         <Badge key={day} variant="outline" className="text-xs bg-[#c7b72f] bg-opacity-10 text-[#c7b72f] border-[#c7b72f]">
@@ -283,10 +294,10 @@ export default function Dashboard() {
                                                                                 </div>
                                                                             </div>
                                                                             <div>
-                  <span className="font-medium flex items-center mb-1">
-                    <UtensilsIcon size={16} className="mr-2 text-[#71bc44]" />
-                    Protein options:
-                  </span>
+                                                                              <span className="font-medium flex items-center mb-1">
+                                                                                <UtensilsIcon size={16} className="mr-2 text-[#71bc44]" />
+                                                                                Protein options:
+                                                                              </span>
                                                                                 <div className="flex flex-wrap gap-1 ml-6">
                                                                                     {meal?.protein?.map((protein) => (
                                                                                         <Badge key={protein} variant="outline" className="text-xs bg-[#71bc44] bg-opacity-10 text-[#71bc44] border-[#71bc44]">
@@ -296,10 +307,10 @@ export default function Dashboard() {
                                                                                 </div>
                                                                             </div>
                                                                             <div>
-                  <span className="font-medium flex items-center mb-1">
-                    <Droplet size={16} className="mr-2 text-[#c7b72f]" />
-                    Sauce options:
-                  </span>
+                                                                              <span className="font-medium flex items-center mb-1">
+                                                                                <Droplet size={16} className="mr-2 text-[#c7b72f]" />
+                                                                                Sauce options:
+                                                                              </span>
                                                                                 <div className="flex flex-wrap gap-1 ml-6">
                                                                                     {meal?.sauce?.map((sauce) => (
                                                                                         <Badge key={sauce} variant="outline" className="text-xs bg-[#c7b72f] bg-opacity-10 text-[#c7b72f] border-[#c7b72f]">
@@ -309,10 +320,10 @@ export default function Dashboard() {
                                                                                 </div>
                                                                             </div>
                                                                             <div>
-                  <span className="font-medium flex items-center mb-1">
-                    <Sandwich size={16} className="mr-2 text-[#71bc44]" />
-                    Extra options:
-                  </span>
+                                                                              <span className="font-medium flex items-center mb-1">
+                                                                                <Sandwich size={16} className="mr-2 text-[#71bc44]" />
+                                                                                Extra options:
+                                                                              </span>
                                                                                 <div className="flex flex-wrap gap-1 ml-6">
                                                                                     {meal?.extras?.map((extra) => (
                                                                                         <Badge key={extra} variant="outline" className="text-xs bg-[#71bc44] bg-opacity-10 text-[#71bc44] border-[#71bc44]">
@@ -340,15 +351,36 @@ export default function Dashboard() {
                                                     <TooltipProvider>
                                                         <Tooltip>
                                                             <TooltipTrigger asChild>
-                                                                <Button
-                                                                    variant="ghost"
-                                                                    size="icon"
-                                                                    onClick={() => deleteMealItem(meal._id)}
-                                                                    className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-200"
-                                                                >
-                                                                    <Trash size={16} />
-                                                                    <span className="sr-only">Delete</span>
-                                                                </Button>
+                                                                <Dialog>
+                                                                    <DialogTrigger asChild>
+                                                                        <Button
+                                                                            variant="ghost"
+                                                                            size="icon"
+                                                                            onClick={() => setMealToDelete(meal._id)}
+                                                                            className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-200"
+                                                                        >
+                                                                            <Trash size={16} />
+                                                                            <span className="sr-only">Delete</span>
+                                                                        </Button>
+                                                                    </DialogTrigger>
+                                                                    <DialogContent>
+                                                                        <DialogHeader>
+                                                                            <DialogTitle>Are you sure you want to delete this meal?</DialogTitle>
+                                                                            <DialogDescription>
+                                                                                This action cannot be undone. This will permanently delete the meal
+                                                                                and remove its data from our servers.
+                                                                            </DialogDescription>
+                                                                        </DialogHeader>
+                                                                        <DialogFooter>
+                                                                            <Button variant="outline" onClick={() => setMealToDelete(null)}>
+                                                                                Cancel
+                                                                            </Button>
+                                                                            <Button variant="destructive" onClick={deleteMealItem}>
+                                                                                Delete
+                                                                            </Button>
+                                                                        </DialogFooter>
+                                                                    </DialogContent>
+                                                                </Dialog>
                                                             </TooltipTrigger>
                                                             <TooltipContent>Delete Meal</TooltipContent>
                                                         </Tooltip>
@@ -396,3 +428,4 @@ export default function Dashboard() {
         </div>
     )
 }
+
