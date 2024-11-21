@@ -275,7 +275,7 @@ export default function Dashboard() {
                     Available on:
                   </span>
                                                                                 <div className="flex flex-wrap gap-1 ml-6">
-                                                                                    {meal.daysAvailable.map((day) => (
+                                                                                    {meal?.daysAvailable?.map((day) => (
                                                                                         <Badge key={day} variant="outline" className="text-xs bg-[#c7b72f] bg-opacity-10 text-[#c7b72f] border-[#c7b72f]">
                                                                                             {day}
                                                                                         </Badge>
@@ -288,7 +288,7 @@ export default function Dashboard() {
                     Protein options:
                   </span>
                                                                                 <div className="flex flex-wrap gap-1 ml-6">
-                                                                                    {meal.protein.map((protein) => (
+                                                                                    {meal?.protein?.map((protein) => (
                                                                                         <Badge key={protein} variant="outline" className="text-xs bg-[#71bc44] bg-opacity-10 text-[#71bc44] border-[#71bc44]">
                                                                                             {protein}
                                                                                         </Badge>
@@ -301,7 +301,7 @@ export default function Dashboard() {
                     Sauce options:
                   </span>
                                                                                 <div className="flex flex-wrap gap-1 ml-6">
-                                                                                    {meal.sauce.map((sauce) => (
+                                                                                    {meal?.sauce?.map((sauce) => (
                                                                                         <Badge key={sauce} variant="outline" className="text-xs bg-[#c7b72f] bg-opacity-10 text-[#c7b72f] border-[#c7b72f]">
                                                                                             {sauce}
                                                                                         </Badge>
@@ -314,7 +314,7 @@ export default function Dashboard() {
                     Extra options:
                   </span>
                                                                                 <div className="flex flex-wrap gap-1 ml-6">
-                                                                                    {meal.extras.map((extra) => (
+                                                                                    {meal?.extras?.map((extra) => (
                                                                                         <Badge key={extra} variant="outline" className="text-xs bg-[#71bc44] bg-opacity-10 text-[#71bc44] border-[#71bc44]">
                                                                                             {extra}
                                                                                         </Badge>
