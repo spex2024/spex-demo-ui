@@ -26,47 +26,46 @@ export default function Dashboard() {
         fetchVendor()
         calculateTrends()
     }, [fetchVendor])
-
     const calculateTrends = () => {
         const now = new Date();
         const oneWeekAgo = new Date();
-        oneWeekAgo.setDate(now.getDate() - 7); // Subtract 7 days to get a week ago
+        oneWeekAgo.setDate(now.getDate() - 7); // Get the date one week ago
 
         // Filter orders from the last week
-        const previousOrders = vendor.orders?.filter((order: { createdAt: string | number | Date }) => new Date(order.createdAt) >= oneWeekAgo) || [];
+        const previousOrders = vendor.orders?.filter((order: { createdAt: string | number | Date }) =>
+            new Date(order.createdAt) >= oneWeekAgo
+        ) || [];
         const previousCompleted = previousOrders.filter((order: { status: string }) => order.status === 'completed');
 
-        // Updated total sales calculation for previous orders
-        const previousSales = previousOrders.reduce((total: any, order: { meals: any[] }) => {
-            // Calculate the total price of meals for the current order
-            const mealsTotal = order.meals?.reduce((mealTotal, meal) => mealTotal + (meal.price || 0), 0) || 0;
-            return total + mealsTotal; // Accumulate to the total sales
-        }, 0);
+        // Calculate total sales for previous orders
+        const previousSales = previousOrders.reduce((total: number, order: { price?: number }) =>
+                total + (order.price || 0),
+            0);
 
-        // Calculate unique agencies from previous orders based on agencyId
+        // Calculate unique agencies from previous orders
         const previousAgencies = new Set(previousOrders.map((order: { agencyId: any }) => order.agencyId));
 
         // Get current values for orders, completed orders, sales, and agencies
-        const currentOrders = vendor.orders?.length || 0; // Total count of current orders
-        const currentCompleted = vendor.completedOrders || 0; // Dynamically fetched completed orders
-        const currentSales = vendor.totalSales || 0; // Dynamically fetched total sales
-        const currentAgencies = vendor.agencies?.length || 0; // Adjust as needed to get current agencies
+        const currentOrders = vendor.orders?.length || 0; // Total current orders
+        const currentCompleted = vendor.orders?.filter((order: { status: string }) => order.status === 'completed').length || 0; // Total completed orders
+        const currentSales = vendor.orders?.reduce((total: number, order: { price?: number }) =>
+                total + (order.price || 0),
+            0) || 0;
+        const currentAgencies = new Set(vendor.orders?.map((order: { agencyId: any }) => order.agencyId)).size || 0;
 
         // Function to calculate growth percentage
         const calculateGrowth = (current: number, previous: number) => {
             if (previous === 0) {
-                return current > 0 ? 100 : 0; // If no previous data but current exists, set growth to 100%
+                return current > 0 ? 100 : 0; // If no previous data, set growth to 100% if current exists
             }
-
-            const growth = ((current - previous) / previous) * 100;
-            return growth; // Allow for negative growth if there's a decrease
+            return ((current - previous) / previous) * 100;
         };
 
         // Calculate growth metrics
         const orderGrowth = calculateGrowth(currentOrders, previousOrders.length);
         const completedGrowth = calculateGrowth(currentCompleted, previousCompleted.length);
         const salesGrowth = calculateGrowth(currentSales, previousSales);
-        const agencyGrowth = calculateGrowth(currentAgencies, previousAgencies.size); // Convert Set to size
+        const agencyGrowth = calculateGrowth(currentAgencies, previousAgencies.size);
 
         // Set the trends state with calculated growth values
         setTrends({
@@ -76,6 +75,7 @@ export default function Dashboard() {
             agencyGrowth,
         });
     };
+
 
  console.log(trends)
     const now = new Date();
@@ -103,9 +103,11 @@ export default function Dashboard() {
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
 
-    const orderTotal = vendor?.order?.reduce((mealTotal: any, meal: { price: any }) => {
-        return mealTotal + (meal.price || 0);
+    const totalSales = vendor?.orders?.reduce((total: any, order: { price: any }) => {
+        return total + (order.price || 0); // Add each order's price to the total
     }, 0);
+
+    console.log("Total Sales:", totalSales);
 
 
     return (
@@ -123,7 +125,7 @@ export default function Dashboard() {
                     {[
                         { title: "Total Orders", icon: ShoppingCart, value: vendor.orders?.length || 0, trend: trends.orderGrowth, color: "border-[#71bc44]" },
                         { title: "Completed Orders", icon: Package, value: vendor.completedOrders || 0, trend: trends.completedGrowth, color: "border-[#c7b730]" },
-                        { title: "Total Sales", icon: DollarSign, value: `GH₵${orderTotal}`, trend: trends.salesGrowth, color: "border-[#71bc44]" },
+                        { title: "Total Sales", icon: DollarSign, value: `GH₵${totalSales}` || 0, trend: trends.salesGrowth, color: "border-[#71bc44]" },
                         { title: "Enterprise(s)", icon: Users, value: vendor.agencies?.length || 0, trend: trends.agencyGrowth, color: "border-[#c7b730]" },
                     ].map((item, index) => (
                         <motion.div key={index} variants={cardVariants}>
