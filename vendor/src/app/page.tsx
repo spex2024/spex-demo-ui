@@ -93,11 +93,20 @@ export default function Dashboard() {
         visible: { opacity: 1, y: 0 }
     }
 
+
+
+
     const indexOfLastOrder = currentPage * ordersPerPage;
     const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
     const currentOrders = recentOrders?.slice(indexOfFirstOrder, indexOfLastOrder);
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+
+    const orderTotal = vendor?.order?.reduce((mealTotal: any, meal: { price: any }) => {
+        return mealTotal + (meal.price || 0);
+    }, 0);
+
 
     return (
         <div className="flex min-h-screen w-full flex-col bg-[#f8f9fa] dark:bg-[#1a1a1a]">
@@ -114,7 +123,7 @@ export default function Dashboard() {
                     {[
                         { title: "Total Orders", icon: ShoppingCart, value: vendor.orders?.length || 0, trend: trends.orderGrowth, color: "border-[#71bc44]" },
                         { title: "Completed Orders", icon: Package, value: vendor.completedOrders || 0, trend: trends.completedGrowth, color: "border-[#c7b730]" },
-                        { title: "Total Sales", icon: DollarSign, value: `GH₵${vendor?.totalSales?.toFixed(2)}`, trend: trends.salesGrowth, color: "border-[#71bc44]" },
+                        { title: "Total Sales", icon: DollarSign, value: `GH₵${orderTotal}`, trend: trends.salesGrowth, color: "border-[#71bc44]" },
                         { title: "Enterprise(s)", icon: Users, value: vendor.agencies?.length || 0, trend: trends.agencyGrowth, color: "border-[#c7b730]" },
                     ].map((item, index) => (
                         <motion.div key={index} variants={cardVariants}>
