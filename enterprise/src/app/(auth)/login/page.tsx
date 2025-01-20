@@ -55,7 +55,7 @@ export default function SignIn() {
             ></div>
             <div className="flex flex-col md:flex-row items-center justify-center w-full p-4 z-10">
                 <div className="md:w-1/2 max-w-xl text-center md:text-left mb-8 md:mb-0 md:pr-8 animate-fade-in-up">
-                    <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 hidden md:block">Corporate Lunch in Reusable Packs</h1>
+                    <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 hidden md:block">Corporate Meal in Reusable Packs</h1>
                     <p className="text-sm md:text-base font-light text-white/90">
                         SPEX simplifies meal planning for your team, saving you time and reducing costs while minimizing plastic waste. Experience convenient, eco-friendly meal solutions that enhance your corporate dining experience.
                     </p>
