@@ -14,7 +14,8 @@ const PaymentCallback = () => {
     const reference = searchParams.get('reference'); // Get the payment reference from query params
     const email = searchParams.get('email'); // Get the email from query params
     const plan = searchParams.get('plan'); // Get the plan from query params
-    const amount = searchParams.get('amount'); // Get the amount from query params
+    const amount = searchParams.get('amount');
+    const staff = searchParams.get('staff'); // Get the amount from query params
     const [loading, setLoading] = useState(true);
     const [status, setStatus] = useState<string | null>(null); // Specify type as string or null
     const [paymentSent, setPaymentSent] = useState(false); // New flag to prevent double submission
@@ -60,6 +61,7 @@ const PaymentCallback = () => {
                 plan,
                 amount: parseFloat(amount || '0'), // Handle case where amount may be null
                 reference,
+                staff
             });
             setPaymentSent(true); // Set the flag to prevent double submission
         } catch (error) {

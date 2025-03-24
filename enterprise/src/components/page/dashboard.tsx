@@ -256,7 +256,7 @@ export default function Dashboard() {
                         </Badge>
                         <Badge variant="secondary"
                                className="text-xs font-semibold flex items-center justify-items-center gap-3 bg-black text-white">
-                            <p>Packs: {packs || 'N/A'}</p>
+                            <p>Packs: {user?.packs|| 'N/A'}</p>
 
                         </Badge>
                     </div>
