@@ -142,6 +142,51 @@ const useAuth = () => {
         }
     };
 
+    const completeOrder = async (orderId) => {
+        setError(null);
+        try {
+            const response = await axios.post(`${baseurl}/api/orders/complete`, { orderId }, { withCredentials: true });
+            if (response.status === 200) {
+                setSuccess(response.data.message);
+                setTimeout(() => { window.location.reload(); }, 3000); // Delayed reload
+            } else {
+                setError(response.data.message);
+            }
+        } catch (error) {
+            setError(error.response.data.message);
+        }
+    };
+
+    const cancelOrder = async (orderId) => {
+        setError(null);
+        try {
+            const response = await axios.post(`${baseurl}/api/orders/cancel`, { orderId }, { withCredentials: true });
+            if (response.status === 200) {
+                setSuccess(response.data.message);
+                setTimeout(() => { window.location.reload(); }, 3000); // Delayed reload
+            } else {
+                setError(response.data.message);
+            }
+        } catch (error) {
+            setError(error.response.data.message);
+        }
+    };
+
+    const deleteOrder = async (orderId) => {
+        setError(null);
+        try {
+            const response = await axios.delete(`${baseurl}/api/orders/${orderId}`, { withCredentials: true });
+            if (response.status === 200) {
+                setSuccess(response?.data?.message);
+                setTimeout(() => { window.location.reload(); }, 3000); // Delayed reload
+            } else {
+                setError(response?.data?.message);
+            }
+        } catch (error) {
+            setError(error.response?.data?.message);
+        }
+    };
+
     return {
         login,
         logout,
@@ -151,6 +196,9 @@ const useAuth = () => {
         resendVerification,
         updateVendor,
         deleteMeal,
+        completeOrder,
+        cancelOrder,
+        deleteOrder,
         success,
         error,
     };

@@ -2,7 +2,16 @@
 
 import React, { useState, useMemo } from "react"
 import Image from "next/image"
-import { CircleArrowLeft, CircleArrowRight, FileDown, ListFilter, CheckCircle, XCircle, FileSpreadsheet } from 'lucide-react'
+import {
+    CircleArrowLeft,
+    CircleArrowRight,
+    FileDown,
+    ListFilter,
+    CheckCircle,
+    XCircle,
+    FileSpreadsheet,
+    Trash
+} from 'lucide-react'
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
@@ -11,22 +20,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { format, isToday, parseISO } from 'date-fns'
-// import { pdf } from '@react-pdf/renderer'
-// import { Document, Page, Text, View, StyleSheet, Font, Image as PDFImage } from '@react-pdf/renderer'
 import { utils, write } from 'xlsx'
+import useAuth from "@/app/hook/auth";
+import toast from "react-hot-toast";
 
-// Register custom fonts
-// Font.register({
-//     family: 'Roboto',
-//     fonts: [
-//         { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf', fontWeight: 300 },
-//         { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-regular-webfont.ttf', fontWeight: 400 },
-//         { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-medium-webfont.ttf', fontWeight: 500 },
-//         { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-bold-webfont.ttf', fontWeight: 700 },
-//     ],
-// })
 
 interface Order {
+    _id: string
     orderId: string
     status: string
     createdAt: string
@@ -54,156 +54,7 @@ interface OrderTableProps {
     orders: Order[]
 }
 
-// @ts-ignore
-// @ts-ignore
-// const style = {
-//     page: {
-//         padding: 30,
-//         backgroundColor: '#ffffff',
-//         fontFamily: 'Roboto, sans-serif',
-//     },
-//     header: {
-//         display: 'flex',
-//         flexDirection: 'row',
-//         marginBottom: 20,
-//         backgroundColor: '#c7b72f',
-//         padding: 20,
-//         borderRadius: 5,
-//     },
-//     headerLeft: {
-//         flex: 1,
-//     },
-//     headerRight: {
-//         flex: 1,
-//         textAlign: 'right',
-//     },
-//     logo: {
-//         width: 120,
-//         height: 50,
-//         marginBottom: 10,
-//     },
-//     title: {
-//         fontSize: 24,
-//         fontWeight: 'bold',
-//         marginBottom: 10,
-//         color: '#ffffff',
-//     },
-//     subtitle: {
-//         fontSize: 14,
-//         color: '#ffffff',
-//         marginBottom: 5,
-//     },
-//     table: {
-//         display: 'table',
-//         width: '100%',
-//         marginTop: 10,
-//         borderCollapse: 'collapse',
-//     },
-//     tableRow: {
-//         display: 'table-row',
-//     },
-//     tableColHeader: {
-//         display: 'table-cell',
-//         width: '12.5%',
-//         border: '1px solid #c7b72f',
-//         padding: '5px 8px',
-//         backgroundColor: '#71bc44',
-//     },
-//     tableCol: {
-//         display: 'table-cell',
-//         width: '12.5%',
-//         border: '1px solid #c7b72f',
-//         padding: '5px 8px',
-//     },
-//     tableCellHeader: {
-//         fontSize: 10,
-//         fontWeight: 'bold',
-//         color: '#ffffff',
-//     },
-//     tableCell: {
-//         fontSize: 9,
-//         color: '#000000',
-//     },
-//     footer: {
-//         position: 'absolute',
-//         bottom: 30,
-//         left: 30,
-//         right: 30,
-//         textAlign: 'center',
-//         color: '#71bc44',
-//         fontSize: 10,
-//     },
-// };
 
-
-// const OrdersPDF = ({ orders, title }: { orders: Order[], title: string }) => (
-//     <Document>
-//         <Page size="A4" orientation="landscape" style={styles.page}>
-//             <View style={styles.header}>
-//                 <View style={styles.headerLeft}>
-//                     <PDFImage
-//                         src="https://res.cloudinary.com/ddwet1dzj/image/upload/v1725381965/agency/pt0mh01xihsonzctxyhl.png"
-//                         style={styles.logo}
-//                     />
-//                     <Text style={styles.title}>{title}</Text>
-//                     <Text style={styles.subtitle}>Generated on {format(new Date(), 'MMMM dd, yyyy')}</Text>
-//                 </View>
-//                 <View style={styles.headerRight}>
-//                     <Text style={styles.subtitle}>Spex Africa</Text>
-//                     <Text style={styles.subtitle}>No. 5 Paterson Ave</Text>
-//                     <Text style={styles.subtitle}>Ritz, Adenta - Accra</Text>
-//                     <Text style={styles.subtitle}>+233 302 515 422</Text>
-//                     <Text style={styles.subtitle}>hello@spexafrica.app</Text>
-//                 </View>
-//             </View>
-//
-//             <View style={styles.table}>
-//                 <View style={styles.tableRow}>
-//                     {['Order ID', 'Meal', 'Customer', 'Status', 'Total', 'Protein', 'Sauce', 'Extras', 'Selected Days'].map((header) => (
-//                         <View style={styles.tableColHeader} key={header}>
-//                             <Text style={styles.tableCellHeader}>{header}</Text>
-//                         </View>
-//                     ))}
-//                 </View>
-//                 {orders.map((order) => (
-//                     <View style={styles.tableRow} key={order.orderId}>
-//                         <View style={styles.tableCol}>
-//                             <Text style={styles.tableCell}>{order.orderId}</Text>
-//                         </View>
-//                         <View style={styles.tableCol}>
-//                             <Text style={styles.tableCell}>{order.mealName}</Text>
-//                         </View>
-//                         <View style={styles.tableCol}>
-//                             <Text style={styles.tableCell}>{`${order.user.firstName} ${order.user.lastName}`}</Text>
-//                         </View>
-//                         <View style={styles.tableCol}>
-//                             <Text style={styles.tableCell}>{order.status}</Text>
-//                         </View>
-//                         <View style={styles.tableCol}>
-//                             <Text style={styles.tableCell}>GH₵{order.price * order.quantity}</Text>
-//                         </View>
-//                         <View style={styles.tableCol}>
-//                             <Text style={styles.tableCell}>{order.options.protein}</Text>
-//                         </View>
-//                         <View style={styles.tableCol}>
-//                             <Text style={styles.tableCell}>{order.options.sauce}</Text>
-//                         </View>
-//                         <View style={styles.tableCol}>
-//                             <Text style={styles.tableCell}>{order.options.extras.join(', ')}</Text>
-//                         </View>
-//                         <View style={styles.tableCol}>
-//                             <Text style={styles.tableCell}>{order.selectedDays.join(', ')}</Text>
-//                         </View>
-//                     </View>
-//                 ))}
-//             </View>
-//
-//             <Text style={styles.footer}>
-//                 This is an automatically generated report. For any queries, please contact our support team.
-//             </Text>
-//         </Page>
-//     </Document>
-// )
 
 export default function OrderTable({ orders }: OrderTableProps) {
     const [currentPage, setCurrentPage] = useState<number>(1)
@@ -211,6 +62,8 @@ export default function OrderTable({ orders }: OrderTableProps) {
     const [isGeneratingExcel, setIsGeneratingExcel] = useState(false)
     const [activeTab, setActiveTab] = useState("today")
     const rowsPerPage = 5
+
+    const {completeOrder , cancelOrder , success , error ,deleteOrder} = useAuth()
 
     const todayOrders = useMemo(() => orders.filter(order => isToday(parseISO(order.createdAt))), [orders])
     const pendingOrders = useMemo(() => orders.filter(order => order.status === 'pending'), [orders])
@@ -231,22 +84,6 @@ export default function OrderTable({ orders }: OrderTableProps) {
     const totalPages = Math.ceil(filteredOrders.length / rowsPerPage)
     const paginatedOrders = filteredOrders.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
 
-    // const generatePDF = async (ordersToDownload: Order[], title: string) => {
-    //     setIsGeneratingPDF(true)
-    //     try {
-    //         const blob = await pdf(<OrdersPDF orders={ordersToDownload} title={title} />).toBlob()
-    //         const url = URL.createObjectURL(blob)
-    //         const link = document.createElement('a')
-    //         link.href = url
-    //         link.download = `${title.toLowerCase().replace(' ', '_')}.pdf`
-    //         link.click()
-    //         URL.revokeObjectURL(url)
-    //     } catch (error) {
-    //         console.error('Error generating PDF:', error)
-    //     } finally {
-    //         setIsGeneratingPDF(false)
-    //     }
-    // }
 
     const generateExcel = () => {
         setIsGeneratingExcel(true)
@@ -283,16 +120,31 @@ export default function OrderTable({ orders }: OrderTableProps) {
         }
     }
 
-    const handleComplete = (orderId: string) => {
-        console.log(`Completing order: ${orderId}`)
-        // Add your logic here to complete the order
-    }
+    const handleComplete = async (orderId: string) => {
+        try {
+            await completeOrder(orderId);
+            toast.success("Order completed successfully!");
+        } catch (err) {
+            toast.error("Failed to complete the order. Please try again.");
+        }
+    };
 
-    const handleCancel = (orderId: string) => {
-        console.log(`Cancelling order: ${orderId}`)
-        // Add your logic here to cancel the order
-    }
-
+    const handleCancel = async (orderId: string) => {
+        try {
+            await cancelOrder(orderId);
+            toast.success("Order cancelled successfully!");
+        } catch (err) {
+            toast.error("Failed to cancel the order. Please try again.");
+        }
+    };
+    const handleDeleteOrder = async (orderId: string) => {
+        try {
+            await deleteOrder(orderId);
+            toast.success("Order cancelled successfully!");
+        } catch (err) {
+            toast.error("Failed to cancel the order. Please try again.");
+        }
+    };
     return (
         <div className="flex min-h-screen w-full flex-col bg-muted/40">
             <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
@@ -406,14 +258,14 @@ export default function OrderTable({ orders }: OrderTableProps) {
                                                                         </TableCell>
                                                                         <TableCell>
                                                                             <div className="flex space-x-2">
-                                                                                {order.status === 'pending' && (
+                                                                                {order.status === 'pending' ? (
                                                                                     <>
                                                                                         <Tooltip>
                                                                                             <TooltipTrigger asChild>
                                                                                                 <Button
                                                                                                     size="sm"
                                                                                                     variant="outline"
-                                                                                                    onClick={() => handleComplete(order.orderId)}
+                                                                                                    onClick={() => handleComplete(order._id)}
                                                                                                 >
                                                                                                     <CheckCircle className="h-4 w-4" />
                                                                                                 </Button>
@@ -427,7 +279,7 @@ export default function OrderTable({ orders }: OrderTableProps) {
                                                                                                 <Button
                                                                                                     size="sm"
                                                                                                     variant="outline"
-                                                                                                    onClick={() => handleCancel(order.orderId)}
+                                                                                                    onClick={() => handleCancel(order._id)}
                                                                                                 >
                                                                                                     <XCircle className="h-4 w-4" />
                                                                                                 </Button>
@@ -437,7 +289,27 @@ export default function OrderTable({ orders }: OrderTableProps) {
                                                                                             </TooltipContent>
                                                                                         </Tooltip>
                                                                                     </>
-                                                                                )}
+                                                                                ):(
+                                                                                    <TooltipProvider>
+                                                                                    <Tooltip>
+                                                                                    <TooltipTrigger asChild>
+                                                                                    <Button
+                                                                                    variant="ghost"
+                                                                                    size="icon"
+                                                                                    onClick={() => handleDeleteOrder(order._id)}
+                                                                            >
+                                                                                <Trash className="h-4 w-4"/>
+                                                                            </Button>
+                                                                </TooltipTrigger>
+                                                                <TooltipContent
+                                                                    className={`flex flex-col items-center justify-center bg-white text-black border border-black`}>
+                                                                    <h2 className={`font-bold`}>delete
+                                                                        order</h2>
+
+                                                                </TooltipContent>
+                                                            </Tooltip>
+                                                            </TooltipProvider>
+                                                                                    )}
                                                                             </div>
                                                                         </TableCell>
                                                                     </TableRow>
