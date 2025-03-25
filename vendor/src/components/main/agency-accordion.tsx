@@ -9,6 +9,7 @@ import OrderTable from "@/components/main/order-table";
 
 // Define TypeScript interface for the order structure
 interface Order {
+    _id: string;
     orderId: string
     status: string
     createdAt: string
