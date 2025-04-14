@@ -266,7 +266,6 @@ export default function Dashboard() {
                                             </td>
                                             <td className="p-4">
                                                 <div className="flex items-center">
-                                                    <DollarSignIcon className="mr-1 h-4 w-4 text-[#71bc44]" />
                                                     <span className="font-medium text-gray-800 dark:text-gray-200">
                               GH₵{meal.price.toFixed(2)}
                             </span>
@@ -274,7 +273,6 @@ export default function Dashboard() {
                                             </td>
                                             <td className="p-4">
                                                 <div className="flex items-center">
-                                                    <ShoppingCartIcon className="mr-1 h-4 w-4 text-[#71bc44]" />
                                                     <span className="font-medium text-gray-800 dark:text-gray-200">
                               GH₵{calculateTotalSales(meal._id).toFixed(2)}
                             </span>
@@ -282,7 +280,6 @@ export default function Dashboard() {
                                             </td>
                                             <td className="p-4">
                                                 <div className="flex items-center">
-                                                    <ClockIcon className="mr-1 h-4 w-4 text-[#71bc44]" />
                                                     <span className="font-medium text-gray-800 dark:text-gray-200">
                               {calculateTotalOrders(meal._id)}
                             </span>
