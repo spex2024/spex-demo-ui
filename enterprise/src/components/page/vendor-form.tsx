@@ -108,7 +108,7 @@ export default function VendorFormDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="h-10 bg-black text-white px-3 flex items-center gap-2">
+                <Button variant="outline" size="sm" className="h-10 bg-[#71bc44] text-white px-3 flex items-center gap-2">
                     <PlusCircle size={14} strokeWidth={2} /> Add Vendor
                 </Button>
             </DialogTrigger>
