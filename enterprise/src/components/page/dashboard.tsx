@@ -151,7 +151,7 @@ export default function Dashboard() {
 
     const currentActivePacks = user?.users?.reduce((total, user) => total + (user.activePack || 0), 0) || 0
     const previousActivePacks = filterOrdersByMonth(allOrders, previousMonth).reduce((total, order) => {
-        if (order.status === 'active') return total + 1
+        if (order.status?.toLowerCase() === 'active') return total + 1
         return total
     }, 0)
 
