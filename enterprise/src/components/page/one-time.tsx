@@ -299,7 +299,7 @@ export default function OneTime() {
                                                         isPopular ? "text-white/80" : "text-gray-500",
                                                     )}
                                                 >
-                                                    DAILY
+                                                    PER DAY
                                                 </div>
                                             </div>
                                         </div>
