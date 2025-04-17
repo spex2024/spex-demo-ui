@@ -43,6 +43,8 @@ const Header = () => {
         router.push("/login")
     }
 
+    console.log(vendor)
+
     const navItems = [
         { href: "/", label: "Dashboard", icon: <Home className="h-4 w-4" /> },
         { href: "/pages/add-meal", label: "Add meal", icon: <PlusCircle className="h-4 w-4" /> },
